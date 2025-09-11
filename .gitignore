@@ -22,6 +22,7 @@ Testing
 
 # IDE config
 .idea
+.vscode
 
 # clion cmake builds
 cmake-build-debug
