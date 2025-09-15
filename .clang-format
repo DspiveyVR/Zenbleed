@@ -59,7 +59,7 @@ SpaceAfterCStyleCast: true
 SpaceAfterLogicalNot: false
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeCpp11BracedList: true
-SpaceBeforeParens: NonEmptyParentheses
+SpaceBeforeParens: Never 
 SpaceInEmptyParentheses: false
 SpaceBeforeInheritanceColon: true
 SpacesInAngles: false
