@@ -10,7 +10,7 @@ CTestTestfile.cmake
 _deps
 **/.DS_Store
 
-builds
+build/
 
 # IDE config
 .idea
