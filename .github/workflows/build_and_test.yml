@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  PROJECT_NAME: Zenbleed
   BUILD_TYPE: Release
   BUILD_DIR: build
   DISPLAY: :0
@@ -103,13 +104,9 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: ctest --verbose --output-on-failure
 
-      - name: Read in .env from CMake
+      - name: Setup environment variables
         run: |
-          cat .env # show us the config
-          cat .env >> $GITHUB_ENV # pull in our PRODUCT_NAME, etc
-
-      - name: Set additional env vars for next steps
-        run: |
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
           ARTIFACTS_PATH=${{ env.BUILD_DIR }}/${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}
           echo "ARTIFACTS_PATH=$ARTIFACTS_PATH" >> $GITHUB_ENV
           echo "VST3_PATH=$ARTIFACTS_PATH/VST3/${{ env.PRODUCT_NAME }}.vst3" >> $GITHUB_ENV
