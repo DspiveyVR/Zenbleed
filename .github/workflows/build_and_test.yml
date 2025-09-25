@@ -56,7 +56,8 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@latest
         if: runner.os == 'Linux'
         with:
-          packages: libasound2-dev libx11-dev libxinerama-dev libxrandr-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev xvfb ninja-build
+          packages: ladspa-sdk libasound2-dev libx11-dev libxinerama-dev libxrandr-dev libxext-dev libfreetype-dev \
+            libfreetype6 libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev xvfb ninja-build
           version: 1.0
 
       - name: Start Xvfb in background (Linux) # needed for pluginval
@@ -205,6 +206,7 @@ jobs:
 #          path: packaging/${{ env.ARTIFACT_NAME }}.pkg
 
   release:
+    name: Create Release
     if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     needs: build_and_test
