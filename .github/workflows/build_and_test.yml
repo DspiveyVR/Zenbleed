@@ -28,7 +28,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
+      fail-fast: false
       matrix:
         include:
           - name: Linux
@@ -52,7 +52,7 @@ jobs:
 #        if: runner.os == 'Linux'
 #        uses: egor-tensin/setup-clang@v1
 
-      - name: Install JUCE's Linux Deps
+      - name: Install JUCE's Linux dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         if: runner.os == 'Linux'
         with:
@@ -91,13 +91,13 @@ jobs:
       - name: Cache the build
         uses: mozilla-actions/sccache-action@v0.0.9
 
-      - name: Configure
+      - name: Configure cmake build
         run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ${{ matrix.extra-flags }} .
 
-      - name: Build
+      - name: Build plugin
         run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }}
 
-      - name: Test & Benchmarks
+      - name: Perform tests & benchmarks
         working-directory: ${{ env.BUILD_DIR }}
         run: ctest --verbose --output-on-failure
 
