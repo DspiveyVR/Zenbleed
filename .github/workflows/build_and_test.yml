@@ -11,7 +11,7 @@ concurrency:
 
 env:
   BUILD_TYPE: Release
-  BUILD_DIR: builds
+  BUILD_DIR: build
   DISPLAY: :0
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   SCCACHE_GHA_ENABLED: true
