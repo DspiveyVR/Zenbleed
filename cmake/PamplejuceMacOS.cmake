@@ -1,3 +1,6 @@
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    return()
+endif ()
 
 # This must be set before the project() call
 # see: https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_DEPLOYMENT_TARGET.html
