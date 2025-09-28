@@ -168,4 +168,4 @@ include(Tests)
 include(Benchmarks)
 
 # Output some config for CI (like our PRODUCT_NAME)
-# include(GitHubENV)
+include(GitHubENV)
