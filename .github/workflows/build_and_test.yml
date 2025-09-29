@@ -3,6 +3,10 @@ name: Build & Test
 on:
   workflow_dispatch:
   push:
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - docs/**
   pull_request:
 
 concurrency:
