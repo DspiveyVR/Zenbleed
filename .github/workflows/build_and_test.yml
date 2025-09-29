@@ -99,11 +99,13 @@ jobs:
       - name: Build plugin
         run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --parallel 4
 
-      - name: Setup environment variables
+      - name: Read in .env from CMake # see GitHubENV.cmake
         run: |
           cat .env # show us the config
           cat .env >> $GITHUB_ENV # pull in our PRODUCT_NAME, etc
-          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
+      - name: Setup environment variables
+        run: |
           ARTIFACTS_PATH=${{ env.BUILD_DIR }}/${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}
           echo "ARTIFACTS_PATH=$ARTIFACTS_PATH" >> $GITHUB_ENV
           echo "VST3_PATH=$ARTIFACTS_PATH/VST3/${{ env.PRODUCT_NAME }}.vst3" >> $GITHUB_ENV
