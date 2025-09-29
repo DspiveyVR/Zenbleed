@@ -174,10 +174,10 @@ jobs:
 #          xcrun notarytool submit "${{ env.ARTIFACT_NAME }}.pkg" --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --password ${{ secrets.NOTARIZATION_PASSWORD }} --team-id ${{ secrets.TEAM_ID }} --wait
 #          xcrun stapler staple "${{ env.ARTIFACT_NAME }}.pkg"
 
-      - name: Zip artifacts
-        if: ${{ matrix.name == 'Linux' }}
-        working-directory: ${{ env.ARTIFACTS_PATH }}
-        run: 7z a -tzip "${{ env.ARTIFACT_NAME }}.zip" "-xr!lib${{ env.PRODUCT_NAME }}_SharedCode.a" .
+#      - name: Zip artifacts
+#        if: ${{ matrix.name == 'Linux' }}
+#        working-directory: ${{ env.ARTIFACTS_PATH }}
+#        run: 7z a -tzip "${{ env.ARTIFACT_NAME }}.zip" "-xr!lib${{ env.PRODUCT_NAME }}_SharedCode.a" .
 
 #      - name: Generate Installer
 #        if: ${{ matrix.name == 'Windows' }}
@@ -196,8 +196,8 @@ jobs:
         if: ${{ matrix.name == 'Linux' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}.zip
-          path: "${{ env.ARTIFACTS_PATH }}/${{ env.ARTIFACT_NAME }}.zip"
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACTS_PATH }}
 
 #      - name: Upload pkg (macOS)
 #        if: ${{ matrix.name == 'macOS' }}
