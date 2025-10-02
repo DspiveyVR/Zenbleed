@@ -1,5 +1,5 @@
 # Zenbleed
-![logo](assets/images/logo.png)
+<img src="assets/images/logo.png" alt="logo" width="300" height="300">
 ---
 
 ### Building
