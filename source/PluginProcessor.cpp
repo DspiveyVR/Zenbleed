@@ -10,8 +10,16 @@ PluginProcessor::PluginProcessor()
     #endif
               .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-      )
+      ), 
+      parameters (*this, nullptr, juce::Identifier ("ZenParameters"), {
+              std::make_unique<juce::AudioParameterFloat> ("speed", 
+                  "Speed", 
+                  0.0f,
+                  4.0f, 
+                  1.0f),
+      })
 {
+    speedParameter = parameters.getRawParameterValue("speed");
 }
 
 PluginProcessor::~PluginProcessor()
@@ -86,7 +94,6 @@ void PluginProcessor::changeProgramName(int index, const juce::String& newName)
 //==============================================================================
 void PluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    juce::ignoreUnused(samplesPerBlock);
     this->sampleRate = sampleRate;
 }
 
@@ -104,13 +111,13 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    if(layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
     #if !JucePlugin_IsSynth
-    if(layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
     #endif
 
@@ -125,33 +132,36 @@ void PluginProcessor::processBlock(
     buffer.clear();
     midiMessages.clear();
 
-    if(auto* playhead = getPlayHead())
+    if (auto* playhead = getPlayHead())
     {
-        if(auto positionInfo = playhead->getPosition())
+        if (auto positionInfo = playhead->getPosition())
         {
-            if(positionInfo->getBpm().hasValue())
+            
+            if (positionInfo->getBpm().hasValue())
             {
-                const double bpm = *positionInfo->getBpm();
-                const auto timeInSamples = *positionInfo->getTimeInSamples();
-                const double samplesPerSixteenthNote = (60.0 / bpm * sampleRate);
+                double speedScale = *speedParameter;
+                const double bpm = *positionInfo->getBpm() * speedScale;
+                int bufferSize = buffer.getNumSamples();
+                const double samplePerPpq = (60 * sampleRate) / bpm;
 
-                for(int sample = 0; sample < buffer.getNumSamples(); ++sample)
+                bool isPlaying = positionInfo->getIsPlaying();
+                double currentPpq = *positionInfo->getPpqPosition() * speedScale;
+                if (isPlaying && !wasPlaying)
                 {
-                    const auto absoluteSample = timeInSamples + sample;
+                    nextQuarterNotePpq = std::ceil(currentPpq);
+                }
+                wasPlaying = isPlaying;
+                
+                double currentSamples = *positionInfo->getTimeInSamples();
+                double endBlock = currentSamples + bufferSize;
+                if ((nextQuarterNotePpq * samplePerPpq) <= endBlock)
+                {
+                    double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
 
-                    if(absoluteSample >= (juce::int64) std::floor(nextEventSampleTime))
-                    {
-                        midiMessages.addEvent(juce::MidiMessage::noteOff(1, 30), sample);
+                    midiMessages.addEvent(juce::MidiMessage::noteOff(1, 30), std::floor(noteOffset));
+                    midiMessages.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), std::floor(noteOffset));
 
-                        midiMessages.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), sample);
-
-                        // if (activeEditor) {
-                        //     lastNoteSamplePos.store(absoluteSample);
-                        //     activeEditor->triggerAsyncUpdate();
-                        // }
-
-                        nextEventSampleTime += samplesPerSixteenthNote;
-                    }
+                    nextQuarterNotePpq += 1.0;
                 }
             }
         }
@@ -166,9 +176,9 @@ bool PluginProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor()
 {
-    auto editor = new PluginEditor(*this);
-    activeEditor = editor;
-    return editor;
+    // auto editor = new PluginEditor(*this);
+    // activeEditor = editor;
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 void PluginProcessor::editorBeingDeleted(juce::AudioProcessorEditor* editor) noexcept
