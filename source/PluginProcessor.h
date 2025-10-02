@@ -6,6 +6,8 @@
     #include "ipps.h"
 #endif
 
+class PluginEditor;
+
 class PluginProcessor : public juce::AudioProcessor
 {
 public:
@@ -20,6 +22,7 @@ public:
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     juce::AudioProcessorEditor* createEditor() override;
+    void editorBeingDeleted(juce::AudioProcessorEditor* editor) noexcept;
     bool hasEditor() const override;
 
     const juce::String getName() const override;
@@ -38,6 +41,12 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+    std::atomic<float> lastNoteSamplePos = 0.0;
+
 private:
+    double sampleRate = 0;
+    double nextEventSampleTime = 0.0;
+    PluginEditor* activeEditor = nullptr;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
