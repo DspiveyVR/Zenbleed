@@ -1,5 +1,5 @@
 # Zenbleed
-
+![logo](https://github.com/CSCI591USCA/Zenbleed/blob/main/assets/images/logo.png)
 ---
 
 ### Building
