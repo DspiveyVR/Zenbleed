@@ -10,15 +10,7 @@ CTestTestfile.cmake
 _deps
 **/.DS_Store
 
-# It's nice to have the Builds folder exist, to remind us where it is
-Builds/*
-!Builds/.gitkeep
-
-# This should never exist
-Install/*
-
-# Running CTest makes a bunch o junk
-Testing
+build/
 
 # IDE config
 .idea
