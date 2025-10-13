@@ -3,6 +3,8 @@ name: Build & Test
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths-ignore:
       - README.md
       - LICENSE
@@ -28,7 +30,6 @@ defaults:
 
 jobs:
   build_and_test:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -43,13 +44,15 @@ jobs:
 #            os: macos-14
 #            pluginval-binary: pluginval.app/Contents/MacOS/pluginval
 #            extra-flags: -G Ninja -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-#          - name: Windows
-#            os: windows-latest
-#            pluginval-binary: ./pluginval.exe
+          - name: Windows
+            os: windows-latest
+            pluginval-binary: ./pluginval.exe
+            extra-flags: -G Ninja
 
     steps:
-#      # Setup MSVC toolchain and developer command prompt (Windows)
-#      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
 
       # Use clang on Linux so we don't introduce a 3rd compiler (Windows and macOS use MSVC and Clang)
 #      - name: Set up Clang
@@ -69,14 +72,18 @@ jobs:
         if: runner.os == 'Linux'
         run: 'sudo /usr/bin/Xvfb $DISPLAY &'
 
-#      - name: Install IPP (Windows)
-#        if: (runner.os == 'Windows')
-#        run: |
-#          nuget install intelipp.static.win-x64 -Version 2022.2.0.575
+      - name: Cache NuGet packages (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/intelipp.static.win-x64.2022.2.0.575
+          key: nuget-ipp-2022.2.0.575
 
-#      - name: Install Ninja (Windows)
-#        if: runner.os == 'Windows'
-#        run: choco install ninja
+      - name: Install Windows dependencies
+        if: runner.os == 'Windows'
+        run: |
+          choco install ninja innosetup
+          nuget install intelipp.static.win-x64 -Version 2022.2.0.575
 
 #      - name: Install macOS Deps
 #        if: ${{ matrix.name == 'macOS' }}
@@ -101,7 +108,7 @@ jobs:
         run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ${{ matrix.extra-flags }} .
 
       - name: Build plugin
-        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --parallel 4
+        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --parallel 2
 
       - name: Read in .env from CMake # see GitHubENV.cmake
         run: |
@@ -183,18 +190,18 @@ jobs:
 #        working-directory: ${{ env.ARTIFACTS_PATH }}
 #        run: 7z a -tzip "${{ env.ARTIFACT_NAME }}.zip" "-xr!lib${{ env.PRODUCT_NAME }}_SharedCode.a" .
 
-#      - name: Generate Installer
-#        if: ${{ matrix.name == 'Windows' }}
-#        run: |
-#          iscc "packaging\installer.iss"
-#          mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
+      - name: Generate Installer
+        if: ${{ matrix.name == 'Windows' }}
+        run: |
+          iscc "packaging\installer.iss"
+          mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
 
-#      - name: Upload Exe (Windows)
-#        if: ${{ matrix.name == 'Windows' }}
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ env.ARTIFACT_NAME }}.exe
-#          path: "${{ env.ARTIFACTS_PATH }}/${{ env.ARTIFACT_NAME }}.exe"
+      - name: Upload Exe (Windows)
+        if: ${{ matrix.name == 'Windows' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: "${{ env.ARTIFACTS_PATH }}/${{ env.ARTIFACT_NAME }}.exe"
 
       - name: Upload Zip (Linux)
         if: ${{ matrix.name == 'Linux' }}
