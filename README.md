@@ -1,6 +1,13 @@
 # Zenbleed
 <img src="assets/images/logo.png" alt="logo" width="300" height="300">
+
 ---
+
+### Features
+Supported platforms: Linux, Windows
+
+### Installation
+Download the artifact for your system from the latest run on the [actions](https://github.com/CSCI591USCA/Zenbleed/actions) tab
 
 ### Building
 Required dependencies (Debian/Ubuntu):
@@ -18,3 +25,6 @@ mkdir build && cd build
 cmake ..
 make # For a faster build, use 'make -j <num_cores>'
 ```
+
+### License
+Licensed under the GNU Affero General Public License v3.0. See [LICENSE](LICENSE) for more information.
