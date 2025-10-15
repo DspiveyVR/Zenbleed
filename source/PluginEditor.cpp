@@ -1,8 +1,6 @@
 #include "PluginEditor.h"
 
-PluginEditor::PluginEditor(PluginProcessor& p)
-    : AudioProcessorEditor(&p), processorRef(p)
-{
+PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), processorRef(p) {
     juce::ignoreUnused(processorRef);
 
     // addAndMakeVisible(inspectButton);
@@ -34,12 +32,10 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     setSize(640, 480);
 }
 
-PluginEditor::~PluginEditor()
-{
+PluginEditor::~PluginEditor() {
 }
 
-void PluginEditor::paint(juce::Graphics& g)
-{
+void PluginEditor::paint(juce::Graphics& g) {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
     auto area = getLocalBounds();
@@ -49,8 +45,7 @@ void PluginEditor::paint(juce::Graphics& g)
     // g.drawText(helloWorld, area.removeFromTop(150), juce::Justification::centred, false);
 }
 
-void PluginEditor::resized()
-{
+void PluginEditor::resized() {
     // layout the positions of your child components here
     auto area = getLocalBounds();
     area.removeFromBottom(50);
