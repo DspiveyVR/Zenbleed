@@ -44,7 +44,7 @@ public:
     std::atomic<float> lastNoteSamplePos = 0.0;
 
 private:
-    int sampleRate = 0;
+    double sampleRate = 0.0;
     bool wasPlaying = false;
     double nextQuarterNotePpq = 0;
     juce::AudioProcessorValueTreeState parameters;
