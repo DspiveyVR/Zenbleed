@@ -8,8 +8,7 @@
 
 class PluginEditor;
 
-class PluginProcessor : public juce::AudioProcessor
-{
+class PluginProcessor final : public juce::AudioProcessor {
 public:
     PluginProcessor();
     ~PluginProcessor() override;

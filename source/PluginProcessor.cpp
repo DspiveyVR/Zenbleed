@@ -23,8 +23,7 @@ PluginProcessor::PluginProcessor()
     speedParameter = parameters.getRawParameterValue("speed");
 }
 
-PluginProcessor::~PluginProcessor() {
-}
+PluginProcessor::~PluginProcessor() = default;
 
 //==============================================================================
 const juce::String PluginProcessor::getName() const {
@@ -73,7 +72,7 @@ const juce::String PluginProcessor::getProgramName(int index) {
     return {};
 }
 
-void PluginProcessor::changeProgramName(int index, const juce::String&newName) {
+void PluginProcessor::changeProgramName(int index, const juce::String& newName) {
     juce::ignoreUnused(index, newName);
 }
 
@@ -87,7 +86,7 @@ void PluginProcessor::releaseResources() {
     // spare memory, etc.
 }
 
-bool PluginProcessor::isBusesLayoutSupported(const BusesLayout&layouts) const {
+bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
 #if JucePlugin_IsMidiEffect
     juce::ignoreUnused(layouts);
     return true;
@@ -109,50 +108,48 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout&layouts) const {
 }
 
 void PluginProcessor::processBlock(
-    juce::AudioBuffer<float>&buffer,
-    juce::MidiBuffer&midiMessages
+    juce::AudioBuffer<float>& buffer,
+    juce::MidiBuffer& midiMessages
 ) {
     buffer.clear();
     midiMessages.clear();
 
-    if (const auto* playhead = getPlayHead()) {
-        if (auto positionInfo = playhead->getPosition()) {
-            if (positionInfo->getBpm().hasValue()) {
-                const double speedScale = *speedParameter;
-                const double currentPpq = *positionInfo->getPpqPosition();
+    const juce::AudioPlayHead* playhead = getPlayHead();
+    if (!playhead) return;
 
-                const double bpm = *positionInfo->getBpm();
-                const int bufferSize = buffer.getNumSamples();
-                const double samplePerPpq = (60 * sampleRate) / bpm;
+    const auto positionInfo = playhead->getPosition();
+    if (!positionInfo || !positionInfo->getBpm()) return;
 
-                // Resets the next note counter when playback starts so that it's not way off in the distance.
-                const bool isPlaying = positionInfo->getIsPlaying();
-                if (isPlaying && !wasPlaying) {
-                    // Ceil ensures that the first note lies on a quarter note boundary.
-                    // The integer part of ppq represents quarter notes.
-                    nextQuarterNotePpq = std::ceil(currentPpq);
-                }
-                wasPlaying = isPlaying;
+    const double currentPpq = *positionInfo->getPpqPosition();
 
-                const double currentSamples = static_cast<double>(*positionInfo->getTimeInSamples());
+    // Resets the next note counter when playback starts so that it's not way off in the distance.
+    const bool isPlaying = positionInfo->getIsPlaying();
+    if (isPlaying && !wasPlaying) {
+        // Ceil ensures that the first note lies on a quarter note boundary.
+        // The integer part of ppq represents quarter notes.
+        nextQuarterNotePpq = ceil(currentPpq);
+    }
+    wasPlaying = isPlaying;
 
-                if (const double endBlock = currentSamples + bufferSize;
-                    (nextQuarterNotePpq * samplePerPpq) <= endBlock) // If next note is within the current block.
-                {
-                    // Sample position of the note relative to the start of the current block.
-                    const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
+    const double currentSamples = static_cast<double>(*positionInfo->getTimeInSamples());
+    const double bpm = *positionInfo->getBpm();
+    const double samplePerPpq = (60 * sampleRate) / bpm;
+    const int bufferSize = buffer.getNumSamples();
+    // If next note is within the current block.
 
-                    // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
-                    midiMessages.addEvent(juce::MidiMessage::noteOff(1, 30), std::floor(noteOffset));
-                    midiMessages.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), std::floor(noteOffset));
+    if ((nextQuarterNotePpq * samplePerPpq) <= currentSamples + bufferSize) {
+        // Sample position of the note relative to the start of the current block.
+        const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
+        const double speedScale = *speedParameter;
 
-                    // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
-                    // note relative to the baseline.
-                    // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
-                    nextQuarterNotePpq += (1.0 / speedScale);
-                }
-            }
-        }
+        // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
+        midiMessages.addEvent(juce::MidiMessage::noteOff(1, 30), floor(noteOffset));
+        midiMessages.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), floor(noteOffset));
+
+        // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
+        // note relative to the baseline.
+        // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
+        nextQuarterNotePpq += (1.0 / speedScale);
     }
 }
 
@@ -174,7 +171,7 @@ void PluginProcessor::editorBeingDeleted(juce::AudioProcessorEditor* editor) noe
 }
 
 //==============================================================================
-void PluginProcessor::getStateInformation(juce::MemoryBlock&destData) {
+void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
