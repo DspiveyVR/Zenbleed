@@ -1,86 +1,71 @@
-# https://forum.juce.com/t/automatic-juce-like-code-formatting-with-clang-format/31624/20
 ---
+Language: Cpp
+BasedOnStyle: LLVM
 AccessModifierOffset: -4
-AlignAfterOpenBracket: DontAlign
+AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: Left
-AlignOperands: Align
+AlignOperands: true
 AlignTrailingComments: false
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: Never
-AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLambdasOnASingleLine: All
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterDefinitionReturnType: None
-AlwaysBreakAfterReturnType: None
-AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
 BinPackParameters: false
-BreakAfterJavaFieldAnnotations: false
+BraceWrapping: 
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: true
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
-BraceWrapping: # Allman except for lambdas
-  AfterClass: true
-  AfterCaseLabel: true
-  AfterFunction: true
-  AfterNamespace: true
-  AfterStruct: true
-  BeforeElse: true
-  AfterControlStatement: Always
-  BeforeLambdaBody: false
-BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
 BreakStringLiterals: false
-ColumnLimit: 0
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ConstructorInitializerIndentWidth: 4
-ContinuationIndentWidth: 4
+ColumnLimit: 120
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ContinuationIndentWidth: 8
 Cpp11BracedListStyle: false
-DerivePointerAlignment: false
-DisableFormat: false
-ExperimentalAutoDetectBinPacking: false
-IndentCaseLabels: true
-IndentPPDirectives: BeforeHash
-IndentWidth: 4
-IndentWrappedFunctionNames: true
-KeepEmptyLinesAtTheStartOfBlocks: false
-Language: Cpp
-MaxEmptyLinesToKeep: 1
 FixNamespaceComments: false
+IncludeCategories: 
+  - Regex: '^<.*'
+    Priority: 1
+  - Regex: '^".*'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+IndentCaseLabels: true
+IndentWidth: 4
+InsertNewlineAtEOF: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MacroBlockBegin: ''
+MacroBlockEnd: ''
 NamespaceIndentation: All
 PointerAlignment: Left
 ReflowComments: false
 SortIncludes: true
-SpaceAfterCStyleCast: true
-SpaceAfterLogicalNot: false
-SpaceBeforeAssignmentOperators: true
+SpaceAfterTemplateKeyword: false
 SpaceBeforeCpp11BracedList: true
-SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: false
 SpaceInEmptyParentheses: false
-SpaceBeforeInheritanceColon: true
 SpacesInAngles: false
+SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
-SpacesInContainerLiterals: true
 SpacesInParentheses: false
-SpacesInSquareBrackets: false
-Standard: "c++20"
+Standard: c++20
 TabWidth: 4
-UseTab: Never
 UseCRLF: false
----
-Language: ObjC
-BasedOnStyle: Chromium
-BreakBeforeBraces: Allman
-ColumnLimit: 0
-IndentWidth: 4
-KeepEmptyLinesAtTheStartOfBlocks: false
-ObjCSpaceAfterProperty: true
-ObjCSpaceBeforeProtocolList: true
-PointerAlignment: Left
-SpacesBeforeTrailingComments: 1
-TabWidth: 4
-UseTab: Never
+...
