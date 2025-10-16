@@ -44,11 +44,11 @@ public:
 
 private:
     double sampleRate = 0.0;
-    bool wasPlaying = false;
     double nextQuarterNotePpq = 0;
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* speedParameter = nullptr;
-    float lastSpeed = 1.0;
+    int lastNoteNum = 0;
+
     PluginEditor* activeEditor = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)

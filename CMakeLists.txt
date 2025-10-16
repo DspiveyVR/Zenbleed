@@ -64,6 +64,7 @@ add_subdirectory (modules/melatonin_inspector)
 
 # See `docs/CMake API.md` in the JUCE repo for all config options
 juce_add_plugin("${PROJECT_NAME}"
+    NEEDS_MIDI_INPUT TRUE
     NEEDS_MIDI_OUTPUT TRUE
     IS_MIDI_EFFECT TRUE
 
