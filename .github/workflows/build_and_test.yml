@@ -210,7 +210,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: |
             ${{ env.ARTIFACTS_PATH }}
-            !lib${{ env.PRODUCT_NAME }}_SharedCode.a
+            !${{ env.ARTIFACTS_PATH }}/lib${{ env.PRODUCT_NAME }}_SharedCode.a
 
 #      - name: Upload pkg (macOS)
 #        if: ${{ matrix.name == 'macOS' }}
