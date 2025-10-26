@@ -134,11 +134,23 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
         lastNoteNum = firstMessage.getNoteNumber();
 
         if (firstMessage.isNoteOn()) {
-            newBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), firstEventTime);
+            newBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), firstEventTime);
             nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
         } else {
-            newBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), firstEventTime);
+            newBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), firstEventTime);
             nextQuarterNotePpq = 0.0;
+
+            // If there are two notes immediately next to each other.
+            juce::MidiMessage secondMessage;
+            int secondEventTime = 0; // The sample offset (relative to buffer start)
+            bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
+            lastNoteNum = secondMessage.getNoteNumber();
+            if (success2 && secondMessage.isNoteOn()) {
+                const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
+                const double samplePerPpq = (60 * sampleRate) / bpm;
+                newBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), secondEventTime);
+                nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
+            }
         }
     }
 
@@ -148,8 +160,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
         const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
 
         // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
-        newBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), floor(noteOffset));
-        newBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), floor(noteOffset));
+        newBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), floor(noteOffset));
+        newBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), floor(noteOffset));
 
         // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
         // note relative to the baseline.
