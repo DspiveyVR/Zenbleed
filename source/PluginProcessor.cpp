@@ -1,4 +1,6 @@
 #include "PluginProcessor.h"
+
+#include "MidiOscillator.h"
 #include "PluginEditor.h"
 using namespace std;
 
@@ -21,9 +23,10 @@ PluginProcessor::PluginProcessor() :
                     std::make_unique<juce::AudioParameterFloat>("speed", "Speed", 0.0f, 4.0f, 1.0f),
             }) {
     speedParameter = parameters.getRawParameterValue("speed");
+    midiOscillator = new MidiOscillator();
 }
 
-PluginProcessor::~PluginProcessor() = default;
+PluginProcessor::~PluginProcessor() { delete midiOscillator; }
 
 //==============================================================================
 const juce::String PluginProcessor::getName() const { return JucePlugin_Name; }
@@ -71,7 +74,9 @@ const juce::String PluginProcessor::getProgramName(int index) {
 void PluginProcessor::changeProgramName(int index, const juce::String& newName) { juce::ignoreUnused(index, newName); }
 
 //==============================================================================
-void PluginProcessor::prepareToPlay(double sampleRate, int) { this->sampleRate = sampleRate; }
+void PluginProcessor::prepareToPlay(const double sampleRate, int) {
+    if (midiOscillator) midiOscillator->setSampleRate(sampleRate);
+}
 
 void PluginProcessor::releaseResources() {
     // When playback stops, you can use this as an opportunity to free up any
@@ -104,71 +109,14 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     // midiMessages.clear();
 
     const juce::AudioPlayHead* playhead = getPlayHead();
-    if (!playhead)
-        return;
+    if (!playhead) return;
 
-    const auto positionInfo = playhead->getPosition();
-    if (!positionInfo || !positionInfo->getBpm())
-        return;
+    const juce::AudioPlayHead::PositionInfo *positionInfo = &*(playhead->getPosition());
+    if (!positionInfo || !positionInfo->getBpm()) return;
 
-    const double currentPpq = *positionInfo->getPpqPosition();
-    juce::MidiMessage firstMessage;
-    int firstEventTime = 0; // The sample offset (relative to buffer start)
-
-    juce::MidiBuffer::Iterator iterator(midiMessages);
-    // Call getNextEvent() - this returns true if an event was found
-    bool success = iterator.getNextEvent(firstMessage, firstEventTime);
-
-    const double currentSamples = static_cast<double>(*positionInfo->getTimeInSamples());
-    const double bpm = *positionInfo->getBpm();
-    const double samplePerPpq = (60 * sampleRate) / bpm;
-    const int bufferSize = buffer.getNumSamples();
-    const double speedScale = *speedParameter;
     juce::MidiBuffer newBuffer;
-    if (!positionInfo->getIsPlaying()) {
-        newBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), currentSamples);
-        nextQuarterNotePpq = 0.0;
-    }
 
-    if (success) {
-        lastNoteNum = firstMessage.getNoteNumber();
-
-        if (firstMessage.isNoteOn()) {
-            newBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), firstEventTime);
-            nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
-        } else {
-            newBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), firstEventTime);
-            nextQuarterNotePpq = 0.0;
-
-            // If there are two notes immediately next to each other.
-            juce::MidiMessage secondMessage;
-            int secondEventTime = 0; // The sample offset (relative to buffer start)
-            bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
-            lastNoteNum = secondMessage.getNoteNumber();
-            if (success2 && secondMessage.isNoteOn()) {
-                const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
-                const double samplePerPpq = (60 * sampleRate) / bpm;
-                newBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), secondEventTime);
-                nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
-            }
-        }
-    }
-
-    // If next note is within the current block.
-    if ((nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize) && (nextQuarterNotePpq != 0.0)) {
-        // Sample position of the note relative to the start of the current block.
-        const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
-
-        // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
-        newBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), floor(noteOffset));
-        newBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), floor(noteOffset));
-
-        // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
-        // note relative to the baseline.
-        // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
-        nextQuarterNotePpq += (1.0 / speedScale);
-    }
-
+    midiOscillator->processBlock(buffer, newBuffer, *speedParameter, positionInfo);
     midiMessages.swapWith(newBuffer);
 }
 

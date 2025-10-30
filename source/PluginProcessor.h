@@ -6,6 +6,8 @@
     #include "ipps.h"
 #endif
 
+#include "MidiOscillator.h"
+
 class PluginEditor;
 
 class PluginProcessor final : public juce::AudioProcessor {
@@ -43,13 +45,12 @@ public:
     std::atomic<float> lastNoteSamplePos = 0.0;
 
 private:
-    double sampleRate = 0.0;
-    double nextQuarterNotePpq = 0;
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* speedParameter = nullptr;
-    int lastNoteNum = 0;
 
     PluginEditor* activeEditor = nullptr;
+
+    MidiOscillator* midiOscillator;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
