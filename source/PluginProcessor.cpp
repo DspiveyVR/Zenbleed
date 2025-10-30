@@ -114,10 +114,10 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     const juce::AudioPlayHead::PositionInfo *positionInfo = &*(playhead->getPosition());
     if (!positionInfo || !positionInfo->getBpm()) return;
 
-    juce::MidiBuffer newBuffer;
+    juce::MidiBuffer outputBuffer;
 
-    midiOscillator->processBlock(buffer, newBuffer, *speedParameter, positionInfo);
-    midiMessages.swapWith(newBuffer);
+    midiOscillator->processBlock(buffer.getNumSamples(), midiMessages, outputBuffer, *speedParameter, positionInfo);
+    midiMessages.swapWith(outputBuffer);
 }
 
 //==============================================================================

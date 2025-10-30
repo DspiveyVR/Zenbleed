@@ -8,9 +8,10 @@ public:
     ~MidiOscillator();
 
     void processBlock(
-            const juce::AudioBuffer<float>& audioBuffer,
-            juce::MidiBuffer& newBuffer,
-            float speedScale,
+            const int bufferSize,
+            juce::MidiBuffer& inputBuffer,
+            juce::MidiBuffer& outputBuffer,
+            const float speedScale,
             const juce::AudioPlayHead::PositionInfo* positionInfo);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
