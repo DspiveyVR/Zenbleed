@@ -56,6 +56,7 @@ cd Zenbleed
 mkdir build && cd build
 cmake ..
 make -j $(nproc)  # Parallel build using all available cores
+make install  # Install the compiled .vst in the .vst3 directory
 ```
 
 ### Windows
@@ -68,7 +69,7 @@ Windows build instructions coming soon.
 
 - Ensure all prerequisites are installed
 - Update CMake to version 3.22 or later
-- Clear the build directory and reconfigure: `rm -rf build && mkdir build && cd build && cmake .. && make`
+- Clear the build directory and reconfigure: `rm -rf build && mkdir build && cd build && cmake .. && make && make install`
 
 ## License
 
