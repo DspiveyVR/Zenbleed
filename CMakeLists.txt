@@ -55,6 +55,7 @@ juce_add_plugin("${PROJECT_NAME}"
     NEEDS_MIDI_INPUT TRUE
     NEEDS_MIDI_OUTPUT TRUE
     IS_MIDI_EFFECT TRUE
+    IS_SYNTH TRUE
 
     # Icons for the standalone app
     ICON_BIG "${CMAKE_CURRENT_SOURCE_DIR}/packaging/icon.png"
@@ -120,6 +121,8 @@ target_link_libraries(SharedCode
     juce_gui_basics
     juce_gui_extra
     juce_events
+    juce_audio_formats
+    juce_audio_devices
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags)

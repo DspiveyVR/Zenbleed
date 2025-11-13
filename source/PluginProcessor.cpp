@@ -2,31 +2,36 @@
 
 #include "MidiOscillator.h"
 #include "PluginEditor.h"
-using namespace std;
 
 //==============================================================================
 PluginProcessor::PluginProcessor() :
-    AudioProcessor(
-            BusesProperties()
-#if !JucePlugin_IsMidiEffect
-#if !JucePlugin_IsSynth
-                    .withInput("Input", juce::AudioChannelSet::stereo(), true)
-#endif
-                    .withOutput("Output", juce::AudioChannelSet::stereo(), true)
-#endif
-                    ),
+    AudioProcessor(BusesProperties().withOutput("Output", juce::AudioChannelSet::stereo(), true)),
     parameters(
             *this,
             nullptr,
             juce::Identifier("ZenParameters"),
             {
-                    std::make_unique<juce::AudioParameterFloat>("speed", "Speed", 0.0f, 4.0f, 1.0f),
-            }) {
+                    std::make_unique<juce::AudioParameterFloat>(
+                            "speed",
+                            "Speed",
+                            juce::NormalisableRange<float> { 0.1f, 256.0f, 0.01, 0.7 },
+                            1.0f,
+                            juce::AudioParameterFloatAttributes {}.withCategory(
+                                    juce::AudioParameterFloat::genericParameter)),
+                    std::make_unique<juce::AudioParameterBool>(
+                            "isMidiMode",
+                            "Midi mode",
+                            false,
+                            juce::AudioParameterBoolAttributes {}.withCategory(
+                                    juce::AudioParameterBool::genericParameter)),
+            }),
+    sampleOscillator(std::make_unique<SampleOscillator>(parameters)),
+    midiOscillator(std::make_unique<MidiOscillator>()) {
     speedParameter = parameters.getRawParameterValue("speed");
-    midiOscillator = new MidiOscillator();
+    isMidiModeParameter = parameters.getRawParameterValue("isMidiMode");
 }
 
-PluginProcessor::~PluginProcessor() { delete midiOscillator; }
+PluginProcessor::~PluginProcessor() {}
 
 //==============================================================================
 const juce::String PluginProcessor::getName() const { return JucePlugin_Name; }
@@ -75,7 +80,8 @@ void PluginProcessor::changeProgramName(int index, const juce::String& newName) 
 
 //==============================================================================
 void PluginProcessor::prepareToPlay(const double sampleRate, int) {
-    if (midiOscillator) midiOscillator->setSampleRate(sampleRate);
+    sampleOscillator.get()->setSampleRate(sampleRate);
+    midiOscillator.get()->setSampleRate(sampleRate);
 }
 
 void PluginProcessor::releaseResources() {
@@ -109,15 +115,22 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     // midiMessages.clear();
 
     const juce::AudioPlayHead* playhead = getPlayHead();
-    if (!playhead) return;
+    if (!playhead)
+        return;
 
-    const juce::AudioPlayHead::PositionInfo *positionInfo = &*(playhead->getPosition());
-    if (!positionInfo || !positionInfo->getBpm()) return;
+    const juce::AudioPlayHead::PositionInfo* positionInfo = &*(playhead->getPosition());
+    if (!positionInfo || !positionInfo->getBpm())
+        return;
 
-    juce::MidiBuffer outputBuffer;
+    bool isMidiMode = *isMidiModeParameter;
+    if (isMidiMode) {
+        juce::MidiBuffer outputBuffer;
 
-    midiOscillator->processBlock(buffer.getNumSamples(), midiMessages, outputBuffer, *speedParameter, positionInfo);
-    midiMessages.swapWith(outputBuffer);
+        midiOscillator->processBlock(buffer.getNumSamples(), midiMessages, outputBuffer, *speedParameter, positionInfo);
+        midiMessages.swapWith(outputBuffer);
+    } else {
+        sampleOscillator.get()->processBlock(midiMessages, buffer, *speedParameter, positionInfo);
+    }
 }
 
 //==============================================================================
@@ -126,15 +139,14 @@ bool PluginProcessor::hasEditor() const {
 }
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor() {
-    // auto editor = new PluginEditor(*this);
-    // activeEditor = editor;
-    return new juce::GenericAudioProcessorEditor(*this);
+    auto editor = new PluginEditor(*this);
+    return editor;
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 void PluginProcessor::editorBeingDeleted(juce::AudioProcessorEditor* editor) noexcept {
     // This function is called by the framework when the host closes the GUI.
     juce::ignoreUnused(editor);
-    activeEditor = nullptr; // <--- THIS IS THE LINE THAT CLEARS THE REFERENCE
 }
 
 //==============================================================================
@@ -142,13 +154,25 @@ void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused(destData);
+    auto state = parameters.copyState();
+    const auto* path = parameters.state.getPropertyPointer("SamplePath");
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void PluginProcessor::setStateInformation(const void* data, int sizeInBytes) {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused(data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(parameters.state.getType()))
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
+
+    const auto* path = parameters.state.getPropertyPointer("SamplePath");
+    if (path) {
+        juce::File sample(*path);
+        sampleOscillator.get()->loadSampleFromFile(sample);
+    }
 }
 
 //==============================================================================

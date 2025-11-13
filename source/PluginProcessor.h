@@ -1,9 +1,10 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "SampleOscillator.h"
 
 #if (MSVC)
-    #include "ipps.h"
+#include "ipps.h"
 #endif
 
 #include "MidiOscillator.h"
@@ -14,6 +15,7 @@ class PluginProcessor final : public juce::AudioProcessor {
 public:
     PluginProcessor();
     ~PluginProcessor() override;
+
 
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -44,14 +46,14 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     std::atomic<float> lastNoteSamplePos = 0.0;
+    std::unique_ptr<SampleOscillator> sampleOscillator;
 
 private:
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* speedParameter = nullptr;
+    std::atomic<float>* isMidiModeParameter = nullptr;
 
-    PluginEditor* activeEditor = nullptr;
-
-    MidiOscillator* midiOscillator;
+    std::unique_ptr<MidiOscillator> midiOscillator;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
