@@ -99,7 +99,7 @@ target_compile_definitions(SharedCode
     JUCE_VST3_CAN_REPLACE_VST2=0
 
     # Uncomment if you are paying for a an Indie/Pro license or releasing under GPLv3
-    JUCE_DISPLAY_SPLASH_SCREEN=0
+    # JUCE_DISPLAY_SPLASH_SCREEN=0
     CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}"
     VERSION="${CURRENT_VERSION}"
     PRODUCT_NAME_WITHOUT_VERSION="${PRODUCT_NAME}"

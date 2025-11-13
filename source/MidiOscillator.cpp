@@ -1,4 +1,5 @@
 #include "MidiOscillator.h"
+#include "Utilities.h"
 
 MidiOscillator::MidiOscillator() = default;
 MidiOscillator::~MidiOscillator() = default;
@@ -43,16 +44,14 @@ void MidiOscillator::processBlock(
             const bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
             lastNoteNum = secondMessage.getNoteNumber();
             if (success2 && secondMessage.isNoteOn()) {
-                const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
-                const double samplePerPpq = (60 * sampleRate) / bpm;
                 outputBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), secondEventTime);
                 nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
             }
         }
     }
 
-    // If next note is within the current block.
-    if ((nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize) && (nextQuarterNotePpq != 0.0)) {
+    // While next note is within the current block.
+    while ((nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize) && !compareFloat(nextQuarterNotePpq, 0.0)) {
         // Sample position of the note relative to the start of the current block.
         const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
 
