@@ -10,7 +10,8 @@ Zenbleed is a cross-platform midi generator plugin built with modern C++ and the
 
 ## Features
 
-- **Cross-Platform Support**: Linux and Windows
+- **Cross-Platform Support**: Linux (min glibc 2.35) and Windows 10/11
+- **Sample Mode**
 
 ## Installation
 
