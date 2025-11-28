@@ -41,6 +41,16 @@ sudo apt-get update
 sudo apt-get install build-essential libasound2-dev libjack-jackd2-dev ladspa-sdk libcurl4-openssl-dev libfreetype-dev libfontconfig1-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev libwebkit2gtk-4.1-dev libglu1-mesa-dev mesa-common-dev
 ```
 
+### Linux (Fedora)
+
+#### Installing Dependencies
+
+Install required dependencies:
+
+```bash
+sudo dnf install make automake gcc gcc-c++ kernel-devel alsa-lib-devel pipewire-jack-audio-connection-kit-devel ladspa-devel libcurl-devel freetype-devel fontconfig-devel libX11-devel libXcomposite-devel libXcursor libXext-devel libXinerama-devel libXrandr-devel libXrender-devel webkit2gtk4.1-devel mesa-libGLU-devel mesa-libGL-devel mesa-demos
+```
+
 Verify your CMake version:
 
 ```bash
