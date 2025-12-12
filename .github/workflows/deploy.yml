@@ -34,7 +34,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y doxygen graphviz
-          doxygen ./build/Doxyfile
+          doxygen build/Doxyfile
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
