@@ -1,0 +1,4 @@
+#projectlogo img {
+    max-height: calc(var(--title-font-size) * 4);
+    scale: 1.5;
+}

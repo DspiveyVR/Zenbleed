@@ -21,7 +21,7 @@ Pre-built artifacts are available for download from
 the [GitHub Actions](https://github.com/CSCI591USCA/Zenbleed/actions) tab. Select the artifact matching your operating
 system.
 
-## Building from Source
+## Building From Source
 
 ### General Prerequisites
 

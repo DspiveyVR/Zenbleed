@@ -1,0 +1,70 @@
+\hypertarget{class_midi_oscillator}{}\doxysection{Midi\+Oscillator Class Reference}
+\label{class_midi_oscillator}\index{MidiOscillator@{MidiOscillator}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_midi_oscillator_ac674d169aec293d58508b885886c59f9}{process\+Block}} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info)
+\begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_midi_oscillator_a69d2af103400ce6164f1ab81f32af47d}\label{class_midi_oscillator_a69d2af103400ce6164f1ab81f32af47d}} 
+void {\bfseries set\+Sample\+Rate} (const double sr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_midi_oscillator_a96c37788ccd52927d6d41e6d2c2f1c93}\label{class_midi_oscillator_a96c37788ccd52927d6d41e6d2c2f1c93}} 
+double {\bfseries sample\+Rate} = 0
+\item 
+\mbox{\Hypertarget{class_midi_oscillator_ab6f3b44d9ff42c28c6515d3c38ac8ed3}\label{class_midi_oscillator_ab6f3b44d9ff42c28c6515d3c38ac8ed3}} 
+bool {\bfseries was\+Playing} = false
+\item 
+double \mbox{\hyperlink{class_midi_oscillator_a870190c0fb34968188eb3f34afbcacc5}{next\+Quarter\+Note\+Ppq}} = 0
+\item 
+int \mbox{\hyperlink{class_midi_oscillator_a6762f523a973504fe0a50ef285e2587b}{last\+Note\+Num}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_midi_oscillator_ac674d169aec293d58508b885886c59f9}\label{class_midi_oscillator_ac674d169aec293d58508b885886c59f9}} 
+\index{MidiOscillator@{MidiOscillator}!processBlock@{processBlock}}
+\index{processBlock@{processBlock}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{processBlock()}{processBlock()}}
+{\footnotesize\ttfamily void Midi\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{const int}]{buffer\+Size,  }\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Midi\+Buffer \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info }\end{DoxyParamCaption})}
+
+
+
+Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. 
+
+Creates a new MIDI buffer based on the input buffer with notes played at a speed dictated by the bpm $\ast$ speed\+Scale. 
+\begin{DoxyParams}{Parameters}
+{\em buffer\+Size} & \\
+\hline
+{\em input\+Buffer} & Input MIDI notes. \\
+\hline
+{\em output\+Buffer} & Modified MIDI buffer. \\
+\hline
+{\em speed\+Scale} & Current value of the speed parameter. \\
+\hline
+{\em position\+Info} & Position info given by the host DAW. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_midi_oscillator_a6762f523a973504fe0a50ef285e2587b}\label{class_midi_oscillator_a6762f523a973504fe0a50ef285e2587b}} 
+\index{MidiOscillator@{MidiOscillator}!lastNoteNum@{lastNoteNum}}
+\index{lastNoteNum@{lastNoteNum}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{lastNoteNum}{lastNoteNum}}
+{\footnotesize\ttfamily int Midi\+Oscillator\+::last\+Note\+Num = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+The number of the last musical note that was played. \mbox{\Hypertarget{class_midi_oscillator_a870190c0fb34968188eb3f34afbcacc5}\label{class_midi_oscillator_a870190c0fb34968188eb3f34afbcacc5}} 
+\index{MidiOscillator@{MidiOscillator}!nextQuarterNotePpq@{nextQuarterNotePpq}}
+\index{nextQuarterNotePpq@{nextQuarterNotePpq}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{nextQuarterNotePpq}{nextQuarterNotePpq}}
+{\footnotesize\ttfamily double Midi\+Oscillator\+::next\+Quarter\+Note\+Ppq = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+The ppq position of the next note to be played. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Midi\+Oscillator.\+h\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Midi\+Oscillator.\+cpp\end{DoxyCompactItemize}

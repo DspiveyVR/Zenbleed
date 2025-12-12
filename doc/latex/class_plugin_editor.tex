@@ -1,0 +1,59 @@
+\hypertarget{class_plugin_editor}{}\doxysection{Plugin\+Editor Class Reference}
+\label{class_plugin_editor}\index{PluginEditor@{PluginEditor}}
+
+
+Inherits juce\+::\+Generic\+Audio\+Processor\+Editor.
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a7809bdd6cc3bb7e1860c74fe801111a2}\label{class_plugin_editor_a7809bdd6cc3bb7e1860c74fe801111a2}} 
+{\bfseries Plugin\+Editor} (\mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}} \&)
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a3047f83f35e759dc79e28a73a6663817}\label{class_plugin_editor_a3047f83f35e759dc79e28a73a6663817}} 
+void {\bfseries paint} (juce\+::\+Graphics \&) override
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a493e50b4d28e040c24b26829459c2cf3}\label{class_plugin_editor_a493e50b4d28e040c24b26829459c2cf3}} 
+void {\bfseries resized} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a6fefa572759fa15831efe23f99348858}\label{class_plugin_editor_a6fefa572759fa15831efe23f99348858}} 
+void {\bfseries open\+Button\+Clicked} ()
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a562647c819ba9f9e769f01bab5231fa1}\label{class_plugin_editor_a562647c819ba9f9e769f01bab5231fa1}} 
+\mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}} \& {\bfseries get\+Processor} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_plugin_editor_ae56a6e43d134ef927fdd90aea77cbb75}\label{class_plugin_editor_ae56a6e43d134ef927fdd90aea77cbb75}} 
+\mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}} \& {\bfseries processor\+Ref}
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a5734177cd6cc0710459f52c093455abe}\label{class_plugin_editor_a5734177cd6cc0710459f52c093455abe}} 
+std\+::unique\+\_\+ptr$<$ melatonin\+::\+Inspector $>$ {\bfseries inspector}
+\item 
+\mbox{\Hypertarget{class_plugin_editor_a5a91c55387cef8910ed2abb8f994729b}\label{class_plugin_editor_a5a91c55387cef8910ed2abb8f994729b}} 
+juce\+::\+Text\+Button {\bfseries inspect\+Button} \{ \char`\"{}Inspect the UI\char`\"{} \}
+\item 
+juce\+::\+Text\+Button \mbox{\hyperlink{class_plugin_editor_a83a6ef2f49a13e4451f2e6c30a339f68}{open\+Button}} \{ \char`\"{}Open\char`\"{} \}
+\item 
+\mbox{\Hypertarget{class_plugin_editor_afcc98765bdd81cf65172b52c142ddd8e}\label{class_plugin_editor_afcc98765bdd81cf65172b52c142ddd8e}} 
+std\+::unique\+\_\+ptr$<$ juce\+::\+File\+Chooser $>$ {\bfseries chooser}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_plugin_editor_a83a6ef2f49a13e4451f2e6c30a339f68}\label{class_plugin_editor_a83a6ef2f49a13e4451f2e6c30a339f68}} 
+\index{PluginEditor@{PluginEditor}!openButton@{openButton}}
+\index{openButton@{openButton}!PluginEditor@{PluginEditor}}
+\doxysubsubsection{\texorpdfstring{openButton}{openButton}}
+{\footnotesize\ttfamily juce\+::\+Text\+Button Plugin\+Editor\+::open\+Button \{ \char`\"{}Open\char`\"{} \}\hspace{0.3cm}{\ttfamily [private]}}
+
+Opens the file explorer to allow the user to select an audio sample. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Plugin\+Editor.\+h\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Plugin\+Editor.\+cpp\end{DoxyCompactItemize}

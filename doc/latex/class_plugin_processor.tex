@@ -1,0 +1,134 @@
+\hypertarget{class_plugin_processor}{}\doxysection{Plugin\+Processor Class Reference}
+\label{class_plugin_processor}\index{PluginProcessor@{PluginProcessor}}
+
+
+Inherits juce\+::\+Audio\+Processor.
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_plugin_processor_a6245933f65910a173d2e549cfb102996}{Plugin\+Processor}} ()
+\begin{DoxyCompactList}\small\item\em Construct a new Plugin Processor object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_plugin_processor_a75a393de74405e4c90145e183291d423}\label{class_plugin_processor_a75a393de74405e4c90145e183291d423}} 
+void {\bfseries prepare\+To\+Play} (double sample\+Rate, int samples\+Per\+Block) override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_aaa4eacf13476c61f7c2db14c7f4c206b}\label{class_plugin_processor_aaa4eacf13476c61f7c2db14c7f4c206b}} 
+void {\bfseries release\+Resources} () override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_af1d8bb538827dfc5992f7c26cabe686a}\label{class_plugin_processor_af1d8bb538827dfc5992f7c26cabe686a}} 
+bool {\bfseries is\+Buses\+Layout\+Supported} (const Buses\+Layout \&layouts) const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a3e68455546250567a9888382c296d5eb}\label{class_plugin_processor_a3e68455546250567a9888382c296d5eb}} 
+void {\bfseries process\+Block} (juce\+::\+Audio\+Buffer$<$ float $>$ \&, juce\+::\+Midi\+Buffer \&) override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a31a03ee9e92d88620931fd5002c9ceb1}\label{class_plugin_processor_a31a03ee9e92d88620931fd5002c9ceb1}} 
+juce\+::\+Audio\+Processor\+Editor $\ast$ {\bfseries create\+Editor} () override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a0bd175e75e62e8d881f1c614ef56b90c}\label{class_plugin_processor_a0bd175e75e62e8d881f1c614ef56b90c}} 
+void {\bfseries editor\+Being\+Deleted} (juce\+::\+Audio\+Processor\+Editor $\ast$editor) noexcept
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a6576de24cd08675b528166834b4f932e}\label{class_plugin_processor_a6576de24cd08675b528166834b4f932e}} 
+bool {\bfseries has\+Editor} () const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a08847913a957f111a4344528bb74529f}\label{class_plugin_processor_a08847913a957f111a4344528bb74529f}} 
+const juce\+::\+String {\bfseries get\+Name} () const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_abc89f595fff65cc7396a0b01543f8edd}\label{class_plugin_processor_abc89f595fff65cc7396a0b01543f8edd}} 
+bool {\bfseries accepts\+Midi} () const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a62580d6c49bf1bce97947f02f43996fd}\label{class_plugin_processor_a62580d6c49bf1bce97947f02f43996fd}} 
+bool {\bfseries produces\+Midi} () const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a4e6064a98f88a789443e8ec534cb0360}\label{class_plugin_processor_a4e6064a98f88a789443e8ec534cb0360}} 
+bool {\bfseries is\+Midi\+Effect} () const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a742de13773835a2f85ec0d090ace962a}\label{class_plugin_processor_a742de13773835a2f85ec0d090ace962a}} 
+double {\bfseries get\+Tail\+Length\+Seconds} () const override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a12c1919430575ae4324ede0e664d336d}\label{class_plugin_processor_a12c1919430575ae4324ede0e664d336d}} 
+int {\bfseries get\+Num\+Programs} () override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_ab6ad95d489945dc00ce82aeba305be14}\label{class_plugin_processor_ab6ad95d489945dc00ce82aeba305be14}} 
+int {\bfseries get\+Current\+Program} () override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a1e7817965ce7efbb680baad519462fb8}\label{class_plugin_processor_a1e7817965ce7efbb680baad519462fb8}} 
+void {\bfseries set\+Current\+Program} (int index) override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a8decafe7728d5fe3b5b5226622500e33}\label{class_plugin_processor_a8decafe7728d5fe3b5b5226622500e33}} 
+const juce\+::\+String {\bfseries get\+Program\+Name} (int index) override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a4a51235c05bd9e450843382fe8e94479}\label{class_plugin_processor_a4a51235c05bd9e450843382fe8e94479}} 
+void {\bfseries change\+Program\+Name} (int index, const juce\+::\+String \&new\+Name) override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a5218056d16be61b3caa06ec35a4e621d}\label{class_plugin_processor_a5218056d16be61b3caa06ec35a4e621d}} 
+void {\bfseries get\+State\+Information} (juce\+::\+Memory\+Block \&dest\+Data) override
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a79debe20f480b7bb7bd6df531bd427be}\label{class_plugin_processor_a79debe20f480b7bb7bd6df531bd427be}} 
+void {\bfseries set\+State\+Information} (const void $\ast$data, int size\+In\+Bytes) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a8c5ca10403cbee7f6735266684491a1f}\label{class_plugin_processor_a8c5ca10403cbee7f6735266684491a1f}} 
+std\+::atomic$<$ float $>$ {\bfseries last\+Note\+Sample\+Pos} = 0.\+0
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}} $>$ \mbox{\hyperlink{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}{sample\+Oscillator}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_plugin_processor_aa7eb2e7d61250cdbdf58e4e66639a030}\label{class_plugin_processor_aa7eb2e7d61250cdbdf58e4e66639a030}} 
+juce\+::\+Audio\+Processor\+Value\+Tree\+State {\bfseries parameters}
+\item 
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_aa75e34b64ae39540435361fec56bda2f}{speed\+Parameter}} = nullptr
+\item 
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a419e382fde6dc6c311aac4639be54a8c}{is\+Midi\+Mode\+Parameter}} = nullptr
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}} $>$ \mbox{\hyperlink{class_plugin_processor_ad442022d248dfc2a1d1e695c6d1f9d86}{midi\+Oscillator}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_plugin_processor_a6245933f65910a173d2e549cfb102996}\label{class_plugin_processor_a6245933f65910a173d2e549cfb102996}} 
+\index{PluginProcessor@{PluginProcessor}!PluginProcessor@{PluginProcessor}}
+\index{PluginProcessor@{PluginProcessor}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{PluginProcessor()}{PluginProcessor()}}
+{\footnotesize\ttfamily Plugin\+Processor\+::\+Plugin\+Processor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Construct a new Plugin Processor object. 
+
+Uses RAII to create \mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}} and \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}} as child objects, which are used to modularize the DSP logic. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_plugin_processor_a419e382fde6dc6c311aac4639be54a8c}\label{class_plugin_processor_a419e382fde6dc6c311aac4639be54a8c}} 
+\index{PluginProcessor@{PluginProcessor}!isMidiModeParameter@{isMidiModeParameter}}
+\index{isMidiModeParameter@{isMidiModeParameter}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{isMidiModeParameter}{isMidiModeParameter}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::is\+Midi\+Mode\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+Midi mode parameter\+: toggles between MIDI mode and sampler mode \mbox{\Hypertarget{class_plugin_processor_ad442022d248dfc2a1d1e695c6d1f9d86}\label{class_plugin_processor_ad442022d248dfc2a1d1e695c6d1f9d86}} 
+\index{PluginProcessor@{PluginProcessor}!midiOscillator@{midiOscillator}}
+\index{midiOscillator@{midiOscillator}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{midiOscillator}{midiOscillator}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}}$>$ Plugin\+Processor\+::midi\+Oscillator\hspace{0.3cm}{\ttfamily [private]}}
+
+Child instance of \mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}} created in the constructor of \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}} \mbox{\Hypertarget{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}\label{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}} 
+\index{PluginProcessor@{PluginProcessor}!sampleOscillator@{sampleOscillator}}
+\index{sampleOscillator@{sampleOscillator}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{sampleOscillator}{sampleOscillator}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}}$>$ Plugin\+Processor\+::sample\+Oscillator}
+
+Child instance of \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}} created in the constructor of \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}} \mbox{\Hypertarget{class_plugin_processor_aa75e34b64ae39540435361fec56bda2f}\label{class_plugin_processor_aa75e34b64ae39540435361fec56bda2f}} 
+\index{PluginProcessor@{PluginProcessor}!speedParameter@{speedParameter}}
+\index{speedParameter@{speedParameter}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{speedParameter}{speedParameter}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::speed\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+Speed parameter\+: acts as a pitch bend 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Plugin\+Processor.\+h\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Plugin\+Processor.\+cpp\end{DoxyCompactItemize}

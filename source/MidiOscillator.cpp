@@ -22,6 +22,7 @@ void MidiOscillator::processBlock(
 
     const auto currentSamples = static_cast<double>(*positionInfo->getTimeInSamples());
     const double bpm = *positionInfo->getBpm();
+    // 60 seconds cancels out the minutes unit in bpm.  What's left is samples over beats, where a "beat" is basically a quarter note.
     const double samplePerPpq = (60 * sampleRate) / bpm;
     if (!positionInfo->getIsPlaying()) {
         outputBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), currentSamples);
@@ -33,6 +34,13 @@ void MidiOscillator::processBlock(
 
         if (firstMessage.isNoteOn()) {
             outputBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), firstEventTime);
+            /*
+                First event time is relative to the start of the buffer so it must be added to current 
+                samples in order to get its absolute position.  Both of these are in units of samples 
+                so they must be converted to ppq.
+                Clearly the next quarter note is simply one quarter note after the current one, but speedScale
+                must be accounted for since a higher speed effectively results in a shorter note and vice-versa.
+            */
             nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
         } else {
             outputBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), firstEventTime);

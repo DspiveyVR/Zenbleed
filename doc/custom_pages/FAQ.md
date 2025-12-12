@@ -1,0 +1,4 @@
+# FAQ
+
+## Q: What is the purpose of Zenbleed?
+    A: To provide a specialized plugin for the purpose of creating extratone and related genres.  The original motivation behind creating Zenbleed was to create a plugin that could freely control the speed of MIDI notes so that it would be easy to create smooth speed changes.  The goal is to develop Zenbleed to the point where it becomes like its own synthesizer.

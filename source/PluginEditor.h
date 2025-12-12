@@ -21,7 +21,7 @@ private:
     PluginProcessor& processorRef;
     std::unique_ptr<melatonin::Inspector> inspector;
     juce::TextButton inspectButton { "Inspect the UI" };
-    juce::TextButton openButton { "Open" };
+    juce::TextButton openButton { "Open" }; /**< Opens the file explorer to allow the user to select an audio sample. */
     std::unique_ptr<juce::FileChooser> chooser;
 
     void openButtonClicked();

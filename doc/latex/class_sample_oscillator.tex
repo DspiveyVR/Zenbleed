@@ -1,0 +1,115 @@
+\hypertarget{class_sample_oscillator}{}\doxysection{Sample\+Oscillator Class Reference}
+\label{class_sample_oscillator}\index{SampleOscillator@{SampleOscillator}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_ac0478bbc052e0c2516847c53cd5bacd0}\label{class_sample_oscillator_ac0478bbc052e0c2516847c53cd5bacd0}} 
+{\bfseries Sample\+Oscillator} (juce\+::\+Audio\+Processor\+Value\+Tree\+State \&params\+Ref)
+\item 
+void \mbox{\hyperlink{class_sample_oscillator_a22c0b578ef6486d41ee7ff2109aebea9}{process\+Block}} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info)
+\begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sample_oscillator_af3cdaa3ffcb5ec0d52c1876c69789db5}\label{class_sample_oscillator_af3cdaa3ffcb5ec0d52c1876c69789db5}} 
+void {\bfseries set\+Sample\+Rate} (const double sr)
+\item 
+void \mbox{\hyperlink{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}{load\+Sample\+From\+File}} (const juce\+::\+File \&file)
+\begin{DoxyCompactList}\small\item\em Loads an audio sample based on a given file path. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_a9df706c7073f210bc74292706e440831}\label{class_sample_oscillator_a9df706c7073f210bc74292706e440831}} 
+double {\bfseries sample\+Rate} = 0.\+0
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_ad2247cd7c37973071b157135d6fcb785}\label{class_sample_oscillator_ad2247cd7c37973071b157135d6fcb785}} 
+bool {\bfseries was\+Playing} = false
+\item 
+double \mbox{\hyperlink{class_sample_oscillator_a361d05fcc4b318679bb9705fdfb5d8b8}{next\+Quarter\+Note\+Ppq}} = 0
+\item 
+int \mbox{\hyperlink{class_sample_oscillator_a986ddaee77c5693f1ecd6d6594ef0a47}{last\+Note\+Num}} = 0
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_ac53eb1f651ff1689f1ce0062efe6b699}\label{class_sample_oscillator_ac53eb1f651ff1689f1ce0062efe6b699}} 
+juce\+::\+Audio\+Format\+Manager {\bfseries format\+Manager}
+\item 
+std\+::unique\+\_\+ptr$<$ juce\+::\+Memory\+Audio\+Source $>$ \mbox{\hyperlink{class_sample_oscillator_a8cfd008ba0086b0428517a538cf8ecd6}{audio\+Sample\+Source}}
+\item 
+bool \mbox{\hyperlink{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}{note\+Being\+Held}} = false
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_a1bb2a8830bbd0a21a8658939eaa2cbf7}\label{class_sample_oscillator_a1bb2a8830bbd0a21a8658939eaa2cbf7}} 
+juce\+::\+Audio\+Processor\+Value\+Tree\+State \& {\bfseries parameters\+Ref}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}\label{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}} 
+\index{SampleOscillator@{SampleOscillator}!loadSampleFromFile@{loadSampleFromFile}}
+\index{loadSampleFromFile@{loadSampleFromFile}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{loadSampleFromFile()}{loadSampleFromFile()}}
+{\footnotesize\ttfamily void Sample\+Oscillator\+::load\+Sample\+From\+File (\begin{DoxyParamCaption}\item[{const juce\+::\+File \&}]{file }\end{DoxyParamCaption})}
+
+
+
+Loads an audio sample based on a given file path. 
+
+This method is called when the user selects a file and also when the plugin is first loaded by the DAW (assuming a sample has been loaded previously).
+
+\begin{DoxyWarning}{Warning}
+This method should only be called from the message thread since File I/O is not a realtime operation. 
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em file} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_sample_oscillator_a22c0b578ef6486d41ee7ff2109aebea9}\label{class_sample_oscillator_a22c0b578ef6486d41ee7ff2109aebea9}} 
+\index{SampleOscillator@{SampleOscillator}!processBlock@{processBlock}}
+\index{processBlock@{processBlock}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{processBlock()}{processBlock()}}
+{\footnotesize\ttfamily void Sample\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Audio\+Buffer$<$ float $>$ \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info }\end{DoxyParamCaption})}
+
+
+
+Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. 
+
+Internally triggers samples at a speed dictated by bpm $\ast$ speed\+Scale. 
+\begin{DoxyParams}{Parameters}
+{\em input\+Buffer} & MIDI notes to be processed by the \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}}. \\
+\hline
+{\em output\+Buffer} & Audio output. \\
+\hline
+{\em speed\+Scale} & Current value of the speed parameter. \\
+\hline
+{\em position\+Info} & Position info given by the host DAW. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_sample_oscillator_a8cfd008ba0086b0428517a538cf8ecd6}\label{class_sample_oscillator_a8cfd008ba0086b0428517a538cf8ecd6}} 
+\index{SampleOscillator@{SampleOscillator}!audioSampleSource@{audioSampleSource}}
+\index{audioSampleSource@{audioSampleSource}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{audioSampleSource}{audioSampleSource}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$juce\+::\+Memory\+Audio\+Source$>$ Sample\+Oscillator\+::audio\+Sample\+Source\hspace{0.3cm}{\ttfamily [private]}}
+
+The source that holds the loaded sample data. \mbox{\Hypertarget{class_sample_oscillator_a986ddaee77c5693f1ecd6d6594ef0a47}\label{class_sample_oscillator_a986ddaee77c5693f1ecd6d6594ef0a47}} 
+\index{SampleOscillator@{SampleOscillator}!lastNoteNum@{lastNoteNum}}
+\index{lastNoteNum@{lastNoteNum}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{lastNoteNum}{lastNoteNum}}
+{\footnotesize\ttfamily int Sample\+Oscillator\+::last\+Note\+Num = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+The number of the last musical note that was played. \mbox{\Hypertarget{class_sample_oscillator_a361d05fcc4b318679bb9705fdfb5d8b8}\label{class_sample_oscillator_a361d05fcc4b318679bb9705fdfb5d8b8}} 
+\index{SampleOscillator@{SampleOscillator}!nextQuarterNotePpq@{nextQuarterNotePpq}}
+\index{nextQuarterNotePpq@{nextQuarterNotePpq}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{nextQuarterNotePpq}{nextQuarterNotePpq}}
+{\footnotesize\ttfamily double Sample\+Oscillator\+::next\+Quarter\+Note\+Ppq = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+The ppq position of the next note to be played. \mbox{\Hypertarget{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}\label{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}} 
+\index{SampleOscillator@{SampleOscillator}!noteBeingHeld@{noteBeingHeld}}
+\index{noteBeingHeld@{noteBeingHeld}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{noteBeingHeld}{noteBeingHeld}}
+{\footnotesize\ttfamily bool Sample\+Oscillator\+::note\+Being\+Held = false\hspace{0.3cm}{\ttfamily [private]}}
+
+indicates whether a note is currently being held. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Sample\+Oscillator.\+h\item 
+/home/dentonspivey/\+Programming/\+Zenbleed/source/Sample\+Oscillator.\+cpp\end{DoxyCompactItemize}

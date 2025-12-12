@@ -13,6 +13,12 @@ class PluginEditor;
 
 class PluginProcessor final : public juce::AudioProcessor {
 public:
+    /**
+     * @brief Construct a new Plugin Processor object
+
+     * Uses RAII to create MidiOscillator and SampleOscillator as child objects,
+     * which are used to modularize the DSP logic.
+     */
     PluginProcessor();
     ~PluginProcessor() override;
 
@@ -46,14 +52,14 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     std::atomic<float> lastNoteSamplePos = 0.0;
-    std::unique_ptr<SampleOscillator> sampleOscillator;
+    std::unique_ptr<SampleOscillator> sampleOscillator; /**< Child instance of SampleOscillator created in the constructor of PluginProcessor */
 
 private:
     juce::AudioProcessorValueTreeState parameters;
-    std::atomic<float>* speedParameter = nullptr;
-    std::atomic<float>* isMidiModeParameter = nullptr;
+    std::atomic<float>* speedParameter = nullptr; /**< Speed parameter: acts as a pitch bend */
+    std::atomic<float>* isMidiModeParameter = nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
 
-    std::unique_ptr<MidiOscillator> midiOscillator;
+    std::unique_ptr<MidiOscillator> midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
