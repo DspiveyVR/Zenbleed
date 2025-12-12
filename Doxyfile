@@ -1,4 +1,4 @@
-HTML_EXTRA_STYLESHEET    = /home/dentonspivey/Programming/Zenbleed/build/_deps/doxygen-awesome-css-src/doxygen-awesome.css doc/custom_styles/main_style.css
+HTML_EXTRA_STYLESHEET    = doc/html/doxygen-awesome.css doc/custom_styles/main_style.css
 GENERATE_TREEVIEW      = YES # optional. Also works without treeview
 DISABLE_INDEX = NO
 FULL_SIDEBAR = NO
