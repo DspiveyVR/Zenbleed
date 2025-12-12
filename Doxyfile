@@ -1,4 +1,4 @@
-HTML_EXTRA_STYLESHEET    = html/doxygen-awesome.css custom_styles/main_style.css
+HTML_EXTRA_STYLESHEET    = doxygen-awesome.css ../custom_styles/main_style.css
 GENERATE_TREEVIEW      = YES # optional. Also works without treeview
 DISABLE_INDEX = NO
 FULL_SIDEBAR = NO
