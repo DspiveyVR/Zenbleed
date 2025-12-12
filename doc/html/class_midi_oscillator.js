@@ -1,8 +1,8 @@
 var class_midi_oscillator =
 [
-    [ "Speed slider", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md24", null ],
-    [ "MIDI mode checkbox", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md25", null ],
-    [ "Open button", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md26", null ],
+    [ "Speed slider", "md_doc_custom_pages__user_manual.html#autotoc_md24", null ],
+    [ "MIDI mode checkbox", "md_doc_custom_pages__user_manual.html#autotoc_md25", null ],
+    [ "Open button", "md_doc_custom_pages__user_manual.html#autotoc_md26", null ],
     [ "MidiOscillator", "class_midi_oscillator.html#a54953dac0e428a3dbc914a618faf1699", null ],
     [ "~MidiOscillator", "class_midi_oscillator.html#a89bbe8d7108ac8b8a011f89c1cc15246", null ],
     [ "processBlock", "class_midi_oscillator.html#ac674d169aec293d58508b885886c59f9", null ],

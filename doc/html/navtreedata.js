@@ -25,37 +25,37 @@
 var NAVTREE =
 [
   [ "Zenbleed", "index.html", [
-    [ "FAQ", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__f_a_q.html", [
-      [ "Q: What is the purpose of Zenbleed?", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__f_a_q.html#autotoc_md1", null ]
+    [ "FAQ", "md_doc_custom_pages__f_a_q.html", [
+      [ "Q: What is the purpose of Zenbleed?", "md_doc_custom_pages__f_a_q.html#autotoc_md1", null ]
     ] ],
-    [ "Introduction", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html", [
-      [ "Building From Source", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md14", [
-        [ "System Requirements", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md3", [
-          [ "Windows", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md4", [
-            [ "Minimum:", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md5", null ],
-            [ "Recommended:", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md6", null ]
+    [ "Introduction", "md_doc_custom_pages__user_manual.html", [
+      [ "Building From Source", "md_doc_custom_pages__user_manual.html#autotoc_md14", [
+        [ "System Requirements", "md_doc_custom_pages__user_manual.html#autotoc_md3", [
+          [ "Windows", "md_doc_custom_pages__user_manual.html#autotoc_md4", [
+            [ "Minimum:", "md_doc_custom_pages__user_manual.html#autotoc_md5", null ],
+            [ "Recommended:", "md_doc_custom_pages__user_manual.html#autotoc_md6", null ]
           ] ],
-          [ "Linux", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md7", [
-            [ "Minimum:", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md8", null ],
-            [ "Recommended:", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md9", null ]
+          [ "Linux", "md_doc_custom_pages__user_manual.html#autotoc_md7", [
+            [ "Minimum:", "md_doc_custom_pages__user_manual.html#autotoc_md8", null ],
+            [ "Recommended:", "md_doc_custom_pages__user_manual.html#autotoc_md9", null ]
           ] ],
-          [ "MacOs", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md10", null ]
+          [ "MacOs", "md_doc_custom_pages__user_manual.html#autotoc_md10", null ]
         ] ],
-        [ "History", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md11", null ],
-        [ "Developer Information", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md12", null ],
-        [ "Quick Start", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md13", null ],
-        [ "General Prerequisites", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md15", null ],
-        [ "Linux (Debian/Ubuntu)", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md16", [
-          [ "Installing Dependencies", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md17", null ],
-          [ "Build Instructions", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md18", null ]
+        [ "History", "md_doc_custom_pages__user_manual.html#autotoc_md11", null ],
+        [ "Developer Information", "md_doc_custom_pages__user_manual.html#autotoc_md12", null ],
+        [ "Quick Start", "md_doc_custom_pages__user_manual.html#autotoc_md13", null ],
+        [ "General Prerequisites", "md_doc_custom_pages__user_manual.html#autotoc_md15", null ],
+        [ "Linux (Debian/Ubuntu)", "md_doc_custom_pages__user_manual.html#autotoc_md16", [
+          [ "Installing Dependencies", "md_doc_custom_pages__user_manual.html#autotoc_md17", null ],
+          [ "Build Instructions", "md_doc_custom_pages__user_manual.html#autotoc_md18", null ]
         ] ],
-        [ "Windows", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md19", null ]
+        [ "Windows", "md_doc_custom_pages__user_manual.html#autotoc_md19", null ]
       ] ],
-      [ "Troubleshooting", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md20", [
-        [ "Build Failures on Linux", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md21", null ]
+      [ "Troubleshooting", "md_doc_custom_pages__user_manual.html#autotoc_md20", [
+        [ "Build Failures on Linux", "md_doc_custom_pages__user_manual.html#autotoc_md21", null ]
       ] ],
-      [ "Diagrams", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md22", null ],
-      [ "User Manual", "md__home_dentonspivey__programming__zenbleed_doc_custom_pages__user_manual.html#autotoc_md23", null ]
+      [ "Diagrams", "md_doc_custom_pages__user_manual.html#autotoc_md22", null ],
+      [ "User Manual", "md_doc_custom_pages__user_manual.html#autotoc_md23", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
