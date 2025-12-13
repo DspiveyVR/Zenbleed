@@ -58,6 +58,9 @@ private:
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* speedParameter = nullptr; /**< Speed parameter: acts as a pitch bend */
     std::atomic<float>* isMidiModeParameter = nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
+    std::atomic<float>* isTunedParameter = nullptr;
+    double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
+    double nextNoteSample = 0;
 
     std::unique_ptr<MidiOscillator> midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
 

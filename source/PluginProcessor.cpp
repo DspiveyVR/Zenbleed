@@ -24,11 +24,18 @@ PluginProcessor::PluginProcessor() :
                             false,
                             juce::AudioParameterBoolAttributes {}.withCategory(
                                     juce::AudioParameterBool::genericParameter)),
+                    std::make_unique<juce::AudioParameterBool>(
+                            "isTuned",
+                            "Tuned",
+                            false,
+                            juce::AudioParameterBoolAttributes {}.withCategory(
+                                    juce::AudioParameterBool::genericParameter)),
             }),
     sampleOscillator(std::make_unique<SampleOscillator>(parameters)),
     midiOscillator(std::make_unique<MidiOscillator>()) {
     speedParameter = parameters.getRawParameterValue("speed");
     isMidiModeParameter = parameters.getRawParameterValue("isMidiMode");
+    isTunedParameter = parameters.getRawParameterValue("isTuned");
 }
 
 PluginProcessor::~PluginProcessor() {}
@@ -113,6 +120,7 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
 void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) {
     buffer.clear();
     // midiMessages.clear();
+    juce::ScopedNoDenormals noDenormals;
 
     const juce::AudioPlayHead* playhead = getPlayHead();
     if (!playhead)
@@ -126,10 +134,12 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     if (isMidiMode) {
         juce::MidiBuffer outputBuffer;
 
-        midiOscillator->processBlock(buffer.getNumSamples(), midiMessages, outputBuffer, *speedParameter, positionInfo);
+        midiOscillator->processBlock(buffer.getNumSamples(), midiMessages, outputBuffer, *speedParameter, 
+            positionInfo, *isTunedParameter, nextQuarterNotePpq, nextNoteSample);
         midiMessages.swapWith(outputBuffer);
     } else {
-        sampleOscillator.get()->processBlock(midiMessages, buffer, *speedParameter, positionInfo);
+        sampleOscillator.get()->processBlock(midiMessages, buffer, *speedParameter, 
+            positionInfo, *isTunedParameter, nextQuarterNotePpq, nextNoteSample);
     }
 }
 

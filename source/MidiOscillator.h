@@ -23,13 +23,15 @@ public:
             juce::MidiBuffer& inputBuffer,
             juce::MidiBuffer& outputBuffer,
             const float speedScale,
-            const juce::AudioPlayHead::PositionInfo* positionInfo);
+            const juce::AudioPlayHead::PositionInfo* positionInfo,
+            bool isTuned,
+            double& nextQuarterNotePpq,
+            double& nextNoteSample);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
 private:
     double sampleRate = 0;
     bool wasPlaying = false;
-    double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     int lastNoteNum = 0; /**< The number of the last musical note that was played. */
 };

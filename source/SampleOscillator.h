@@ -21,7 +21,11 @@ public:
             juce::MidiBuffer& inputBuffer,
             juce::AudioBuffer<float>& outputBuffer,
             const float speedScale,
-            const juce::AudioPlayHead::PositionInfo* positionInfo);
+            const juce::AudioPlayHead::PositionInfo* positionInfo,
+            bool isTuned,
+            double& nextQuarterNotePpq,
+            double& nextNoteSample
+    );
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -39,7 +43,6 @@ public:
 private:
     double sampleRate = 0.0;
     bool wasPlaying = false;
-    double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     int lastNoteNum = 0; /**< The number of the last musical note that was played. */
 
     juce::AudioFormatManager formatManager;
@@ -47,5 +50,4 @@ private:
     bool noteBeingHeld = false; /**< indicates whether a note is currently being held. */
 
     juce::AudioProcessorValueTreeState& parametersRef;
-
 };
