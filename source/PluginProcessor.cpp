@@ -134,12 +134,25 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     if (isMidiMode) {
         juce::MidiBuffer outputBuffer;
 
-        midiOscillator->processBlock(buffer.getNumSamples(), midiMessages, outputBuffer, *speedParameter, 
-            positionInfo, *isTunedParameter, nextQuarterNotePpq, nextNoteSample);
+        midiOscillator->processBlock(
+                buffer.getNumSamples(),
+                midiMessages,
+                outputBuffer,
+                *speedParameter,
+                positionInfo,
+                *isTunedParameter,
+                nextQuarterNotePpq,
+                nextNoteSample);
         midiMessages.swapWith(outputBuffer);
     } else {
-        sampleOscillator.get()->processBlock(midiMessages, buffer, *speedParameter, 
-            positionInfo, *isTunedParameter, nextQuarterNotePpq, nextNoteSample);
+        sampleOscillator.get()->processBlock(
+                midiMessages,
+                buffer,
+                *speedParameter,
+                positionInfo,
+                *isTunedParameter,
+                nextQuarterNotePpq,
+                nextNoteSample);
     }
 }
 

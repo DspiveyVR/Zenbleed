@@ -108,7 +108,7 @@ void MidiOscillator::processBlock(
 
                 // curr + firstTime gets the absolute position of the first note, and the next note is determined
                 // simply by adding samplePerHz since 1Hz == 1 note.
-                nextNoteSample = (currentSamples + firstEventTime + samplePerHz) / speedScale;
+                nextNoteSample = currentSamples + firstEventTime + samplePerHz / speedScale;
             } else {
                 outputBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), firstEventTime);
                 nextNoteSample = 0.0;
@@ -122,7 +122,7 @@ void MidiOscillator::processBlock(
                     const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
                     const double samplePerHz = sampleRate / hertz;
                     outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), secondEventTime);
-                    nextNoteSample = (currentSamples + secondEventTime + samplePerHz) / speedScale;
+                    nextNoteSample = currentSamples + secondEventTime + samplePerHz / speedScale;
                 }
             }
         }

@@ -126,7 +126,7 @@ void SampleOscillator::processBlock(
                     Clearly the next quarter note is simply one quarter note after the current one, but speedScale
                     must be accounted for since a higher speed effectively results in a shorter note and vice-versa.
                 */
-                nextNoteSample = (currentSamples + firstEventTime + samplePerHz) / speedScale;
+                nextNoteSample = currentSamples + firstEventTime + samplePerHz / speedScale;
             } else {
                 noteBeingHeld = false;
                 sampleInfo.numSamples = firstEventTime - sampleInfo.startSample;
@@ -146,7 +146,7 @@ void SampleOscillator::processBlock(
                     const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
                     const double samplePerHz = sampleRate / hertz;
 
-                    nextNoteSample = (currentSamples + secondEventTime + samplePerHz) / speedScale;
+                    nextNoteSample = currentSamples + secondEventTime + samplePerHz / speedScale;
                 }
             }
         }
