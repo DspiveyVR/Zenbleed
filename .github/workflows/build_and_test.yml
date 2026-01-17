@@ -74,7 +74,7 @@ jobs:
 
       - name: Cache NuGet packages (Windows)
         if: runner.os == 'Windows'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/intelipp.static.win-x64.2022.2.0.575
           key: nuget-ipp-2022.2.0.575
