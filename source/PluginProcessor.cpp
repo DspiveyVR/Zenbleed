@@ -12,11 +12,32 @@ PluginProcessor::PluginProcessor() :
             juce::Identifier("ZenParameters"),
             {
                     std::make_unique<juce::AudioParameterFloat>(
-                            "speed",
-                            "Speed",
+                            "lowSpeed",
+                            "Low Speed",
+                            juce::NormalisableRange<float> { 0.1f, 16.0f, 0.01, 0.7 },
+                            1.0f,
+                            juce::AudioParameterFloatAttributes {}.withCategory(
+                                    juce::AudioParameterFloat::genericParameter)),
+                    std::make_unique<juce::AudioParameterFloat>(
+                            "midSpeed",
+                            "Mid Speed",
+                            juce::NormalisableRange<float> { 0.1f, 64.0f, 0.01, 0.7 },
+                            1.0f,
+                            juce::AudioParameterFloatAttributes {}.withCategory(
+                                    juce::AudioParameterFloat::genericParameter)),
+                    std::make_unique<juce::AudioParameterFloat>(
+                            "highSpeed",
+                            "High Speed",
                             juce::NormalisableRange<float> { 0.1f, 256.0f, 0.01, 0.7 },
                             1.0f,
                             juce::AudioParameterFloatAttributes {}.withCategory(
+                                    juce::AudioParameterFloat::genericParameter)),
+                    std::make_unique<juce::AudioParameterChoice>(
+                            "speedRange",
+                            "Speed Range",
+                            speedRangeChoices,
+                            static_cast<int>(SpeedRange::Medium),
+                            juce::AudioParameterChoiceAttributes {}.withCategory(
                                     juce::AudioParameterFloat::genericParameter)),
                     std::make_unique<juce::AudioParameterBool>(
                             "isMidiMode",
@@ -33,7 +54,10 @@ PluginProcessor::PluginProcessor() :
             }),
     sampleOscillator(std::make_unique<SampleOscillator>(parameters)),
     midiOscillator(std::make_unique<MidiOscillator>()) {
-    speedParameter = parameters.getRawParameterValue("speed");
+    lowSpeedParameter = parameters.getRawParameterValue("lowSpeed");
+    midSpeedParameter = parameters.getRawParameterValue("midSpeed");
+    highSpeedParameter = parameters.getRawParameterValue("highSpeed");
+    speedRangeParameter = parameters.getRawParameterValue("speedRange");
     isMidiModeParameter = parameters.getRawParameterValue("isMidiMode");
     isTunedParameter = parameters.getRawParameterValue("isTuned");
 }
@@ -119,7 +143,6 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
 
 void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) {
     buffer.clear();
-    // midiMessages.clear();
     juce::ScopedNoDenormals noDenormals;
 
     const juce::AudioPlayHead* playhead = getPlayHead();
@@ -130,7 +153,23 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     if (!positionInfo || !positionInfo->getBpm())
         return;
 
-    bool isMidiMode = *isMidiModeParameter;
+    double speedScale = 0.0;
+    const SpeedRange rangeChoice = static_cast<SpeedRange>(static_cast<int>(speedRangeParameter->load()));
+    switch (rangeChoice) {
+        case SpeedRange::Low:
+            speedScale = lowSpeedParameter->load();
+            break;
+        case SpeedRange::Medium:
+            speedScale = midSpeedParameter->load();
+            break;
+        case SpeedRange::High:
+            speedScale = highSpeedParameter->load();
+            break;
+        default:
+            break;
+    }
+
+    bool isMidiMode = isMidiModeParameter->load();
     if (isMidiMode) {
         juce::MidiBuffer outputBuffer;
 
@@ -138,9 +177,9 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 buffer.getNumSamples(),
                 midiMessages,
                 outputBuffer,
-                *speedParameter,
+                speedScale,
                 positionInfo,
-                *isTunedParameter,
+                isTunedParameter->load(),
                 nextQuarterNotePpq,
                 nextNoteSample);
         midiMessages.swapWith(outputBuffer);
@@ -148,9 +187,9 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
         sampleOscillator.get()->processBlock(
                 midiMessages,
                 buffer,
-                *speedParameter,
+                speedScale,
                 positionInfo,
-                *isTunedParameter,
+                isTunedParameter->load(),
                 nextQuarterNotePpq,
                 nextNoteSample);
     }

@@ -22,7 +22,6 @@ public:
     PluginProcessor();
     ~PluginProcessor() override;
 
-
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
@@ -48,21 +47,35 @@ public:
     const juce::String getProgramName(int index) override;
     void changeProgramName(int index, const juce::String& newName) override;
 
+    const juce::StringArray getSpeedRangeChoices() { return speedRangeChoices; }
+    juce::AudioProcessorValueTreeState& getParametersApvts() { return parameters; }
+
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     std::atomic<float> lastNoteSamplePos = 0.0;
-    std::unique_ptr<SampleOscillator> sampleOscillator; /**< Child instance of SampleOscillator created in the constructor of PluginProcessor */
+    std::unique_ptr<SampleOscillator>
+            sampleOscillator; /**< Child instance of SampleOscillator created in the constructor of PluginProcessor */
 
 private:
-    juce::AudioProcessorValueTreeState parameters;
-    std::atomic<float>* speedParameter = nullptr; /**< Speed parameter: acts as a pitch bend */
-    std::atomic<float>* isMidiModeParameter = nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
-    std::atomic<float>* isTunedParameter = nullptr;
-    double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
-    double nextNoteSample = 0;
+    enum class SpeedRange { Low, Medium, High };
+    const juce::StringArray speedRangeChoices = { "Low", "Medium", "High" };
 
-    std::unique_ptr<MidiOscillator> midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
+    juce::AudioProcessorValueTreeState parameters;
+    std::atomic<float>* lowSpeedParameter = nullptr; /**< Speed parameter (low range): acts as a pitch bend */
+    std::atomic<float>* midSpeedParameter = nullptr; /**< Speed parameter (mid range): acts as a pitch bend */
+    std::atomic<float>* highSpeedParameter = nullptr; /**< Speed parameter (high range): acts as a pitch bend */
+    std::atomic<float>* speedRangeParameter =
+            nullptr; /**< Speed range parameter: selects which speed range to choose */
+    std::atomic<float>* isMidiModeParameter =
+            nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
+    std::atomic<float>* isTunedParameter =
+            nullptr; /**< Tuned mode parameter: determines whether or not the extratone is tuned to the input note */
+    double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
+    double nextNoteSample = 0; /**< The sample position of the next note to be played. */
+
+    std::unique_ptr<MidiOscillator>
+            midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };

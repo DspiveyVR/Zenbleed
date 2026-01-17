@@ -20,9 +20,13 @@ private:
     // access the processor object that created it.
     PluginProcessor& processorRef;
     std::unique_ptr<melatonin::Inspector> inspector;
+    std::unique_ptr<juce::FileChooser> chooser;
+    
     juce::TextButton inspectButton { "Inspect the UI" };
     juce::TextButton openButton { "Open" }; /**< Opens the file explorer to allow the user to select an audio sample. */
-    std::unique_ptr<juce::FileChooser> chooser;
+    juce::ComboBox speedRangeBox;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> speedRangeAttachment;
 
     void openButtonClicked();
     PluginProcessor& getProcessor() const;

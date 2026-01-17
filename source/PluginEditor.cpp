@@ -1,8 +1,6 @@
 #include "PluginEditor.h"
 
 PluginEditor::PluginEditor(PluginProcessor& p) : GenericAudioProcessorEditor(&p), processorRef(p) {
-    juce::ignoreUnused(processorRef);
-
     // addAndMakeVisible(inspectButton);
 
     // // this chunk of code instantiates and opens the melatonin inspector
@@ -16,7 +14,19 @@ PluginEditor::PluginEditor(PluginProcessor& p) : GenericAudioProcessorEditor(&p)
     //     inspector->setVisible(true);
     // };
 
+    const juce::StringArray speedRanges = processorRef.getSpeedRangeChoices();
+    for (size_t i = 0; i < speedRanges.size(); i++) {
+        speedRangeBox.addItem(speedRanges[i], i + 1);
+    }
+
+    speedRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
+            processorRef.getParametersApvts(),
+            "speedRange",
+            speedRangeBox
+    );
+
     addAndMakeVisible(openButton);
+    addAndMakeVisible(speedRangeBox);
 
     openButton.onClick = [this] { openButtonClicked(); };
 
@@ -54,7 +64,8 @@ void PluginEditor::paint(juce::Graphics& g) {
 void PluginEditor::resized() {
     // layout the positions of your child components here
     juce::GenericAudioProcessorEditor::resized();
-    openButton.setBounds((getWidth() / 2) - (100 / 2), 50, 100, 40);
+    openButton.setBounds((getWidth() / 2) - (100 / 2), 150, 100, 40);
+    speedRangeBox.setBounds((getWidth() / 2) - (100 / 2), 200, 100, 40);
     // Let the generic controls layout first
     // inspectButton.setBounds(getLocalBounds().withSizeKeepingCentre(100, 50));
 }
