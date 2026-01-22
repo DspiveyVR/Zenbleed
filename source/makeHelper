@@ -1,0 +1,10 @@
+#!/bin/bash
+# Break on exception
+set -e
+
+# Go to build directory and make
+cd ../build
+make -j 4
+make install
+# Return to source folder
+cd ../source
