@@ -1,18 +1,18 @@
 #include "PluginEditor.h"
 
 PluginEditor::PluginEditor(PluginProcessor& p) : GenericAudioProcessorEditor(&p), processorRef(p) {
-    // addAndMakeVisible(inspectButton);
+    addAndMakeVisible(inspectButton);
 
-    // // this chunk of code instantiates and opens the melatonin inspector
-    // inspectButton.onClick = [&] {
-    //     if(!inspector)
-    //     {
-    //         inspector = std::make_unique<melatonin::Inspector>(*this);
-    //         inspector->onClose = [this]() { inspector.reset(); };
-    //     }
+    // this chunk of code instantiates and opens the melatonin inspector
+    inspectButton.onClick = [&] {
+        if(!inspector)
+        {
+            inspector = std::make_unique<melatonin::Inspector>(*this);
+            inspector->onClose = [this]() { inspector.reset(); };
+        }
 
-    //     inspector->setVisible(true);
-    // };
+        inspector->setVisible(true);
+    };
 
     const juce::StringArray speedRanges = processorRef.getSpeedRangeChoices();
     for (size_t i = 0; i < speedRanges.size(); i++) {
@@ -20,15 +20,23 @@ PluginEditor::PluginEditor(PluginProcessor& p) : GenericAudioProcessorEditor(&p)
     }
 
     speedRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
-            processorRef.getParametersApvts(),
-            "speedRange",
-            speedRangeBox
-    );
+            processorRef.getParametersApvts(), "speedRange", speedRangeBox);
 
     addAndMakeVisible(openButton);
     addAndMakeVisible(speedRangeBox);
 
+    addAndMakeVisible(lowSpeed);
+    addAndMakeVisible(midSpeed);
+    addAndMakeVisible(highSpeed);
+    addAndMakeVisible(speedKnob);
+    speedKnob.setSliderStyle(juce::Slider::Rotary);
+    speedKnob.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    speedKnob.setValue(5.00);
+
     openButton.onClick = [this] { openButtonClicked(); };
+    lowSpeed.onClick = [this] {speedKnobButtonClicked();};
+    midSpeed.onClick = [this] {speedKnobButtonClicked();};
+    highSpeed.onClick = [this] {speedKnobButtonClicked();};
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -48,6 +56,13 @@ void PluginEditor::openButtonClicked() {
     });
 }
 
+void PluginEditor::speedKnobButtonClicked() {
+    /* TODO: Take input from each button to
+     * know which parameter to select. Then update
+     * knob.
+     */
+}
+
 PluginProcessor& PluginEditor::getProcessor() const { return static_cast<PluginProcessor&>(processor); }
 
 void PluginEditor::paint(juce::Graphics& g) {
@@ -64,8 +79,12 @@ void PluginEditor::paint(juce::Graphics& g) {
 void PluginEditor::resized() {
     // layout the positions of your child components here
     juce::GenericAudioProcessorEditor::resized();
-    openButton.setBounds((getWidth() / 2) - (100 / 2), 150, 100, 40);
-    speedRangeBox.setBounds((getWidth() / 2) - (100 / 2), 200, 100, 40);
+    // openButton.setBounds((getWidth() / 2) - (100 / 2), 150, 100, 40);
+    // speedRangeBox.setBounds((getWidth() / 2) - (100 / 2), 200, 100, 40);
+    speedKnob.setBounds(200, 200, 200, 200);
+    lowSpeed.setBounds(225, 180, 50, 20);
+    midSpeed.setBounds(275, 180, 50, 20);
+    highSpeed.setBounds(325, 180, 50, 20);
     // Let the generic controls layout first
-    // inspectButton.setBounds(getLocalBounds().withSizeKeepingCentre(100, 50));
+    inspectButton.setBounds(getLocalBounds().withSizeKeepingCentre(100, 50));
 }
