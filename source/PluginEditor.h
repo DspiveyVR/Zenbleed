@@ -2,6 +2,7 @@
 
 #include <juce_events/juce_events.h>
 #include "PluginProcessor.h"
+#include "ZenbleedLookAndFeel.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 
 class PluginEditor final : public juce::GenericAudioProcessorEditor {
@@ -16,8 +17,8 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+    ZenbleedLookAndFeel lookAndFeel;
+
     PluginProcessor& processorRef;
     std::unique_ptr<melatonin::Inspector> inspector;
     std::unique_ptr<juce::FileChooser> chooser;

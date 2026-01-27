@@ -1,18 +1,22 @@
 #include "PluginEditor.h"
 
+#include "ZenbleedLookAndFeel.h"
+
 PluginEditor::PluginEditor(PluginProcessor& p) : GenericAudioProcessorEditor(&p), processorRef(p) {
+    setLookAndFeel(&lookAndFeel);
+#if DEBUG
     addAndMakeVisible(inspectButton);
 
     // this chunk of code instantiates and opens the melatonin inspector
     inspectButton.onClick = [&] {
-        if(!inspector)
-        {
+        if(!inspector) {
             inspector = std::make_unique<melatonin::Inspector>(*this);
             inspector->onClose = [this]() { inspector.reset(); };
         }
 
         inspector->setVisible(true);
     };
+#endif
 
     const juce::StringArray speedRanges = processorRef.getSpeedRangeChoices();
     for (size_t i = 0; i < speedRanges.size(); i++) {
@@ -43,7 +47,9 @@ PluginEditor::PluginEditor(PluginProcessor& p) : GenericAudioProcessorEditor(&p)
     setSize(640, 480);
 }
 
-PluginEditor::~PluginEditor() {}
+PluginEditor::~PluginEditor() {
+    setLookAndFeel(nullptr);
+}
 
 void PluginEditor::openButtonClicked() {
     chooser = std::make_unique<juce::FileChooser>("Select a sample... ", juce::File {}, "*.wav");
