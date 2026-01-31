@@ -26,7 +26,8 @@ public:
             const juce::AudioPlayHead::PositionInfo* positionInfo,
             bool isTuned,
             double& nextQuarterNotePpq,
-            double& nextNoteSample);
+            double& nextNoteSample,
+            float noteLength);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -34,4 +35,5 @@ private:
     double sampleRate = 0;
     bool wasPlaying = false;
     int lastNoteNum = 0; /**< The number of the last musical note that was played. */
+    bool noteBeingHeld = false; /**< indicates whether a note is currently being held. */
 };

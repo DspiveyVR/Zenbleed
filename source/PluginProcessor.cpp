@@ -51,6 +51,13 @@ PluginProcessor::PluginProcessor() :
                             false,
                             juce::AudioParameterBoolAttributes {}.withCategory(
                                     juce::AudioParameterBool::genericParameter)),
+                    std::make_unique<juce::AudioParameterFloat>(
+                            "noteLength",
+                            "Note Length",
+                            juce::NormalisableRange<float> { 0.1f, 1.0f, 0.01 },
+                            1.0f,
+                            juce::AudioParameterFloatAttributes {}.withCategory(
+                                    juce::AudioParameterFloat::genericParameter)),
             }),
     sampleOscillator(std::make_unique<SampleOscillator>(parameters)),
     midiOscillator(std::make_unique<MidiOscillator>()) {
@@ -60,6 +67,7 @@ PluginProcessor::PluginProcessor() :
     speedRangeParameter = parameters.getRawParameterValue("speedRange");
     isMidiModeParameter = parameters.getRawParameterValue("isMidiMode");
     isTunedParameter = parameters.getRawParameterValue("isTuned");
+    noteLengthParameter = parameters.getRawParameterValue("noteLength");
 }
 
 PluginProcessor::~PluginProcessor() {}
@@ -170,6 +178,7 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     }
 
     bool isMidiMode = isMidiModeParameter->load();
+    float noteLength = *noteLengthParameter;
     if (isMidiMode) {
         juce::MidiBuffer outputBuffer;
 
@@ -181,7 +190,9 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 positionInfo,
                 isTunedParameter->load(),
                 nextQuarterNotePpq,
-                nextNoteSample);
+                nextNoteSample,
+                noteLength);
+
         midiMessages.swapWith(outputBuffer);
     } else {
         sampleOscillator.get()->processBlock(
@@ -191,7 +202,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 positionInfo,
                 isTunedParameter->load(),
                 nextQuarterNotePpq,
-                nextNoteSample);
+                nextNoteSample,
+                noteLength);
     }
 }
 

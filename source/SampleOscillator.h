@@ -24,7 +24,8 @@ public:
             const juce::AudioPlayHead::PositionInfo* positionInfo,
             bool isTuned,
             double& nextQuarterNotePpq,
-            double& nextNoteSample
+            double& nextNoteSample,
+            float noteLength
     );
 
     void setSampleRate(const double sr) { sampleRate = sr; }

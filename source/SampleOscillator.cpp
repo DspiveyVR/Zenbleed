@@ -1,4 +1,5 @@
 #include "SampleOscillator.h"
+#include "Utilities.h"
 
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
@@ -29,7 +30,8 @@ void SampleOscillator::processBlock(
         const juce::AudioPlayHead::PositionInfo* positionInfo,
         bool isTuned,
         double& nextQuarterNotePpq,
-        double& nextNoteSample) {
+        double& nextNoteSample,
+        float noteLength) {
     juce::MemoryAudioSource* sampleSource = audioSampleSource.get();
     if (!sampleSource)
         return;
@@ -88,26 +90,63 @@ void SampleOscillator::processBlock(
             }
         }
 
-        if (!noteBeingHeld)
-            return;
+        double adjustedNoteEnd = nextQuarterNotePpq - (1.0 / speedScale) + (noteLength / speedScale);
+        bool nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
+                               && !compareFloat(nextQuarterNotePpq, 0.0);
+        bool noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
 
-        // If next note is within the current block.
-        while ((nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize) && (nextQuarterNotePpq != 0.0)) {
-            // Sample position of the note relative to the start of the current block.
-            const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
-            sampleInfo.numSamples = noteOffset - sampleInfo.startSample - 1;
-            sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
+            if (noteBeingHeld && noteEndInBlock) {
+                // Calculate the length of the note fragment.
+                double fragmentSamples = adjustedNoteEnd - currentSamples  - sampleInfo.startSample;
 
-            sampleSource->setNextReadPosition(0);
-            sampleInfo.startSample = noteOffset;
+                sampleInfo.numSamples = fragmentSamples;
+                sampleSource->getNextAudioBlock(sampleInfo);
 
-            // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
-            // note relative to the baseline.
-            // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
-            nextQuarterNotePpq += (1.0 / speedScale);
+                // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
+                // This prevents a click at the end of the note.
+                // The fade length changes based on speed since we don't want to fade the short fragments too early but we also want long
+                // fragments to have a fade long enough to eliminate the click.
+                // The call to min is there to ensure that the fadeLength is never longer than the fragment length (this would cause a memory error),
+                // though I haven't checked if this is mathematically possible anyway.
+                const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
+                const int fadeStart = sampleInfo.startSample + fragmentSamples - fadeLength;
+
+                for (int ch = 0; ch < outputBuffer.getNumChannels(); ++ch) {
+                    outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
+                }
+
+                noteBeingHeld = false;
+            }
+            if (nextNoteInBlock) {
+                // Sample position of the note relative to the start of the current block.
+                const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
+                sampleInfo.numSamples = noteOffset - sampleInfo.startSample - 1;
+
+                if (!noteEndInBlock) {
+                    sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+                }
+                noteBeingHeld = true;
+
+                sampleSource->setNextReadPosition(0);
+
+                sampleInfo.startSample = noteOffset;
+
+                // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
+                // note relative to the baseline.
+                // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
+                nextQuarterNotePpq += (1.0 / speedScale);
+
+                adjustedNoteEnd = nextQuarterNotePpq - (1.0 / speedScale) + (noteLength / speedScale);
+                nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
+                                  && !compareFloat(nextQuarterNotePpq, 0.0);
+                noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
+            }
         }
-        sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
-        sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        if (noteBeingHeld) {
+            sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
+            sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        }
     } else {
         if (success) {
             lastNoteNum = firstMessage.getNoteNumber();
@@ -151,27 +190,63 @@ void SampleOscillator::processBlock(
             }
         }
 
-        if (!noteBeingHeld)
-            return;
+        const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
+        const double samplePerHz = sampleRate / hertz;
+        double adjustedNoteEnd =
+                nextNoteSample - (samplePerHz / speedScale) + ((noteLength * samplePerHz) / speedScale);
+        bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0);
+        bool noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
 
-        // If next note is within the current block.
-        while (nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0)) {
-            // Sample position of the note relative to the start of the current block.
-            const double noteOffset = nextNoteSample - currentSamples;
-            const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
-            const double samplePerHz = sampleRate / hertz;
-            sampleInfo.numSamples = noteOffset - sampleInfo.startSample - 1;
-            sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
+            if (noteBeingHeld && noteEndInBlock) {
+                // Calculate the length of the note fragment.
+                double fragmentSamples = (adjustedNoteEnd - currentSamples) - sampleInfo.startSample;
 
-            sampleSource->setNextReadPosition(0);
-            sampleInfo.startSample = noteOffset;
+                sampleInfo.numSamples = fragmentSamples;
+                sampleSource->getNextAudioBlock(sampleInfo);
 
-            // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
-            // note relative to the baseline.
-            // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
-            nextNoteSample += samplePerHz / speedScale;
+                // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
+                // This prevents a click at the end of the note.
+                // The fade length changes based on speed since we don't want to fade the short fragments too early but we also want long
+                // fragments to have a fade long enough to eliminate the click.
+                // The call to min is there to ensure that the fadeLength is never longer than the fragment length (this would cause a memory error),
+                // though I haven't checked if this is mathematically possible anyway.
+                const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
+                const int fadeStart = sampleInfo.startSample + fragmentSamples - fadeLength;
+
+                for (int ch = 0; ch < outputBuffer.getNumChannels(); ++ch) {
+                    outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
+                }
+
+                noteBeingHeld = false;
+            }
+            if (nextNoteInBlock) {
+                const double noteOffset = nextNoteSample - currentSamples;
+                sampleInfo.numSamples = noteOffset - sampleInfo.startSample - 1;
+
+                if (!noteEndInBlock) {
+                    sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+                }
+                noteBeingHeld = true;
+
+                sampleSource->setNextReadPosition(0);
+                sampleInfo.startSample = noteOffset;
+
+                // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
+                // note relative to the baseline.
+                // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
+                nextNoteSample += samplePerHz / speedScale;
+
+                adjustedNoteEnd =
+                        nextNoteSample - (samplePerHz / speedScale) + ((noteLength * samplePerHz) / speedScale);
+                nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0);
+                noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
+            }
         }
-        sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
-        sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+
+        if (noteBeingHeld) {
+            sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
+            sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        }
     }
 }
