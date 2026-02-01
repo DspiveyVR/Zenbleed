@@ -25,8 +25,7 @@ public:
             bool isTuned,
             double& nextQuarterNotePpq,
             double& nextNoteSample,
-            float noteLength
-    );
+            float noteLength);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -42,6 +41,46 @@ public:
     void loadSampleFromFile(const juce::File& file);
 
 private:
+    void processUntuned(
+            juce::MidiBuffer& inputBuffer,
+            juce::AudioBuffer<float>& outputBuffer,
+            const float speedScale,
+            const juce::AudioPlayHead::PositionInfo* positionInfo,
+            double& nextQuarterNotePpq,
+            double& nextNoteSample,
+            float noteLength,
+            bool success,
+            double firstEventTime,
+            juce::AudioSourceChannelInfo& sampleInfo,
+            juce::MidiMessage firstMessage,
+            double currentSamples,
+            double samplePerPpq,
+            const int bufferSize,
+            juce::MidiBuffer::Iterator& iterator,
+            juce::MemoryAudioSource* sampleSource,
+            const double bpm,
+            double currentPpq);
+
+    void processTuned(
+            juce::MidiBuffer& inputBuffer,
+            juce::AudioBuffer<float>& outputBuffer,
+            const float speedScale,
+            const juce::AudioPlayHead::PositionInfo* positionInfo,
+            double& nextQuarterNotePpq,
+            double& nextNoteSample,
+            float noteLength,
+            bool success,
+            double firstEventTime,
+            juce::AudioSourceChannelInfo& sampleInfo,
+            juce::MidiMessage firstMessage,
+            double currentSamples,
+            double samplePerPpq,
+            const int bufferSize,
+            juce::MidiBuffer::Iterator& iterator,
+            juce::MemoryAudioSource* sampleSource,
+            const double bpm,
+            double currentPpq);
+
     double sampleRate = 0.0;
     bool wasPlaying = false;
     int lastNoteNum = 0; /**< The number of the last musical note that was played. */

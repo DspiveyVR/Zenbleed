@@ -32,6 +32,26 @@ public:
     void setSampleRate(const double sr) { sampleRate = sr; }
 
 private:
+    void processUntuned(
+            const int bufferSize,
+            juce::MidiBuffer& inputBuffer,
+            juce::MidiBuffer& outputBuffer,
+            const float speedScale,
+            const juce::AudioPlayHead::PositionInfo* positionInfo,
+            double& nextQuarterNotePpq,
+            double& nextNoteSample,
+            float noteLength);
+
+    void processTuned(
+            const int bufferSize,
+            juce::MidiBuffer& inputBuffer,
+            juce::MidiBuffer& outputBuffer,
+            const float speedScale,
+            const juce::AudioPlayHead::PositionInfo* positionInfo,
+            double& nextQuarterNotePpq,
+            double& nextNoteSample,
+            float noteLength);
+
     double sampleRate = 0;
     bool wasPlaying = false;
     int lastNoteNum = 0; /**< The number of the last musical note that was played. */
