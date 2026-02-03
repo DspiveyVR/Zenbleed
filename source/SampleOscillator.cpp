@@ -159,7 +159,7 @@ void SampleOscillator::processUntuned(
     while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
-            double fragmentSamples = adjustedNoteEnd - currentSamples - sampleInfo.startSample;
+            double fragmentSamples = (adjustedNoteEnd * samplePerPpq) - currentSamples - sampleInfo.startSample;
 
             sampleInfo.numSamples = fragmentSamples;
             sampleSource->getNextAudioBlock(sampleInfo);
