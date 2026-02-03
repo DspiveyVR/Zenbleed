@@ -5,7 +5,7 @@
 #include "ZenbleedLookAndFeel.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 
-class PluginEditor final : public juce::GenericAudioProcessorEditor {
+class PluginEditor final : public juce::AudioProcessorEditor {
 public:
     explicit PluginEditor(PluginProcessor&);
 
@@ -36,7 +36,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> speedRangeAttachment;
 
     void openButtonClicked();
-    void speedKnobButtonClicked();
+    void speedKnobButtonClicked(const juce::String&);
     PluginProcessor& getProcessor() const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
