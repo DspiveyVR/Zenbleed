@@ -28,10 +28,11 @@ private:
     juce::ComboBox speedRangeBox;
     
     // Text buttons for knob control
-    juce::TextButton lowSpeed { "Low" };
-    juce::TextButton midSpeed { "Mid" };
-    juce::TextButton highSpeed { "High" };
+    juce::TextButton lowSpeedButton { "Low" };
+    juce::TextButton midSpeedButton { "Mid" };
+    juce::TextButton highSpeedButton { "High" };
     juce::Slider speedKnob;
+    juce::RangedAudioParameter* currentSpeedParam = nullptr;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> speedRangeAttachment;
 

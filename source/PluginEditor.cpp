@@ -4,7 +4,7 @@
 
 PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), processorRef(p) {
     setLookAndFeel(&lookAndFeel);
-// #if DEBUG
+#if DEBUG
     addAndMakeVisible(inspectButton);
 
     // this chunk of code instantiates and opens the melatonin inspector
@@ -16,7 +16,7 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
 
         inspector->setVisible(true);
     };
-// #endif
+#endif
 
     const juce::StringArray speedRanges = processorRef.getSpeedRangeChoices();
     for (size_t i = 0; i < speedRanges.size(); i++) {
@@ -34,19 +34,27 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
     addAndMakeVisible(openButton);
     addAndMakeVisible(speedRangeBox);
 
-    addAndMakeVisible(lowSpeed);
-    addAndMakeVisible(midSpeed);
-    addAndMakeVisible(highSpeed);
+    addAndMakeVisible(lowSpeedButton);
+    addAndMakeVisible(midSpeedButton);
+    addAndMakeVisible(highSpeedButton);
     addAndMakeVisible(speedKnob);
+
     speedKnob.setSliderStyle(juce::Slider::Rotary);
     speedKnob.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    speedKnob.onValueChange = [this] {
+        if (currentSpeedParam) {
+            // Convert knob value to normalized (0-1)
+            float normalized = currentSpeedParam->convertTo0to1((float)speedKnob.getValue());
+            currentSpeedParam->setValueNotifyingHost(normalized);
+        }
+    };
     speedKnob.setValue(5.00);
 
     openButton.onClick = [this] { openButtonClicked(); };
     // FIXME: Hard coding parameter names is bad.
-    lowSpeed.onClick = [this] {speedKnobButtonClicked("lowSpeed");};
-    midSpeed.onClick = [this] {speedKnobButtonClicked("midSpeed");};
-    highSpeed.onClick = [this] {speedKnobButtonClicked("highSpeed");};
+    lowSpeedButton.onClick = [this] {speedKnobButtonClicked("lowSpeed");};
+    midSpeedButton.onClick = [this] {speedKnobButtonClicked("midSpeed");};
+    highSpeedButton.onClick = [this] {speedKnobButtonClicked("highSpeed");};
 
 }
 
@@ -66,21 +74,29 @@ void PluginEditor::openButtonClicked() {
 }
 
 void PluginEditor::speedKnobButtonClicked(const juce::String& parameter) {
-    float value = *processorRef.getParametersApvts().getRawParameterValue(parameter);
     if (parameter == "lowSpeed")
     {
+        currentSpeedParam = processorRef.getParametersApvts().getParameter("lowSpeed");
         speedKnob.setRange(0.0, 16.0);
     }
     else if (parameter == "midSpeed")
     {
+        currentSpeedParam = processorRef.getParametersApvts().getParameter("midSpeed");
         speedKnob.setRange(0.0, 64.0);
     }
     else if (parameter == "highSpeed")
     {
+        currentSpeedParam = processorRef.getParametersApvts().getParameter("highSpeed");
         speedKnob.setRange(0.0, 256.0);
     }
-    speedKnob.setValue(value);
-    // TODO: Add reverse support. Knob moves -> parameter value changes.
+
+    if (currentSpeedParam)
+    {
+        // Move knob to match parameter value
+        float normalized = currentSpeedParam->getValue(); // normalized 0-1
+        float realValue = currentSpeedParam->convertFrom0to1(normalized);
+        speedKnob.setValue(realValue, juce::dontSendNotification);
+    }
 }
 
 PluginProcessor& PluginEditor::getProcessor() const { return static_cast<PluginProcessor&>(processor); }
@@ -102,9 +118,9 @@ void PluginEditor::resized() {
     // openButton.setBounds((getWidth() / 2) - (100 / 2), 150, 100, 40);
     // speedRangeBox.setBounds((getWidth() / 2) - (100 / 2), 200, 100, 40);
     speedKnob.setBounds(getScreenBounds().withSizeKeepingCentre(180,180)); // 180x180
-    midSpeed.setBounds(speedKnob.getScreenX() + speedKnob.getWidth()/2 - 25, speedKnob.getScreenY() - 20, 50, 20); // 50x20
-    lowSpeed.setBounds(midSpeed.getScreenX() - 50, midSpeed.getScreenY(), 50, 20);
-    highSpeed.setBounds(midSpeed.getScreenX() + 50, midSpeed.getScreenY(), 50, 20);
+    midSpeedButton.setBounds(speedKnob.getScreenX() + speedKnob.getWidth()/2 - 25, speedKnob.getScreenY() - 20, 50, 20); // 50x20
+    lowSpeedButton.setBounds(midSpeedButton.getScreenX() - 50, midSpeedButton.getScreenY(), 50, 20);
+    highSpeedButton.setBounds(midSpeedButton.getScreenX() + 50, midSpeedButton.getScreenY(), 50, 20);
     // Let the generic controls layout first
     inspectButton.setSize(100, 50);
     inspectButton.setBoundsToFit(getScreenBounds(), juce::Justification::bottomRight, true);
