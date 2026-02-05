@@ -25,7 +25,11 @@ public:
             bool isTuned,
             double& nextQuarterNotePpq,
             double& nextNoteSample,
-            float noteLength);
+            float noteLength,
+            bool isUnjustIntonation,
+            int unjustRootNote,
+            float unjustNumerator,
+            float unjustDenominator);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -59,7 +63,11 @@ private:
             juce::MidiBuffer::Iterator& iterator,
             juce::MemoryAudioSource* sampleSource,
             const double bpm,
-            double currentPpq);
+            double currentPpq,
+            bool isUnjustIntonation,
+            int unjustRootNote,
+            float unjustNumerator,
+            float unjustDenominator);
 
     void processTuned(
             juce::MidiBuffer& inputBuffer,

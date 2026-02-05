@@ -1,6 +1,13 @@
 #include "SampleOscillator.h"
 #include "Utilities.h"
 
+inline float getUnjustScale(
+        float inputSpeedScale,
+        float unjustNumerator,
+        float unjustDenominator,
+        int lastNoteNum,
+        int unjustRootNote);
+
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
     formatManager.registerBasicFormats();
@@ -31,7 +38,11 @@ void SampleOscillator::processBlock(
         bool isTuned,
         double& nextQuarterNotePpq,
         double& nextNoteSample,
-        float noteLength) {
+        float noteLength,
+        bool isUnjustIntonation,
+        int unjustRootNote,
+        float unjustNumerator,
+        float unjustDenominator) {
     juce::MemoryAudioSource* sampleSource = audioSampleSource.get();
     if (!sampleSource)
         return;
@@ -53,7 +64,7 @@ void SampleOscillator::processBlock(
     const int bufferSize = outputBuffer.getNumSamples();
 
     if (!isTuned) {
-        processUntuned(
+        processUntuned( // TODO: Might just need a struct type for these massive param lists
                 inputBuffer,
                 outputBuffer,
                 speedScale,
@@ -71,7 +82,11 @@ void SampleOscillator::processBlock(
                 iterator,
                 sampleSource,
                 bpm,
-                currentPpq);
+                currentPpq,
+                isUnjustIntonation,
+                unjustRootNote,
+                unjustNumerator,
+                unjustDenominator);
     } else {
         processTuned(
                 inputBuffer,
@@ -98,7 +113,7 @@ void SampleOscillator::processBlock(
 void SampleOscillator::processUntuned(
         juce::MidiBuffer& inputBuffer,
         juce::AudioBuffer<float>& outputBuffer,
-        const float speedScale,
+        const float inputSpeedScale,
         const juce::AudioPlayHead::PositionInfo* positionInfo,
         double& nextQuarterNotePpq,
         double& nextNoteSample,
@@ -113,9 +128,26 @@ void SampleOscillator::processUntuned(
         juce::MidiBuffer::Iterator& iterator,
         juce::MemoryAudioSource* sampleSource,
         const double bpm,
-        double currentPpq) {
+        double currentPpq,
+        bool isUnjustIntonation,
+        int unjustRootNote,
+        float unjustNumerator,
+        float unjustDenominator) {
+    float speedScale =
+            isUnjustIntonation
+                    ? inputSpeedScale
+                              * getUnjustScale(
+                                      inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote)
+                    : inputSpeedScale;
+
     if (success) {
         lastNoteNum = firstMessage.getNoteNumber();
+
+        if (isUnjustIntonation) {
+            speedScale =
+                    inputSpeedScale
+                    * getUnjustScale(inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+        }
 
         if (firstMessage.isNoteOn()) {
             noteBeingHeld = true;
@@ -140,6 +172,13 @@ void SampleOscillator::processUntuned(
             int secondEventTime = 0; // The sample offset (relative to buffer start)
             bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
             lastNoteNum = secondMessage.getNoteNumber();
+
+            if (isUnjustIntonation) {
+                speedScale = inputSpeedScale
+                             * getUnjustScale(
+                                     inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+            }
+
             if (success2 && secondMessage.isNoteOn()) {
                 noteBeingHeld = true;
                 sampleInfo.startSample = secondEventTime;
@@ -207,6 +246,21 @@ void SampleOscillator::processUntuned(
     if (noteBeingHeld) {
         sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
         sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+    }
+}
+
+inline float getUnjustScale(
+        float inputSpeedScale,
+        float unjustNumerator,
+        float unjustDenominator,
+        int lastNoteNum,
+        int unjustRootNote) {
+    const int noteDiff = lastNoteNum - unjustRootNote;
+    const float interval = unjustNumerator / unjustDenominator;
+    if (noteDiff == 0) {
+        return 1.0f;
+    } else {
+        return std::pow(interval, noteDiff);
     }
 }
 

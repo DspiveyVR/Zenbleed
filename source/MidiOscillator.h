@@ -27,7 +27,11 @@ public:
             bool isTuned,
             double& nextQuarterNotePpq,
             double& nextNoteSample,
-            float noteLength);
+            float noteLength,
+            bool isUnjustIntonation,
+            int unjustRootNote,
+            float unjustNumerator,
+            float unjustDenominator);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -40,7 +44,11 @@ private:
             const juce::AudioPlayHead::PositionInfo* positionInfo,
             double& nextQuarterNotePpq,
             double& nextNoteSample,
-            float noteLength);
+            float noteLength,
+            bool isUnjustIntonation,
+            int unjustRootNote,
+            float unjustNumerator,
+            float unjustDenominator);
 
     void processTuned(
             const int bufferSize,

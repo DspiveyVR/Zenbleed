@@ -1,6 +1,13 @@
 #include "MidiOscillator.h"
 #include "Utilities.h"
 
+inline float getUnjustScale(
+        float inputSpeedScale,
+        float unjustNumerator,
+        float unjustDenominator,
+        int lastNoteNum,
+        int unjustRootNote);
+
 MidiOscillator::MidiOscillator() = default;
 MidiOscillator::~MidiOscillator() = default;
 
@@ -14,29 +21,35 @@ void MidiOscillator::processBlock(
         bool isTuned,
         double& nextQuarterNotePpq,
         double& nextNoteSample,
-        float noteLength) {
+        float noteLength,
+        bool isUnjustIntonation,
+        int unjustRootNote,
+        float unjustNumerator,
+        float unjustDenominator) {
     if (!isTuned) {
         processUntuned(
-            bufferSize,
-            inputBuffer,
-            outputBuffer,
-            speedScale,
-            positionInfo,
-            nextQuarterNotePpq,
-            nextNoteSample,
-            noteLength
-        );
+                bufferSize,
+                inputBuffer,
+                outputBuffer,
+                speedScale,
+                positionInfo,
+                nextQuarterNotePpq,
+                nextNoteSample,
+                noteLength,
+                isUnjustIntonation,
+                unjustRootNote,
+                unjustNumerator,
+                unjustDenominator);
     } else {
         processTuned(
-            bufferSize,
-            inputBuffer,
-            outputBuffer,
-            speedScale,
-            positionInfo,
-            nextQuarterNotePpq,
-            nextNoteSample,
-            noteLength
-        );
+                bufferSize,
+                inputBuffer,
+                outputBuffer,
+                speedScale,
+                positionInfo,
+                nextQuarterNotePpq,
+                nextNoteSample,
+                noteLength);
     }
 }
 
@@ -44,11 +57,22 @@ void MidiOscillator::processUntuned(
         const int bufferSize,
         juce::MidiBuffer& inputBuffer,
         juce::MidiBuffer& outputBuffer,
-        const float speedScale,
+        float inputSpeedScale,
         const juce::AudioPlayHead::PositionInfo* positionInfo,
         double& nextQuarterNotePpq,
         double& nextNoteSample,
-        float noteLength) {
+        float noteLength,
+        bool isUnjustIntonation,
+        int unjustRootNote,
+        float unjustNumerator,
+        float unjustDenominator) {
+    float speedScale =
+            isUnjustIntonation
+                    ? inputSpeedScale
+                              * getUnjustScale(
+                                      inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote)
+                    : inputSpeedScale;
+
     const double currentPpq = *positionInfo->getPpqPosition();
     juce::MidiMessage firstMessage;
     int firstEventTime = 0; // The sample offset (relative to buffer start)
@@ -62,15 +86,24 @@ void MidiOscillator::processUntuned(
     // 60 seconds cancels out the minutes unit in bpm.  What's left is samples over beats, where a "beat" is basically a quarter note.
     const double samplePerPpq = (60 * sampleRate) / bpm;
     if (!positionInfo->getIsPlaying()) {
-        outputBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), currentSamples);
+        outputBuffer.addEvent(
+                juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum), currentSamples);
         nextQuarterNotePpq = 0.0;
     }
 
     if (success) {
         lastNoteNum = firstMessage.getNoteNumber();
 
+        if (isUnjustIntonation) {
+            speedScale =
+                    inputSpeedScale
+                    * getUnjustScale(inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+        }
+
         if (firstMessage.isNoteOn()) {
-            outputBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), firstEventTime);
+            outputBuffer.addEvent(
+                    juce::MidiMessage::noteOn(1, isUnjustIntonation ? unjustRootNote : lastNoteNum, 1.0f),
+                    firstEventTime);
             noteBeingHeld = true;
             /*
                 First event time is relative to the start of the buffer so it must be added to current 
@@ -81,7 +114,8 @@ void MidiOscillator::processUntuned(
             */
             nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
         } else {
-            outputBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), firstEventTime);
+            outputBuffer.addEvent(
+                    juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum), firstEventTime);
             noteBeingHeld = false;
             nextQuarterNotePpq = 0.0;
 
@@ -90,8 +124,17 @@ void MidiOscillator::processUntuned(
             int secondEventTime = 0; // The sample offset (relative to buffer start)
             const bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
             lastNoteNum = secondMessage.getNoteNumber();
+
+            if (isUnjustIntonation) {
+                speedScale = inputSpeedScale
+                             * getUnjustScale(
+                                     inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+            }
+
             if (success2 && secondMessage.isNoteOn()) {
-                outputBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), secondEventTime);
+                outputBuffer.addEvent(
+                        juce::MidiMessage::noteOn(1, isUnjustIntonation ? unjustRootNote : lastNoteNum, 1.0f),
+                        secondEventTime);
                 noteBeingHeld = true;
                 nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
             }
@@ -105,7 +148,8 @@ void MidiOscillator::processUntuned(
     while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
         if (noteBeingHeld && noteEndInBlock) {
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOff(1, lastNoteNum), floor((adjustedNoteEnd - currentPpq) * samplePerPpq));
+                    juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum),
+                    floor((adjustedNoteEnd - currentPpq) * samplePerPpq));
             noteBeingHeld = false;
         }
         if (nextNoteInBlock) {
@@ -113,8 +157,12 @@ void MidiOscillator::processUntuned(
             const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
 
             // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
-            outputBuffer.addEvent(juce::MidiMessage::noteOff(1, lastNoteNum), floor(noteOffset));
-            outputBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteNum, 1.0f), floor(noteOffset));
+            outputBuffer.addEvent(
+                    juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum),
+                    floor(noteOffset));
+            outputBuffer.addEvent(
+                    juce::MidiMessage::noteOn(1, isUnjustIntonation ? unjustRootNote : lastNoteNum, 1.0f),
+                    floor(noteOffset));
             noteBeingHeld = true;
 
             // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
@@ -126,6 +174,21 @@ void MidiOscillator::processUntuned(
                               && !compareFloat(nextQuarterNotePpq, 0.0);
             noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
         }
+    }
+}
+
+inline float getUnjustScale(
+        float inputSpeedScale,
+        float unjustNumerator,
+        float unjustDenominator,
+        int lastNoteNum,
+        int unjustRootNote) {
+    const int noteDiff = lastNoteNum - unjustRootNote;
+    const float interval = unjustNumerator / unjustDenominator;
+    if (noteDiff == 0) {
+        return 1.0f;
+    } else {
+        return std::pow(interval, noteDiff);
     }
 }
 
