@@ -37,24 +37,31 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
     addAndMakeVisible(lowSpeedButton);
     addAndMakeVisible(midSpeedButton);
     addAndMakeVisible(highSpeedButton);
-    addAndMakeVisible(speedKnob);
+    addAndMakeVisible(speedSlider);
 
-    speedKnob.setSliderStyle(juce::Slider::Rotary);
-    speedKnob.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    speedKnob.onValueChange = [this] {
+    addAndMakeVisible(midiToggle);
+    addAndMakeVisible(tunedToggle);
+    addAndMakeVisible(titleLabel);
+
+    titleLabel.setText("Lambel", juce::dontSendNotification);
+
+
+    // speedKnob.setSliderStyle(juce::Slider::Rotary);
+    speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    speedSlider.onValueChange = [this] {
         if (currentSpeedParam) {
             // Convert knob value to normalized (0-1)
-            float normalized = currentSpeedParam->convertTo0to1((float)speedKnob.getValue());
+            float normalized = currentSpeedParam->convertTo0to1((float)speedSlider.getValue());
             currentSpeedParam->setValueNotifyingHost(normalized);
         }
     };
-    speedKnob.setValue(5.00);
+    speedSlider.setValue(5.00);
 
     openButton.onClick = [this] { openButtonClicked(); };
     // FIXME: Hard coding parameter names is bad.
-    lowSpeedButton.onClick = [this] {speedKnobButtonClicked("lowSpeed");};
-    midSpeedButton.onClick = [this] {speedKnobButtonClicked("midSpeed");};
-    highSpeedButton.onClick = [this] {speedKnobButtonClicked("highSpeed");};
+    lowSpeedButton.onClick = [this] {speedSliderButtonClicked("lowSpeed");};
+    midSpeedButton.onClick = [this] {speedSliderButtonClicked("midSpeed");};
+    highSpeedButton.onClick = [this] {speedSliderButtonClicked("highSpeed");};
 
 }
 
@@ -73,21 +80,21 @@ void PluginEditor::openButtonClicked() {
     });
 }
 
-void PluginEditor::speedKnobButtonClicked(const juce::String& parameter) {
+void PluginEditor::speedSliderButtonClicked(const juce::String& parameter) {
     if (parameter == "lowSpeed")
     {
         currentSpeedParam = processorRef.getParametersApvts().getParameter("lowSpeed");
-        speedKnob.setRange(0.0, 16.0);
+        speedSlider.setRange(0.0, 16.0);
     }
     else if (parameter == "midSpeed")
     {
         currentSpeedParam = processorRef.getParametersApvts().getParameter("midSpeed");
-        speedKnob.setRange(0.0, 64.0);
+        speedSlider.setRange(0.0, 64.0);
     }
     else if (parameter == "highSpeed")
     {
         currentSpeedParam = processorRef.getParametersApvts().getParameter("highSpeed");
-        speedKnob.setRange(0.0, 256.0);
+        speedSlider.setRange(0.0, 256.0);
     }
 
     if (currentSpeedParam)
@@ -95,7 +102,7 @@ void PluginEditor::speedKnobButtonClicked(const juce::String& parameter) {
         // Move knob to match parameter value
         float normalized = currentSpeedParam->getValue(); // normalized 0-1
         float realValue = currentSpeedParam->convertFrom0to1(normalized);
-        speedKnob.setValue(realValue, juce::dontSendNotification);
+        speedSlider.setValue(realValue, juce::dontSendNotification);
     }
 }
 
@@ -117,10 +124,20 @@ void PluginEditor::resized() {
     juce::AudioProcessorEditor::resized();
     // openButton.setBounds((getWidth() / 2) - (100 / 2), 150, 100, 40);
     // speedRangeBox.setBounds((getWidth() / 2) - (100 / 2), 200, 100, 40);
-    speedKnob.setBounds(getScreenBounds().withSizeKeepingCentre(180,180)); // 180x180
-    midSpeedButton.setBounds(speedKnob.getScreenX() + speedKnob.getWidth()/2 - 25, speedKnob.getScreenY() - 20, 50, 20); // 50x20
+
+    // Speed controls
+    speedSlider.setBounds(getScreenBounds().withSizeKeepingCentre(180,30)); // 180x180
+    midSpeedButton.setBounds(speedSlider.getScreenX() + speedSlider.getWidth()/2 - 25, speedSlider.getScreenY() - 20, 50, 20); // 50x20
     lowSpeedButton.setBounds(midSpeedButton.getScreenX() - 50, midSpeedButton.getScreenY(), 50, 20);
     highSpeedButton.setBounds(midSpeedButton.getScreenX() + 50, midSpeedButton.getScreenY(), 50, 20);
+    
+    // Toggles
+    midiToggle.setBounds(speedSlider.getScreenX() + speedSlider.getWidth()/3 - 15, speedSlider.getScreenY() + 70, 25, 20);
+    tunedToggle.setBounds(speedSlider.getScreenX() + 2*speedSlider.getWidth()/3 - 15, midiToggle.getScreenY(), 25, 20);
+
+    // Labels
+    titleLabel.setBoundsToFit(getScreenBounds(),juce::Justification::topRight, true);
+    
     // Let the generic controls layout first
     inspectButton.setSize(100, 50);
     inspectButton.setBoundsToFit(getScreenBounds(), juce::Justification::bottomRight, true);

@@ -26,18 +26,31 @@ private:
     juce::TextButton inspectButton { "Inspect the UI" };
     juce::TextButton openButton { "Open" }; /**< Opens the file explorer to allow the user to select an audio sample. */
     juce::ComboBox speedRangeBox;
-    
-    // Text buttons for knob control
+
+    // Speed Control
     juce::TextButton lowSpeedButton { "Low" };
     juce::TextButton midSpeedButton { "Mid" };
     juce::TextButton highSpeedButton { "High" };
-    juce::Slider speedKnob;
+    juce::Slider speedSlider;
     juce::RangedAudioParameter* currentSpeedParam = nullptr;
+
+    // Labels
+    juce::Label titleLabel;
+    juce::Label midiToggleLabel;
+    juce::Label tunedToggleLabel;
+    // TODO: Add labels to other parts of the window.
+
+    // Frames
+    // TODO: Add frames to segment components and modularize.
+
+    // Toggles
+    juce::ToggleButton midiToggle;
+    juce::ToggleButton tunedToggle;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> speedRangeAttachment;
 
     void openButtonClicked();
-    void speedKnobButtonClicked(const juce::String&);
+    void speedSliderButtonClicked(const juce::String&);
     PluginProcessor& getProcessor() const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
