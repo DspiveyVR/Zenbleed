@@ -77,6 +77,7 @@ private:
     std::atomic<float>* unjustNumeratorParameter = nullptr; /**< Unjust Intonation numerator parameter: Controls the numerator of the harmonic interval used in Unjust Intonation */
     std::atomic<float>* unjustDenominatorParameter = nullptr; /**< Unjust Intonation denominator parameter: Controls the denominator of the harmonic interval used in Unjust Intonation */
     std::atomic<float>* noteLengthParameter = nullptr; /**< Note length parameter: Controls how long a note is held before the next note is played */
+    std::atomic<float>* samplePitchBendParameter = nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
     double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     double nextNoteSample = 0; /**< The sample position of the next note to be played. */
 

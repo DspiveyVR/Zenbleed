@@ -26,6 +26,7 @@ public:
             double& nextQuarterNotePpq,
             double& nextNoteSample,
             float noteLength,
+            float samplePitchBendRatio,
             bool isUnjustIntonation,
             int unjustRootNote,
             float unjustNumerator,
@@ -53,15 +54,15 @@ private:
             double& nextQuarterNotePpq,
             double& nextNoteSample,
             float noteLength,
+            float samplePitchBendRatio,
             bool success,
             double firstEventTime,
-            juce::AudioSourceChannelInfo& sampleInfo,
             juce::MidiMessage firstMessage,
             double currentSamples,
             double samplePerPpq,
             const int bufferSize,
             juce::MidiBuffer::Iterator& iterator,
-            juce::MemoryAudioSource* sampleSource,
+            juce::AudioBuffer<float>* sampleBuffer,
             const double bpm,
             double currentPpq,
             bool isUnjustIntonation,
@@ -77,24 +78,25 @@ private:
             double& nextQuarterNotePpq,
             double& nextNoteSample,
             float noteLength,
+            float samplePitchBendRatio,
             bool success,
             double firstEventTime,
-            juce::AudioSourceChannelInfo& sampleInfo,
             juce::MidiMessage firstMessage,
             double currentSamples,
             double samplePerPpq,
             const int bufferSize,
             juce::MidiBuffer::Iterator& iterator,
-            juce::MemoryAudioSource* sampleSource,
+            juce::AudioBuffer<float>* sampleBuffer,
             const double bpm,
             double currentPpq);
 
     double sampleRate = 0.0;
     bool wasPlaying = false;
     int lastNoteNum = 0; /**< The number of the last musical note that was played. */
+    double nextReadPosition = 0.0;
 
     juce::AudioFormatManager formatManager;
-    std::unique_ptr<juce::MemoryAudioSource> audioSampleSource; /**< The source that holds the loaded sample data. */
+    std::unique_ptr<juce::AudioBuffer<float>> loadedSampleBuffer; /**< The buffer that holds the loaded sample data. */
     bool noteBeingHeld = false; /**< indicates whether a note is currently being held. */
 
     juce::AudioProcessorValueTreeState& parametersRef;

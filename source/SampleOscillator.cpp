@@ -24,10 +24,13 @@ void SampleOscillator::loadSampleFromFile(const juce::File& file) {
     auto totalLength = (int)reader->lengthInSamples;
     auto numChannels = (int)reader->numChannels;
 
-    auto sampleBuffer = std::make_unique<juce::AudioBuffer<float>>(numChannels, totalLength);
-    reader->read(sampleBuffer.get(), 0, totalLength, 0, true, true);
+    loadedSampleBuffer = std::make_unique<juce::AudioBuffer<float>>(numChannels, totalLength + 1);
+    reader->read(loadedSampleBuffer.get(), 0, totalLength, 0, true, true);
 
-    audioSampleSource = std::make_unique<juce::MemoryAudioSource>(*sampleBuffer.release(), true);
+    for (int ch = 0; ch < numChannels; ++ch)
+        loadedSampleBuffer->setSample(ch, totalLength, loadedSampleBuffer->getSample(ch, 0));
+
+    delete reader;
 }
 
 void SampleOscillator::processBlock(
@@ -39,15 +42,14 @@ void SampleOscillator::processBlock(
         double& nextQuarterNotePpq,
         double& nextNoteSample,
         float noteLength,
+        float samplePitchBendRatio,
         bool isUnjustIntonation,
         int unjustRootNote,
         float unjustNumerator,
         float unjustDenominator) {
-    juce::MemoryAudioSource* sampleSource = audioSampleSource.get();
-    if (!sampleSource)
+    juce::AudioBuffer<float>* sampleBuffer = loadedSampleBuffer.get();
+    if (!sampleBuffer)
         return;
-
-    juce::AudioSourceChannelInfo sampleInfo(outputBuffer);
 
     const double currentPpq = *positionInfo->getPpqPosition();
     juce::MidiMessage firstMessage;
@@ -64,7 +66,7 @@ void SampleOscillator::processBlock(
     const int bufferSize = outputBuffer.getNumSamples();
 
     if (!isTuned) {
-        processUntuned( // TODO: Might just need a struct type for these massive param lists
+        processUntuned(
                 inputBuffer,
                 outputBuffer,
                 speedScale,
@@ -72,15 +74,15 @@ void SampleOscillator::processBlock(
                 nextQuarterNotePpq,
                 nextNoteSample,
                 noteLength,
+                samplePitchBendRatio,
                 success,
                 firstEventTime,
-                sampleInfo,
                 firstMessage,
                 currentSamples,
                 samplePerPpq,
                 bufferSize,
                 iterator,
-                sampleSource,
+                sampleBuffer,
                 bpm,
                 currentPpq,
                 isUnjustIntonation,
@@ -96,15 +98,15 @@ void SampleOscillator::processBlock(
                 nextQuarterNotePpq,
                 nextNoteSample,
                 noteLength,
+                samplePitchBendRatio,
                 success,
                 firstEventTime,
-                sampleInfo,
                 firstMessage,
                 currentSamples,
                 samplePerPpq,
                 bufferSize,
                 iterator,
-                sampleSource,
+                sampleBuffer,
                 bpm,
                 currentPpq);
     }
@@ -118,21 +120,27 @@ void SampleOscillator::processUntuned(
         double& nextQuarterNotePpq,
         double& nextNoteSample,
         float noteLength,
+        float samplePitchBendRatio,
         bool success,
         double firstEventTime,
-        juce::AudioSourceChannelInfo& sampleInfo,
         juce::MidiMessage firstMessage,
         double currentSamples,
         double samplePerPpq,
         const int bufferSize,
         juce::MidiBuffer::Iterator& iterator,
-        juce::MemoryAudioSource* sampleSource,
+        juce::AudioBuffer<float>* sampleBuffer,
         const double bpm,
         double currentPpq,
         bool isUnjustIntonation,
         int unjustRootNote,
         float unjustNumerator,
         float unjustDenominator) {
+    const float* inSamples = sampleBuffer->getReadPointer(0);
+    float* outSamples = outputBuffer.getWritePointer(0);
+
+    int writeStart = 0;
+    int writeLength = 0;
+
     float speedScale =
             isUnjustIntonation
                     ? inputSpeedScale
@@ -151,7 +159,7 @@ void SampleOscillator::processUntuned(
 
         if (firstMessage.isNoteOn()) {
             noteBeingHeld = true;
-            sampleInfo.startSample = firstEventTime;
+            writeStart = firstEventTime;
             /*
                     First event time is relative to the start of the buffer so it must be added to current 
                     samples in order to get its absolute position.  Both of these are in units of samples 
@@ -162,10 +170,16 @@ void SampleOscillator::processUntuned(
             nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
         } else {
             noteBeingHeld = false;
-            sampleInfo.numSamples = firstEventTime - sampleInfo.startSample;
-            sampleSource->setNextReadPosition(0);
+            writeLength = firstEventTime - writeStart;
             nextQuarterNotePpq = 0.0;
-            sampleSource->getNextAudioBlock(sampleInfo); // Play the first note
+            nextReadPosition = 0;
+
+            for (int i = 0; i < (int)writeLength; ++i) {
+                int idxA = (int)nextReadPosition;
+                float fraction = (float)(nextReadPosition - (double)idxA);
+                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                nextReadPosition += samplePitchBendRatio;
+            }
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -181,8 +195,8 @@ void SampleOscillator::processUntuned(
 
             if (success2 && secondMessage.isNoteOn()) {
                 noteBeingHeld = true;
-                sampleInfo.startSample = secondEventTime;
-                sampleSource->setNextReadPosition(0);
+                writeStart = secondEventTime;
+                nextReadPosition = 0;
 
                 const double samplePerPpq = (60 * sampleRate) / bpm;
                 nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
@@ -198,10 +212,15 @@ void SampleOscillator::processUntuned(
     while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
-            double fragmentSamples = (adjustedNoteEnd * samplePerPpq) - currentSamples - sampleInfo.startSample;
+            double fragmentSamples = (adjustedNoteEnd * samplePerPpq) - currentSamples - writeStart;
 
-            sampleInfo.numSamples = fragmentSamples;
-            sampleSource->getNextAudioBlock(sampleInfo);
+            writeLength = fragmentSamples;
+            for (int i = 0; i < (int)writeLength; ++i) {
+                int idxA = (int)nextReadPosition;
+                float fraction = (float)(nextReadPosition - (double)idxA);
+                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                nextReadPosition += samplePitchBendRatio;
+            }
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -210,7 +229,7 @@ void SampleOscillator::processUntuned(
             // The call to min is there to ensure that the fadeLength is never longer than the fragment length (this would cause a memory error),
             // though I haven't checked if this is mathematically possible anyway.
             const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
-            const int fadeStart = sampleInfo.startSample + fragmentSamples - fadeLength;
+            const int fadeStart = writeStart + fragmentSamples - fadeLength;
 
             for (int ch = 0; ch < outputBuffer.getNumChannels(); ++ch) {
                 outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
@@ -221,16 +240,20 @@ void SampleOscillator::processUntuned(
         if (nextNoteInBlock) {
             // Sample position of the note relative to the start of the current block.
             const double noteOffset = (nextQuarterNotePpq - currentPpq) * samplePerPpq;
-            sampleInfo.numSamples = noteOffset - sampleInfo.startSample - 1;
+            writeLength = noteOffset - writeStart - 1;
 
             if (!noteEndInBlock) {
-                sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+                for (int i = 0; i < (int)writeLength; ++i) {
+                    int idxA = (int)nextReadPosition;
+                    float fraction = (float)(nextReadPosition - (double)idxA);
+                    outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                    nextReadPosition += samplePitchBendRatio;
+                }
             }
             noteBeingHeld = true;
 
-            sampleSource->setNextReadPosition(0);
-
-            sampleInfo.startSample = noteOffset;
+            nextReadPosition = 0;
+            writeStart = noteOffset;
 
             // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
             // note relative to the baseline.
@@ -244,8 +267,13 @@ void SampleOscillator::processUntuned(
         }
     }
     if (noteBeingHeld) {
-        sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
-        sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        writeLength = outputBuffer.getNumSamples() - writeStart;
+        for (int i = 0; i < (int)writeLength; ++i) {
+            int idxA = (int)nextReadPosition;
+            float fraction = (float)(nextReadPosition - (double)idxA);
+            outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+            nextReadPosition += samplePitchBendRatio;
+        }
     }
 }
 
@@ -272,17 +300,23 @@ void SampleOscillator::processTuned(
         double& nextQuarterNotePpq,
         double& nextNoteSample,
         float noteLength,
+        float samplePitchBendRatio,
         bool success,
         double firstEventTime,
-        juce::AudioSourceChannelInfo& sampleInfo,
         juce::MidiMessage firstMessage,
         double currentSamples,
         double samplePerPpq,
         const int bufferSize,
         juce::MidiBuffer::Iterator& iterator,
-        juce::MemoryAudioSource* sampleSource,
+        juce::AudioBuffer<float>* sampleBuffer,
         const double bpm,
         double currentPpq) {
+    const float* inSamples = sampleBuffer->getReadPointer(0);
+    float* outSamples = outputBuffer.getWritePointer(0);
+
+    int writeStart = 0;
+    int writeLength = 0;
+
     if (success) {
         lastNoteNum = firstMessage.getNoteNumber();
 
@@ -292,10 +326,10 @@ void SampleOscillator::processTuned(
 
         if (firstMessage.isNoteOn()) {
             noteBeingHeld = true;
-            sampleInfo.startSample = firstEventTime;
+            writeStart = firstEventTime;
             /*
-                    First event time is relative to the start of the buffer so it must be added to current 
-                    samples in order to get its absolute position.  Both of these are in units of samples 
+                    First event time is relative to the start of the buffer so it must be added to current
+                    samples in order to get its absolute position.  Both of these are in units of samples
                     so they must be converted to ppq.
                     Clearly the next quarter note is simply one quarter note after the current one, but speedScale
                     must be accounted for since a higher speed effectively results in a shorter note and vice-versa.
@@ -303,10 +337,17 @@ void SampleOscillator::processTuned(
             nextNoteSample = currentSamples + firstEventTime + samplePerHz / speedScale;
         } else {
             noteBeingHeld = false;
-            sampleInfo.numSamples = firstEventTime - sampleInfo.startSample;
-            sampleSource->setNextReadPosition(0);
+            writeLength = firstEventTime - writeStart;
+            nextReadPosition = 0;
             nextNoteSample = 0.0;
-            sampleSource->getNextAudioBlock(sampleInfo); // Play the first note
+
+            // Play the first note
+            for (int i = 0; i < (int)writeLength; ++i) {
+                int idxA = (int)nextReadPosition;
+                float fraction = (float)(nextReadPosition - (double)idxA);
+                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                nextReadPosition += samplePitchBendRatio;
+            }
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -315,8 +356,8 @@ void SampleOscillator::processTuned(
             lastNoteNum = secondMessage.getNoteNumber();
             if (success2 && secondMessage.isNoteOn()) {
                 noteBeingHeld = true;
-                sampleInfo.startSample = secondEventTime;
-                sampleSource->setNextReadPosition(0);
+                writeStart = secondEventTime;
+                nextReadPosition = 0;
                 const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
                 const double samplePerHz = sampleRate / hertz;
 
@@ -334,10 +375,15 @@ void SampleOscillator::processTuned(
     while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
-            double fragmentSamples = (adjustedNoteEnd - currentSamples) - sampleInfo.startSample;
+            double fragmentSamples = (adjustedNoteEnd - currentSamples) - writeStart;
 
-            sampleInfo.numSamples = fragmentSamples;
-            sampleSource->getNextAudioBlock(sampleInfo);
+            writeLength = fragmentSamples;
+            for (int i = 0; i < (int)writeLength; ++i) {
+                int idxA = (int)nextReadPosition;
+                float fraction = (float)(nextReadPosition - (double)idxA);
+                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                nextReadPosition += samplePitchBendRatio;
+            }
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -346,7 +392,7 @@ void SampleOscillator::processTuned(
             // The call to min is there to ensure that the fadeLength is never longer than the fragment length (this would cause a memory error),
             // though I haven't checked if this is mathematically possible anyway.
             const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
-            const int fadeStart = sampleInfo.startSample + fragmentSamples - fadeLength;
+            const int fadeStart = writeStart + fragmentSamples - fadeLength;
 
             for (int ch = 0; ch < outputBuffer.getNumChannels(); ++ch) {
                 outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
@@ -356,15 +402,21 @@ void SampleOscillator::processTuned(
         }
         if (nextNoteInBlock) {
             const double noteOffset = nextNoteSample - currentSamples;
-            sampleInfo.numSamples = noteOffset - sampleInfo.startSample - 1;
+            writeLength = noteOffset - writeStart - 1;
 
             if (!noteEndInBlock) {
-                sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+                // play the remainder of the current note
+                for (int i = 0; i < (int)writeLength; ++i) {
+                    int idxA = (int)nextReadPosition;
+                    float fraction = (float)(nextReadPosition - (double)idxA);
+                    outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                    nextReadPosition += samplePitchBendRatio;
+                }
             }
             noteBeingHeld = true;
 
-            sampleSource->setNextReadPosition(0);
-            sampleInfo.startSample = noteOffset;
+            nextReadPosition = 0;
+            writeStart = noteOffset;
 
             // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
             // note relative to the baseline.
@@ -378,7 +430,13 @@ void SampleOscillator::processTuned(
     }
 
     if (noteBeingHeld) {
-        sampleInfo.numSamples = outputBuffer.getNumSamples() - sampleInfo.startSample;
-        sampleSource->getNextAudioBlock(sampleInfo); // play the remainder of the current note
+        writeLength = outputBuffer.getNumSamples() - writeStart;
+        // play the remainder of the current note
+        for (int i = 0; i < (int)writeLength; ++i) {
+            int idxA = (int)nextReadPosition;
+            float fraction = (float)(nextReadPosition - (double)idxA);
+            outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+            nextReadPosition += samplePitchBendRatio;
+        }
     }
 }
