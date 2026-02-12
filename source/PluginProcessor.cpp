@@ -46,24 +46,24 @@ PluginProcessor::PluginProcessor() :
                       false,
                       juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
               std::make_unique<juce::AudioParameterBool>(
-                      "isUnjustIntonation",
-                      "Unjust Intonation",
+                      "isEtet",
+                      "Extratone Equal Temperament (ETET)",
                       false,
                       juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
               std::make_unique<juce::AudioParameterFloat>(
-                      "unjustRootNote",
+                      "etetRootNote",
                       "Root Note",
                       juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
                       1.0f,
                       juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
               std::make_unique<juce::AudioParameterFloat>(
-                      "unjustNumerator",
+                      "etetNumerator",
                       "Numerator",
                       juce::NormalisableRange<float> { 1.0f, 16.0f, 1.0f },
                       1.0f,
                       juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
               std::make_unique<juce::AudioParameterFloat>(
-                      "unjustDenominator",
+                      "etetDenominator",
                       "Denominator",
                       juce::NormalisableRange<float> { 1.0f, 16.0f, 1.0f },
                       1.0f,
@@ -90,10 +90,10 @@ PluginProcessor::PluginProcessor() :
     speedRangeParameter = parameters.getRawParameterValue("speedRange");
     isMidiModeParameter = parameters.getRawParameterValue("isMidiMode");
     isTunedParameter = parameters.getRawParameterValue("isTuned");
-    isUnjustIntonationParameter = parameters.getRawParameterValue("isUnjustIntonation");
-    unjustRootNoteParameter = parameters.getRawParameterValue("unjustRootNote");
-    unjustNumeratorParameter = parameters.getRawParameterValue("unjustNumerator");
-    unjustDenominatorParameter = parameters.getRawParameterValue("unjustDenominator");
+    isEtetParameter = parameters.getRawParameterValue("isEtet");
+    etetRootNoteParameter = parameters.getRawParameterValue("etetRootNote");
+    etetNumeratorParameter = parameters.getRawParameterValue("etetNumerator");
+    etetDenominatorParameter = parameters.getRawParameterValue("etetDenominator");
     noteLengthParameter = parameters.getRawParameterValue("noteLength");
     samplePitchBendParameter = parameters.getRawParameterValue("samplePitchBendRatio");
 }
@@ -221,10 +221,10 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 nextQuarterNotePpq,
                 nextNoteSample,
                 noteLength,
-                isUnjustIntonationParameter->load(),
-                unjustRootNoteParameter->load(),
-                unjustNumeratorParameter->load(),
-                unjustDenominatorParameter->load());
+                isEtetParameter->load(),
+                etetRootNoteParameter->load(),
+                etetNumeratorParameter->load(),
+                etetDenominatorParameter->load());
 
         midiMessages.swapWith(outputBuffer);
     } else {
@@ -238,10 +238,10 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 nextNoteSample,
                 noteLength,
                 samplePitchBendRatio,
-                isUnjustIntonationParameter->load(),
-                unjustRootNoteParameter->load(),
-                unjustNumeratorParameter->load(),
-                unjustDenominatorParameter->load());
+                isEtetParameter->load(),
+                etetRootNoteParameter->load(),
+                etetNumeratorParameter->load(),
+                etetDenominatorParameter->load());
     }
 }
 

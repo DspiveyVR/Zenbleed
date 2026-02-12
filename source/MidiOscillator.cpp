@@ -1,12 +1,12 @@
 #include "MidiOscillator.h"
 #include "Utilities.h"
 
-inline float getUnjustScale(
+inline float getEtetScale(
         float inputSpeedScale,
-        float unjustNumerator,
-        float unjustDenominator,
+        float etetNumerator,
+        float etetDenominator,
         int lastNoteNum,
-        int unjustRootNote);
+        int etetRootNote);
 
 MidiOscillator::MidiOscillator() = default;
 MidiOscillator::~MidiOscillator() = default;
@@ -22,10 +22,10 @@ void MidiOscillator::processBlock(
         double& nextQuarterNotePpq,
         double& nextNoteSample,
         float noteLength,
-        bool isUnjustIntonation,
-        int unjustRootNote,
-        float unjustNumerator,
-        float unjustDenominator) {
+        bool isEtet,
+        int etetRootNote,
+        float etetNumerator,
+        float etetDenominator) {
     if (!isTuned) {
         processUntuned(
                 bufferSize,
@@ -36,10 +36,10 @@ void MidiOscillator::processBlock(
                 nextQuarterNotePpq,
                 nextNoteSample,
                 noteLength,
-                isUnjustIntonation,
-                unjustRootNote,
-                unjustNumerator,
-                unjustDenominator);
+                isEtet,
+                etetRootNote,
+                etetNumerator,
+                etetDenominator);
     } else {
         processTuned(
                 bufferSize,
@@ -62,15 +62,15 @@ void MidiOscillator::processUntuned(
         double& nextQuarterNotePpq,
         double& nextNoteSample,
         float noteLength,
-        bool isUnjustIntonation,
-        int unjustRootNote,
-        float unjustNumerator,
-        float unjustDenominator) {
+        bool isEtet,
+        int etetRootNote,
+        float etetNumerator,
+        float etetDenominator) {
     float speedScale =
-            isUnjustIntonation
+            isEtet
                     ? inputSpeedScale
-                              * getUnjustScale(
-                                      inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote)
+                              * getEtetScale(
+                                      inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
                     : inputSpeedScale;
 
     const double currentPpq = *positionInfo->getPpqPosition();
@@ -87,22 +87,22 @@ void MidiOscillator::processUntuned(
     const double samplePerPpq = (60 * sampleRate) / bpm;
     if (!positionInfo->getIsPlaying()) {
         outputBuffer.addEvent(
-                juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum), currentSamples);
+                juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), currentSamples);
         nextQuarterNotePpq = 0.0;
     }
 
     if (success) {
         lastNoteNum = firstMessage.getNoteNumber();
 
-        if (isUnjustIntonation) {
+        if (isEtet) {
             speedScale =
                     inputSpeedScale
-                    * getUnjustScale(inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+                    * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
         }
 
         if (firstMessage.isNoteOn()) {
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOn(1, isUnjustIntonation ? unjustRootNote : lastNoteNum, 1.0f),
+                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f),
                     firstEventTime);
             noteBeingHeld = true;
             /*
@@ -115,7 +115,7 @@ void MidiOscillator::processUntuned(
             nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
         } else {
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum), firstEventTime);
+                    juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), firstEventTime);
             noteBeingHeld = false;
             nextQuarterNotePpq = 0.0;
 
@@ -125,15 +125,15 @@ void MidiOscillator::processUntuned(
             const bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
             lastNoteNum = secondMessage.getNoteNumber();
 
-            if (isUnjustIntonation) {
+            if (isEtet) {
                 speedScale = inputSpeedScale
-                             * getUnjustScale(
-                                     inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+                             * getEtetScale(
+                                     inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
                 outputBuffer.addEvent(
-                        juce::MidiMessage::noteOn(1, isUnjustIntonation ? unjustRootNote : lastNoteNum, 1.0f),
+                        juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f),
                         secondEventTime);
                 noteBeingHeld = true;
                 nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
@@ -148,7 +148,7 @@ void MidiOscillator::processUntuned(
     while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
         if (noteBeingHeld && noteEndInBlock) {
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum),
+                    juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum),
                     floor((adjustedNoteEnd - currentPpq) * samplePerPpq));
             noteBeingHeld = false;
         }
@@ -158,10 +158,10 @@ void MidiOscillator::processUntuned(
 
             // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOff(1, isUnjustIntonation ? unjustRootNote : lastNoteNum),
+                    juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum),
                     floor(noteOffset));
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOn(1, isUnjustIntonation ? unjustRootNote : lastNoteNum, 1.0f),
+                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f),
                     floor(noteOffset));
             noteBeingHeld = true;
 
@@ -177,14 +177,14 @@ void MidiOscillator::processUntuned(
     }
 }
 
-inline float getUnjustScale(
+inline float getEtetScale(
         float inputSpeedScale,
-        float unjustNumerator,
-        float unjustDenominator,
+        float etetNumerator,
+        float etetDenominator,
         int lastNoteNum,
-        int unjustRootNote) {
-    const int noteDiff = lastNoteNum - unjustRootNote;
-    const float interval = unjustNumerator / unjustDenominator;
+        int etetRootNote) {
+    const int noteDiff = lastNoteNum - etetRootNote;
+    const float interval = etetNumerator / etetDenominator;
     if (noteDiff == 0) {
         return 1.0f;
     } else {

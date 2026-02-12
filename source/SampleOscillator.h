@@ -27,10 +27,10 @@ public:
             double& nextNoteSample,
             float noteLength,
             float samplePitchBendRatio,
-            bool isUnjustIntonation,
-            int unjustRootNote,
-            float unjustNumerator,
-            float unjustDenominator);
+            bool isEtet,
+            int etetRootNote,
+            float etetNumerator,
+            float etetDenominator);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -65,10 +65,10 @@ private:
             juce::AudioBuffer<float>* sampleBuffer,
             const double bpm,
             double currentPpq,
-            bool isUnjustIntonation,
-            int unjustRootNote,
-            float unjustNumerator,
-            float unjustDenominator);
+            bool isEtet,
+            int etetRootNote,
+            float etetNumerator,
+            float etetDenominator);
 
     void processTuned(
             juce::MidiBuffer& inputBuffer,

@@ -1,12 +1,12 @@
 #include "SampleOscillator.h"
 #include "Utilities.h"
 
-inline float getUnjustScale(
+inline float getEtetScale(
         float inputSpeedScale,
-        float unjustNumerator,
-        float unjustDenominator,
+        float etetNumerator,
+        float etetDenominator,
         int lastNoteNum,
-        int unjustRootNote);
+        int etetRootNote);
 
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
@@ -43,10 +43,10 @@ void SampleOscillator::processBlock(
         double& nextNoteSample,
         float noteLength,
         float samplePitchBendRatio,
-        bool isUnjustIntonation,
-        int unjustRootNote,
-        float unjustNumerator,
-        float unjustDenominator) {
+        bool isEtet,
+        int etetRootNote,
+        float etetNumerator,
+        float etetDenominator) {
     juce::AudioBuffer<float>* sampleBuffer = loadedSampleBuffer.get();
     if (!sampleBuffer)
         return;
@@ -85,10 +85,10 @@ void SampleOscillator::processBlock(
                 sampleBuffer,
                 bpm,
                 currentPpq,
-                isUnjustIntonation,
-                unjustRootNote,
-                unjustNumerator,
-                unjustDenominator);
+                isEtet,
+                etetRootNote,
+                etetNumerator,
+                etetDenominator);
     } else {
         processTuned(
                 inputBuffer,
@@ -131,10 +131,10 @@ void SampleOscillator::processUntuned(
         juce::AudioBuffer<float>* sampleBuffer,
         const double bpm,
         double currentPpq,
-        bool isUnjustIntonation,
-        int unjustRootNote,
-        float unjustNumerator,
-        float unjustDenominator) {
+        bool isEtet,
+        int etetRootNote,
+        float etetNumerator,
+        float etetDenominator) {
     const float* inSamples = sampleBuffer->getReadPointer(0);
     float* outSamples = outputBuffer.getWritePointer(0);
 
@@ -142,19 +142,19 @@ void SampleOscillator::processUntuned(
     int writeLength = 0;
 
     float speedScale =
-            isUnjustIntonation
+            isEtet
                     ? inputSpeedScale
-                              * getUnjustScale(
-                                      inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote)
+                              * getEtetScale(
+                                      inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
                     : inputSpeedScale;
 
     if (success) {
         lastNoteNum = firstMessage.getNoteNumber();
 
-        if (isUnjustIntonation) {
+        if (isEtet) {
             speedScale =
                     inputSpeedScale
-                    * getUnjustScale(inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+                    * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
         }
 
         if (firstMessage.isNoteOn()) {
@@ -187,10 +187,10 @@ void SampleOscillator::processUntuned(
             bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
             lastNoteNum = secondMessage.getNoteNumber();
 
-            if (isUnjustIntonation) {
+            if (isEtet) {
                 speedScale = inputSpeedScale
-                             * getUnjustScale(
-                                     inputSpeedScale, unjustNumerator, unjustDenominator, lastNoteNum, unjustRootNote);
+                             * getEtetScale(
+                                     inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
@@ -277,14 +277,14 @@ void SampleOscillator::processUntuned(
     }
 }
 
-inline float getUnjustScale(
+inline float getEtetScale(
         float inputSpeedScale,
-        float unjustNumerator,
-        float unjustDenominator,
+        float etetNumerator,
+        float etetDenominator,
         int lastNoteNum,
-        int unjustRootNote) {
-    const int noteDiff = lastNoteNum - unjustRootNote;
-    const float interval = unjustNumerator / unjustDenominator;
+        int etetRootNote) {
+    const int noteDiff = lastNoteNum - etetRootNote;
+    const float interval = etetNumerator / etetDenominator;
     if (noteDiff == 0) {
         return 1.0f;
     } else {

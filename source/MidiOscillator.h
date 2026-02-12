@@ -28,10 +28,10 @@ public:
             double& nextQuarterNotePpq,
             double& nextNoteSample,
             float noteLength,
-            bool isUnjustIntonation,
-            int unjustRootNote,
-            float unjustNumerator,
-            float unjustDenominator);
+            bool isEtet,
+            int etetRootNote,
+            float etetNumerator,
+            float etetDenominator);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -45,10 +45,10 @@ private:
             double& nextQuarterNotePpq,
             double& nextNoteSample,
             float noteLength,
-            bool isUnjustIntonation,
-            int unjustRootNote,
-            float unjustNumerator,
-            float unjustDenominator);
+            bool isEtet,
+            int etetRootNote,
+            float etetNumerator,
+            float etetDenominator);
 
     void processTuned(
             const int bufferSize,

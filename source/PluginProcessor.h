@@ -71,11 +71,11 @@ private:
             nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
     std::atomic<float>* isTunedParameter =
             nullptr; /**< Tuned mode parameter: determines whether or not the extratone is tuned to the input note */
-    std::atomic<float>* isUnjustIntonationParameter =
-            nullptr; /**< Unjust Intonation mode parameter: determines whether or not the "Unjust Intonation mode is enabled" */
-    std::atomic<float>* unjustRootNoteParameter = nullptr; /**< Unjust root note parameter: The root note for Unjust Intonation */
-    std::atomic<float>* unjustNumeratorParameter = nullptr; /**< Unjust Intonation numerator parameter: Controls the numerator of the harmonic interval used in Unjust Intonation */
-    std::atomic<float>* unjustDenominatorParameter = nullptr; /**< Unjust Intonation denominator parameter: Controls the denominator of the harmonic interval used in Unjust Intonation */
+    std::atomic<float>* isEtetParameter =
+            nullptr; /**< Extratone Equal Temperament (ETET) mode parameter: determines whether or not the "Extratone Equal Temperament (ETET) mode is enabled" */
+    std::atomic<float>* etetRootNoteParameter = nullptr; /**< ETET root note parameter: The root note for Extratone Equal Temperament (ETET) */
+    std::atomic<float>* etetNumeratorParameter = nullptr; /**< Extratone Equal Temperament (ETET) numerator parameter: Controls the numerator of the harmonic interval used in Extratone Equal Temperament (ETET) */
+    std::atomic<float>* etetDenominatorParameter = nullptr; /**< Extratone Equal Temperament (ETET) denominator parameter: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) */
     std::atomic<float>* noteLengthParameter = nullptr; /**< Note length parameter: Controls how long a note is held before the next note is played */
     std::atomic<float>* samplePitchBendParameter = nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
     double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
