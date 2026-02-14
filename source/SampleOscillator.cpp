@@ -1,12 +1,8 @@
 #include "SampleOscillator.h"
 #include "Utilities.h"
 
-inline float getEtetScale(
-        float inputSpeedScale,
-        float etetNumerator,
-        float etetDenominator,
-        int lastNoteNum,
-        int etetRootNote);
+inline float
+getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote);
 
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
@@ -18,13 +14,14 @@ void SampleOscillator::loadSampleFromFile(const juce::File& file) {
     parametersRef.state.setProperty("SamplePath", file.getFullPathName(), nullptr);
 
     auto* reader = formatManager.createReaderFor(file);
-    if (reader == nullptr)
+    if (reader == nullptr) {
         return;
+    }
 
     auto totalLength = (int)reader->lengthInSamples;
     auto numChannels = (int)reader->numChannels;
 
-    loadedSampleBuffer = std::make_unique<juce::AudioBuffer<float>>(numChannels, totalLength + 1);
+    loadedSampleBuffer = std::make_unique<juce::AudioBuffer<float>>(2, totalLength + 1);
     reader->read(loadedSampleBuffer.get(), 0, totalLength, 0, true, true);
 
     for (int ch = 0; ch < numChannels; ++ch)
@@ -135,26 +132,25 @@ void SampleOscillator::processUntuned(
         int etetRootNote,
         float etetNumerator,
         float etetDenominator) {
-    const float* inSamples = sampleBuffer->getReadPointer(0);
-    float* outSamples = outputBuffer.getWritePointer(0);
+    const float* inSamplesL = sampleBuffer->getReadPointer(0);
+    const float* inSamplesR = sampleBuffer->getReadPointer(1);
+    float* outSamplesL = outputBuffer.getWritePointer(0);
+    float* outSamplesR = outputBuffer.getWritePointer(1);
 
     int writeStart = 0;
     int writeLength = 0;
 
     float speedScale =
-            isEtet
-                    ? inputSpeedScale
-                              * getEtetScale(
-                                      inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
-                    : inputSpeedScale;
+            isEtet ? inputSpeedScale
+                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
+                   : inputSpeedScale;
 
     if (success) {
         lastNoteNum = firstMessage.getNoteNumber();
 
         if (isEtet) {
-            speedScale =
-                    inputSpeedScale
-                    * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
+            speedScale = inputSpeedScale
+                         * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
         }
 
         if (firstMessage.isNoteOn()) {
@@ -177,7 +173,8 @@ void SampleOscillator::processUntuned(
             for (int i = 0; i < (int)writeLength; ++i) {
                 int idxA = (int)nextReadPosition;
                 float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
                 nextReadPosition += samplePitchBendRatio;
             }
 
@@ -189,8 +186,7 @@ void SampleOscillator::processUntuned(
 
             if (isEtet) {
                 speedScale = inputSpeedScale
-                             * getEtetScale(
-                                     inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
+                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
@@ -218,7 +214,8 @@ void SampleOscillator::processUntuned(
             for (int i = 0; i < (int)writeLength; ++i) {
                 int idxA = (int)nextReadPosition;
                 float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
                 nextReadPosition += samplePitchBendRatio;
             }
 
@@ -231,7 +228,7 @@ void SampleOscillator::processUntuned(
             const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
             const int fadeStart = writeStart + fragmentSamples - fadeLength;
 
-            for (int ch = 0; ch < outputBuffer.getNumChannels(); ++ch) {
+            for (int ch = 0; ch < 2; ++ch) {
                 outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
             }
 
@@ -246,7 +243,10 @@ void SampleOscillator::processUntuned(
                 for (int i = 0; i < (int)writeLength; ++i) {
                     int idxA = (int)nextReadPosition;
                     float fraction = (float)(nextReadPosition - (double)idxA);
-                    outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                    outSamplesL[writeStart + i] =
+                            inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+                    outSamplesR[writeStart + i] =
+                            inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
                     nextReadPosition += samplePitchBendRatio;
                 }
             }
@@ -271,18 +271,15 @@ void SampleOscillator::processUntuned(
         for (int i = 0; i < (int)writeLength; ++i) {
             int idxA = (int)nextReadPosition;
             float fraction = (float)(nextReadPosition - (double)idxA);
-            outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+            outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+            outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
             nextReadPosition += samplePitchBendRatio;
         }
     }
 }
 
-inline float getEtetScale(
-        float inputSpeedScale,
-        float etetNumerator,
-        float etetDenominator,
-        int lastNoteNum,
-        int etetRootNote) {
+inline float
+getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote) {
     const int noteDiff = lastNoteNum - etetRootNote;
     const float interval = etetNumerator / etetDenominator;
     if (noteDiff == 0) {
@@ -311,8 +308,10 @@ void SampleOscillator::processTuned(
         juce::AudioBuffer<float>* sampleBuffer,
         const double bpm,
         double currentPpq) {
-    const float* inSamples = sampleBuffer->getReadPointer(0);
-    float* outSamples = outputBuffer.getWritePointer(0);
+    const float* inSamplesL = sampleBuffer->getReadPointer(0);
+    const float* inSamplesR = sampleBuffer->getReadPointer(1);
+    float* outSamplesL = outputBuffer.getWritePointer(0);
+    float* outSamplesR = outputBuffer.getWritePointer(1);
 
     int writeStart = 0;
     int writeLength = 0;
@@ -345,7 +344,8 @@ void SampleOscillator::processTuned(
             for (int i = 0; i < (int)writeLength; ++i) {
                 int idxA = (int)nextReadPosition;
                 float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
                 nextReadPosition += samplePitchBendRatio;
             }
 
@@ -381,7 +381,8 @@ void SampleOscillator::processTuned(
             for (int i = 0; i < (int)writeLength; ++i) {
                 int idxA = (int)nextReadPosition;
                 float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
                 nextReadPosition += samplePitchBendRatio;
             }
 
@@ -394,7 +395,7 @@ void SampleOscillator::processTuned(
             const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
             const int fadeStart = writeStart + fragmentSamples - fadeLength;
 
-            for (int ch = 0; ch < outputBuffer.getNumChannels(); ++ch) {
+            for (int ch = 0; ch < 2; ++ch) {
                 outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
             }
 
@@ -409,7 +410,10 @@ void SampleOscillator::processTuned(
                 for (int i = 0; i < (int)writeLength; ++i) {
                     int idxA = (int)nextReadPosition;
                     float fraction = (float)(nextReadPosition - (double)idxA);
-                    outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+                    outSamplesL[writeStart + i] =
+                            inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+                    outSamplesR[writeStart + i] =
+                            inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
                     nextReadPosition += samplePitchBendRatio;
                 }
             }
@@ -435,7 +439,8 @@ void SampleOscillator::processTuned(
         for (int i = 0; i < (int)writeLength; ++i) {
             int idxA = (int)nextReadPosition;
             float fraction = (float)(nextReadPosition - (double)idxA);
-            outSamples[writeStart + i] = inSamples[idxA] + fraction * (inSamples[idxA + 1] - inSamples[idxA]);
+            outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
+            outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
             nextReadPosition += samplePitchBendRatio;
         }
     }
