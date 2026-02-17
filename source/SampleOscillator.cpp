@@ -4,6 +4,19 @@
 inline float
 getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote);
 
+void getNextSampleBlock(
+        const int writeStart,
+        const int writeLength,
+        double& nextReadPosition,
+        const float samplePitchBendRatio,
+        const int inSamplesLength,
+        const int outSamplesLength,
+        const float* inSamplesL,
+        const float* inSamplesR,
+        float* outSamplesL,
+        float* outSamplesR,
+        bool& currentSampleEnded);
+
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
     formatManager.registerBasicFormats();
@@ -63,6 +76,7 @@ void SampleOscillator::processBlock(
     const int bufferSize = outputBuffer.getNumSamples();
 
     if (!isTuned) {
+        nextNoteSample = nextQuarterNotePpq * samplePerPpq;
         processUntuned(
                 inputBuffer,
                 outputBuffer,
@@ -87,6 +101,7 @@ void SampleOscillator::processBlock(
                 etetNumerator,
                 etetDenominator);
     } else {
+        nextQuarterNotePpq = nextNoteSample / samplePerPpq;
         processTuned(
                 inputBuffer,
                 outputBuffer,
@@ -134,6 +149,8 @@ void SampleOscillator::processUntuned(
         float etetDenominator) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
+    const int inSamplesLength = sampleBuffer->getNumSamples();
+    const int outSamplesLength = outputBuffer.getNumSamples();
     float* outSamplesL = outputBuffer.getWritePointer(0);
     float* outSamplesR = outputBuffer.getWritePointer(1);
 
@@ -146,6 +163,7 @@ void SampleOscillator::processUntuned(
                    : inputSpeedScale;
 
     if (success) {
+        currentSampleEnded = false;
         lastNoteNum = firstMessage.getNoteNumber();
 
         if (isEtet) {
@@ -170,13 +188,18 @@ void SampleOscillator::processUntuned(
             nextQuarterNotePpq = 0.0;
             nextReadPosition = 0;
 
-            for (int i = 0; i < (int)writeLength; ++i) {
-                int idxA = (int)nextReadPosition;
-                float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-                nextReadPosition += samplePitchBendRatio;
-            }
+            getNextSampleBlock(
+                    writeStart,
+                    writeLength,
+                    nextReadPosition,
+                    samplePitchBendRatio,
+                    inSamplesLength,
+                    outSamplesLength,
+                    inSamplesL,
+                    inSamplesR,
+                    outSamplesL,
+                    outSamplesR,
+                    currentSampleEnded);
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -211,13 +234,18 @@ void SampleOscillator::processUntuned(
             double fragmentSamples = (adjustedNoteEnd * samplePerPpq) - currentSamples - writeStart;
 
             writeLength = fragmentSamples;
-            for (int i = 0; i < (int)writeLength; ++i) {
-                int idxA = (int)nextReadPosition;
-                float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-                nextReadPosition += samplePitchBendRatio;
-            }
+            getNextSampleBlock(
+                    writeStart,
+                    writeLength,
+                    nextReadPosition,
+                    samplePitchBendRatio,
+                    inSamplesLength,
+                    outSamplesLength,
+                    inSamplesL,
+                    inSamplesR,
+                    outSamplesL,
+                    outSamplesR,
+                    currentSampleEnded);
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -225,11 +253,13 @@ void SampleOscillator::processUntuned(
             // fragments to have a fade long enough to eliminate the click.
             // The call to min is there to ensure that the fadeLength is never longer than the fragment length (this would cause a memory error),
             // though I haven't checked if this is mathematically possible anyway.
-            const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
+            const int fadeLength = (int)std::min(6.4 / speedScale, fragmentSamples);
             const int fadeStart = writeStart + fragmentSamples - fadeLength;
 
-            for (int ch = 0; ch < 2; ++ch) {
-                outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
+            if (fadeStart >= 0) {
+                for (int ch = 0; ch < 2; ++ch) {
+                    outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
+                }
             }
 
             noteBeingHeld = false;
@@ -240,17 +270,21 @@ void SampleOscillator::processUntuned(
             writeLength = noteOffset - writeStart - 1;
 
             if (!noteEndInBlock) {
-                for (int i = 0; i < (int)writeLength; ++i) {
-                    int idxA = (int)nextReadPosition;
-                    float fraction = (float)(nextReadPosition - (double)idxA);
-                    outSamplesL[writeStart + i] =
-                            inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-                    outSamplesR[writeStart + i] =
-                            inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-                    nextReadPosition += samplePitchBendRatio;
-                }
+                getNextSampleBlock(
+                        writeStart,
+                        writeLength,
+                        nextReadPosition,
+                        samplePitchBendRatio,
+                        inSamplesLength,
+                        outSamplesLength,
+                        inSamplesL,
+                        inSamplesR,
+                        outSamplesL,
+                        outSamplesR,
+                        currentSampleEnded);
             }
             noteBeingHeld = true;
+            currentSampleEnded = false;
 
             nextReadPosition = 0;
             writeStart = noteOffset;
@@ -268,13 +302,18 @@ void SampleOscillator::processUntuned(
     }
     if (noteBeingHeld) {
         writeLength = outputBuffer.getNumSamples() - writeStart;
-        for (int i = 0; i < (int)writeLength; ++i) {
-            int idxA = (int)nextReadPosition;
-            float fraction = (float)(nextReadPosition - (double)idxA);
-            outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-            outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-            nextReadPosition += samplePitchBendRatio;
-        }
+        getNextSampleBlock(
+                writeStart,
+                writeLength,
+                nextReadPosition,
+                samplePitchBendRatio,
+                inSamplesLength,
+                outSamplesLength,
+                inSamplesL,
+                inSamplesR,
+                outSamplesL,
+                outSamplesR,
+                currentSampleEnded);
     }
 }
 
@@ -310,6 +349,8 @@ void SampleOscillator::processTuned(
         double currentPpq) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
+    const int inSamplesLength = sampleBuffer->getNumSamples();
+    const int outSamplesLength = outputBuffer.getNumSamples();
     float* outSamplesL = outputBuffer.getWritePointer(0);
     float* outSamplesR = outputBuffer.getWritePointer(1);
 
@@ -317,6 +358,7 @@ void SampleOscillator::processTuned(
     int writeLength = 0;
 
     if (success) {
+        currentSampleEnded = false;
         lastNoteNum = firstMessage.getNoteNumber();
 
         // Hertz represents the number of notes per second.
@@ -341,13 +383,18 @@ void SampleOscillator::processTuned(
             nextNoteSample = 0.0;
 
             // Play the first note
-            for (int i = 0; i < (int)writeLength; ++i) {
-                int idxA = (int)nextReadPosition;
-                float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-                nextReadPosition += samplePitchBendRatio;
-            }
+            getNextSampleBlock(
+                    writeStart,
+                    writeLength,
+                    nextReadPosition,
+                    samplePitchBendRatio,
+                    inSamplesLength,
+                    outSamplesLength,
+                    inSamplesL,
+                    inSamplesR,
+                    outSamplesL,
+                    outSamplesR,
+                    currentSampleEnded);
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -378,13 +425,18 @@ void SampleOscillator::processTuned(
             double fragmentSamples = (adjustedNoteEnd - currentSamples) - writeStart;
 
             writeLength = fragmentSamples;
-            for (int i = 0; i < (int)writeLength; ++i) {
-                int idxA = (int)nextReadPosition;
-                float fraction = (float)(nextReadPosition - (double)idxA);
-                outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-                outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-                nextReadPosition += samplePitchBendRatio;
-            }
+            getNextSampleBlock(
+                    writeStart,
+                    writeLength,
+                    nextReadPosition,
+                    samplePitchBendRatio,
+                    inSamplesLength,
+                    outSamplesLength,
+                    inSamplesL,
+                    inSamplesR,
+                    outSamplesL,
+                    outSamplesR,
+                    currentSampleEnded);
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -392,11 +444,13 @@ void SampleOscillator::processTuned(
             // fragments to have a fade long enough to eliminate the click.
             // The call to min is there to ensure that the fadeLength is never longer than the fragment length (this would cause a memory error),
             // though I haven't checked if this is mathematically possible anyway.
-            const int fadeLength = std::min(6.4 / speedScale, fragmentSamples);
+            const int fadeLength = (int)std::min(6.4 / speedScale, fragmentSamples);
             const int fadeStart = writeStart + fragmentSamples - fadeLength;
 
-            for (int ch = 0; ch < 2; ++ch) {
-                outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
+            if (fadeStart >= 0) {
+                for (int ch = 0; ch < 2; ++ch) {
+                    outputBuffer.applyGainRamp(ch, fadeStart, fadeLength, 1.0f, 0.0f);
+                }
             }
 
             noteBeingHeld = false;
@@ -407,17 +461,21 @@ void SampleOscillator::processTuned(
 
             if (!noteEndInBlock) {
                 // play the remainder of the current note
-                for (int i = 0; i < (int)writeLength; ++i) {
-                    int idxA = (int)nextReadPosition;
-                    float fraction = (float)(nextReadPosition - (double)idxA);
-                    outSamplesL[writeStart + i] =
-                            inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-                    outSamplesR[writeStart + i] =
-                            inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-                    nextReadPosition += samplePitchBendRatio;
-                }
+                getNextSampleBlock(
+                        writeStart,
+                        writeLength,
+                        nextReadPosition,
+                        samplePitchBendRatio,
+                        inSamplesLength,
+                        outSamplesLength,
+                        inSamplesL,
+                        inSamplesR,
+                        outSamplesL,
+                        outSamplesR,
+                        currentSampleEnded);
             }
             noteBeingHeld = true;
+            currentSampleEnded = false;
 
             nextReadPosition = 0;
             writeStart = noteOffset;
@@ -436,12 +494,49 @@ void SampleOscillator::processTuned(
     if (noteBeingHeld) {
         writeLength = outputBuffer.getNumSamples() - writeStart;
         // play the remainder of the current note
-        for (int i = 0; i < (int)writeLength; ++i) {
-            int idxA = (int)nextReadPosition;
-            float fraction = (float)(nextReadPosition - (double)idxA);
-            outSamplesL[writeStart + i] = inSamplesL[idxA] + fraction * (inSamplesL[idxA + 1] - inSamplesL[idxA]);
-            outSamplesR[writeStart + i] = inSamplesR[idxA] + fraction * (inSamplesR[idxA + 1] - inSamplesR[idxA]);
-            nextReadPosition += samplePitchBendRatio;
+        getNextSampleBlock(
+                writeStart,
+                writeLength,
+                nextReadPosition,
+                samplePitchBendRatio,
+                inSamplesLength,
+                outSamplesLength,
+                inSamplesL,
+                inSamplesR,
+                outSamplesL,
+                outSamplesR,
+                currentSampleEnded);
+    }
+}
+
+void getNextSampleBlock(
+        const int writeStart,
+        const int writeLength,
+        double& nextReadPosition,
+        const float samplePitchBendRatio,
+        const int inSamplesLength,
+        const int outSamplesLength,
+        const float* inSamplesL,
+        const float* inSamplesR,
+        float* outSamplesL,
+        float* outSamplesR,
+        bool& currentSampleEnded) {
+    if (currentSampleEnded || writeStart < 0 || writeLength <= 0) {
+        return;
+    }
+    // Handle pitch changes with linear interpolation between samples.
+    for (int i = 0; i < writeLength; ++i) {
+        int idxA = (int)nextReadPosition;
+        float fraction = (float)(nextReadPosition - (double)idxA);
+        if (idxA + 1 >= inSamplesLength) {
+            currentSampleEnded = true;
+            return;
         }
+        if (writeStart + i >= outSamplesLength) {
+            return;
+        }
+        outSamplesL[writeStart + i] = inSamplesL[(idxA)] + fraction * (inSamplesL[(idxA + 1)] - inSamplesL[(idxA)]);
+        outSamplesR[writeStart + i] = inSamplesR[(idxA)] + fraction * (inSamplesR[(idxA + 1)] - inSamplesR[(idxA)]);
+        nextReadPosition += samplePitchBendRatio;
     }
 }
