@@ -41,7 +41,10 @@ private:
     // TODO: Add labels to other parts of the window.
 
     // Frames
-    // TODO: Add frames to segment components and modularize.
+    juce::Component titleBarFrame;
+    juce::Component leftFrame;
+    juce::Component rightFrame;
+    juce::Component fileManagementFrame;
 
     // Toggles
     juce::ToggleButton midiToggle;
