@@ -30,7 +30,8 @@ public:
             bool isEtet,
             int etetRootNote,
             float etetNumerator,
-            float etetDenominator);
+            float etetDenominator,
+            bool& killswitch);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -68,7 +69,8 @@ private:
             bool isEtet,
             int etetRootNote,
             float etetNumerator,
-            float etetDenominator);
+            float etetDenominator,
+            bool& killswitch);
 
     void processTuned(
             juce::MidiBuffer& inputBuffer,
@@ -88,7 +90,8 @@ private:
             juce::MidiBuffer::Iterator& iterator,
             juce::AudioBuffer<float>* sampleBuffer,
             const double bpm,
-            double currentPpq);
+            double currentPpq,
+            bool& killswitch);
 
     double sampleRate = 0.0;
     bool wasPlaying = false;

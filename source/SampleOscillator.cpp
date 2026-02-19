@@ -15,7 +15,8 @@ void getNextSampleBlock(
         const float* inSamplesR,
         float* outSamplesL,
         float* outSamplesR,
-        bool& currentSampleEnded);
+        bool& currentSampleEnded,
+        const bool killswitch);
 
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
@@ -56,7 +57,8 @@ void SampleOscillator::processBlock(
         bool isEtet,
         int etetRootNote,
         float etetNumerator,
-        float etetDenominator) {
+        float etetDenominator,
+        bool& killswitch) {
     juce::AudioBuffer<float>* sampleBuffer = loadedSampleBuffer.get();
     if (!sampleBuffer)
         return;
@@ -99,7 +101,8 @@ void SampleOscillator::processBlock(
                 isEtet,
                 etetRootNote,
                 etetNumerator,
-                etetDenominator);
+                etetDenominator,
+                killswitch);
     } else {
         nextQuarterNotePpq = nextNoteSample / samplePerPpq;
         processTuned(
@@ -120,7 +123,8 @@ void SampleOscillator::processBlock(
                 iterator,
                 sampleBuffer,
                 bpm,
-                currentPpq);
+                currentPpq,
+                killswitch);
     }
 }
 
@@ -146,7 +150,8 @@ void SampleOscillator::processUntuned(
         bool isEtet,
         int etetRootNote,
         float etetNumerator,
-        float etetDenominator) {
+        float etetDenominator,
+        bool& killswitch) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
     const int inSamplesLength = sampleBuffer->getNumSamples();
@@ -163,6 +168,7 @@ void SampleOscillator::processUntuned(
                    : inputSpeedScale;
 
     if (success) {
+        killswitch = false;
         currentSampleEnded = false;
         lastNoteNum = firstMessage.getNoteNumber();
 
@@ -199,7 +205,8 @@ void SampleOscillator::processUntuned(
                     inSamplesR,
                     outSamplesL,
                     outSamplesR,
-                    currentSampleEnded);
+                    currentSampleEnded,
+                    killswitch);
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -228,7 +235,7 @@ void SampleOscillator::processUntuned(
                            && !compareFloat(nextQuarterNotePpq, 0.0);
     bool noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
 
-    while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
             double fragmentSamples = (adjustedNoteEnd * samplePerPpq) - currentSamples - writeStart;
@@ -245,7 +252,8 @@ void SampleOscillator::processUntuned(
                     inSamplesR,
                     outSamplesL,
                     outSamplesR,
-                    currentSampleEnded);
+                    currentSampleEnded,
+                    killswitch);
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -281,7 +289,8 @@ void SampleOscillator::processUntuned(
                         inSamplesR,
                         outSamplesL,
                         outSamplesR,
-                        currentSampleEnded);
+                        currentSampleEnded,
+                        killswitch);
             }
             noteBeingHeld = true;
             currentSampleEnded = false;
@@ -293,8 +302,8 @@ void SampleOscillator::processUntuned(
             // note relative to the baseline.
             // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
             nextQuarterNotePpq += (1.0 / speedScale);
-
             adjustedNoteEnd = nextQuarterNotePpq - (1.0 / speedScale) + (noteLength / speedScale);
+
             nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
                               && !compareFloat(nextQuarterNotePpq, 0.0);
             noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
@@ -313,7 +322,8 @@ void SampleOscillator::processUntuned(
                 inSamplesR,
                 outSamplesL,
                 outSamplesR,
-                currentSampleEnded);
+                currentSampleEnded,
+                killswitch);
     }
 }
 
@@ -346,7 +356,8 @@ void SampleOscillator::processTuned(
         juce::MidiBuffer::Iterator& iterator,
         juce::AudioBuffer<float>* sampleBuffer,
         const double bpm,
-        double currentPpq) {
+        double currentPpq,
+        bool& killswitch) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
     const int inSamplesLength = sampleBuffer->getNumSamples();
@@ -358,6 +369,7 @@ void SampleOscillator::processTuned(
     int writeLength = 0;
 
     if (success) {
+        killswitch = false;
         currentSampleEnded = false;
         lastNoteNum = firstMessage.getNoteNumber();
 
@@ -394,7 +406,8 @@ void SampleOscillator::processTuned(
                     inSamplesR,
                     outSamplesL,
                     outSamplesR,
-                    currentSampleEnded);
+                    currentSampleEnded,
+                    killswitch);
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -419,7 +432,7 @@ void SampleOscillator::processTuned(
     bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0);
     bool noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
 
-    while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
             double fragmentSamples = (adjustedNoteEnd - currentSamples) - writeStart;
@@ -436,7 +449,8 @@ void SampleOscillator::processTuned(
                     inSamplesR,
                     outSamplesL,
                     outSamplesR,
-                    currentSampleEnded);
+                    currentSampleEnded,
+                    killswitch);
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -472,7 +486,8 @@ void SampleOscillator::processTuned(
                         inSamplesR,
                         outSamplesL,
                         outSamplesR,
-                        currentSampleEnded);
+                        currentSampleEnded,
+                        killswitch);
             }
             noteBeingHeld = true;
             currentSampleEnded = false;
@@ -484,8 +499,8 @@ void SampleOscillator::processTuned(
             // note relative to the baseline.
             // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
             nextNoteSample += samplePerHz / speedScale;
-
             adjustedNoteEnd = nextNoteSample - (samplePerHz / speedScale) + ((noteLength * samplePerHz) / speedScale);
+
             nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0);
             noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
         }
@@ -505,7 +520,8 @@ void SampleOscillator::processTuned(
                 inSamplesR,
                 outSamplesL,
                 outSamplesR,
-                currentSampleEnded);
+                currentSampleEnded,
+                killswitch);
     }
 }
 
@@ -520,7 +536,8 @@ void getNextSampleBlock(
         const float* inSamplesR,
         float* outSamplesL,
         float* outSamplesR,
-        bool& currentSampleEnded) {
+        bool& currentSampleEnded,
+        const bool killswitch) {
     if (currentSampleEnded || writeStart < 0 || writeLength <= 0) {
         return;
     }

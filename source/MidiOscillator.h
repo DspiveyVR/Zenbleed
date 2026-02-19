@@ -31,7 +31,8 @@ public:
             bool isEtet,
             int etetRootNote,
             float etetNumerator,
-            float etetDenominator);
+            float etetDenominator,
+            bool& killswitch);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -48,7 +49,8 @@ private:
             bool isEtet,
             int etetRootNote,
             float etetNumerator,
-            float etetDenominator);
+            float etetDenominator,
+            bool& killswitch);
 
     void processTuned(
             const int bufferSize,
@@ -58,7 +60,8 @@ private:
             const juce::AudioPlayHead::PositionInfo* positionInfo,
             double& nextQuarterNotePpq,
             double& nextNoteSample,
-            float noteLength);
+            float noteLength,
+            bool& killswitch);
 
     double sampleRate = 0;
     bool wasPlaying = false;

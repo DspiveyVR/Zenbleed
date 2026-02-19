@@ -80,6 +80,7 @@ private:
     std::atomic<float>* samplePitchBendParameter = nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
     double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     double nextNoteSample = 0; /**< The sample position of the next note to be played. */
+    bool killswitch = false;
 
     std::unique_ptr<MidiOscillator>
             midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */

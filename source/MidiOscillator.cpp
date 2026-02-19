@@ -1,12 +1,8 @@
 #include "MidiOscillator.h"
 #include "Utilities.h"
 
-inline float getEtetScale(
-        float inputSpeedScale,
-        float etetNumerator,
-        float etetDenominator,
-        int lastNoteNum,
-        int etetRootNote);
+inline float
+getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote);
 
 MidiOscillator::MidiOscillator() = default;
 MidiOscillator::~MidiOscillator() = default;
@@ -25,7 +21,8 @@ void MidiOscillator::processBlock(
         bool isEtet,
         int etetRootNote,
         float etetNumerator,
-        float etetDenominator) {
+        float etetDenominator,
+        bool& killswitch) {
     if (!isTuned) {
         processUntuned(
                 bufferSize,
@@ -39,7 +36,8 @@ void MidiOscillator::processBlock(
                 isEtet,
                 etetRootNote,
                 etetNumerator,
-                etetDenominator);
+                etetDenominator,
+                killswitch);
     } else {
         processTuned(
                 bufferSize,
@@ -49,7 +47,8 @@ void MidiOscillator::processBlock(
                 positionInfo,
                 nextQuarterNotePpq,
                 nextNoteSample,
-                noteLength);
+                noteLength,
+                killswitch);
     }
 }
 
@@ -65,13 +64,12 @@ void MidiOscillator::processUntuned(
         bool isEtet,
         int etetRootNote,
         float etetNumerator,
-        float etetDenominator) {
+        float etetDenominator,
+        bool& killswitch) {
     float speedScale =
-            isEtet
-                    ? inputSpeedScale
-                              * getEtetScale(
-                                      inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
-                    : inputSpeedScale;
+            isEtet ? inputSpeedScale
+                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
+                   : inputSpeedScale;
 
     const double currentPpq = *positionInfo->getPpqPosition();
     juce::MidiMessage firstMessage;
@@ -86,24 +84,22 @@ void MidiOscillator::processUntuned(
     // 60 seconds cancels out the minutes unit in bpm.  What's left is samples over beats, where a "beat" is basically a quarter note.
     const double samplePerPpq = (60 * sampleRate) / bpm;
     if (!positionInfo->getIsPlaying()) {
-        outputBuffer.addEvent(
-                juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), currentSamples);
+        outputBuffer.addEvent(juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), currentSamples);
         nextQuarterNotePpq = 0.0;
     }
 
     if (success) {
+        killswitch = false;
         lastNoteNum = firstMessage.getNoteNumber();
 
         if (isEtet) {
-            speedScale =
-                    inputSpeedScale
-                    * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
+            speedScale = inputSpeedScale
+                         * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
         }
 
         if (firstMessage.isNoteOn()) {
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f),
-                    firstEventTime);
+                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f), firstEventTime);
             noteBeingHeld = true;
             /*
                 First event time is relative to the start of the buffer so it must be added to current 
@@ -114,8 +110,7 @@ void MidiOscillator::processUntuned(
             */
             nextQuarterNotePpq = ((currentSamples + firstEventTime) / samplePerPpq) + (1.0 / speedScale);
         } else {
-            outputBuffer.addEvent(
-                    juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), firstEventTime);
+            outputBuffer.addEvent(juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), firstEventTime);
             noteBeingHeld = false;
             nextQuarterNotePpq = 0.0;
 
@@ -127,14 +122,12 @@ void MidiOscillator::processUntuned(
 
             if (isEtet) {
                 speedScale = inputSpeedScale
-                             * getEtetScale(
-                                     inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
+                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
                 outputBuffer.addEvent(
-                        juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f),
-                        secondEventTime);
+                        juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f), secondEventTime);
                 noteBeingHeld = true;
                 nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
             }
@@ -145,7 +138,7 @@ void MidiOscillator::processUntuned(
     bool nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
                            && !compareFloat(nextQuarterNotePpq, 0.0);
     bool noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
-    while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             outputBuffer.addEvent(
                     juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum),
@@ -158,17 +151,16 @@ void MidiOscillator::processUntuned(
 
             // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum),
-                    floor(noteOffset));
+                    juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), floor(noteOffset));
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f),
-                    floor(noteOffset));
+                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f), floor(noteOffset));
             noteBeingHeld = true;
 
             // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
             // note relative to the baseline.
             // E.g. A speedScale of 2.0 results in a quarter note half the length of the baseline.
             nextQuarterNotePpq += (1.0 / speedScale);
+
             adjustedNoteEnd = nextQuarterNotePpq - (1.0 / speedScale) + (noteLength / speedScale);
             nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
                               && !compareFloat(nextQuarterNotePpq, 0.0);
@@ -177,12 +169,8 @@ void MidiOscillator::processUntuned(
     }
 }
 
-inline float getEtetScale(
-        float inputSpeedScale,
-        float etetNumerator,
-        float etetDenominator,
-        int lastNoteNum,
-        int etetRootNote) {
+inline float
+getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote) {
     const int noteDiff = lastNoteNum - etetRootNote;
     const float interval = etetNumerator / etetDenominator;
     if (noteDiff == 0) {
@@ -200,7 +188,8 @@ void MidiOscillator::processTuned(
         const juce::AudioPlayHead::PositionInfo* positionInfo,
         double& nextQuarterNotePpq,
         double& nextNoteSample,
-        float noteLength) {
+        float noteLength,
+        bool& killswitch) {
     juce::MidiMessage firstMessage;
     int firstEventTime = 0; // The sample offset (relative to buffer start)
 
@@ -218,6 +207,7 @@ void MidiOscillator::processTuned(
     }
 
     if (success) {
+        killswitch = false;
         lastNoteNum = firstMessage.getNoteNumber();
 
         // Hertz represents the number of notes per second.
@@ -262,7 +252,7 @@ void MidiOscillator::processTuned(
     bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && !compareFloat(nextNoteSample, 0.0);
     bool noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
 
-    while ((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             outputBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), floor(adjustedNoteEnd - currentSamples));
             noteBeingHeld = false;
@@ -277,8 +267,8 @@ void MidiOscillator::processTuned(
             noteBeingHeld = true;
 
             nextNoteSample += samplePerHz / speedScale;
-
             adjustedNoteEnd = nextNoteSample - (samplePerHz / speedScale) + ((noteLength * samplePerHz) / speedScale);
+
             nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && !compareFloat(nextNoteSample, 0.0);
             noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
         }

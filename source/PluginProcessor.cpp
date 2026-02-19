@@ -178,6 +178,7 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
 }
 
 void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) {
+    auto startTime = juce::Time::getHighResolutionTicks();
     buffer.clear();
     juce::ScopedNoDenormals noDenormals;
 
@@ -224,7 +225,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 isEtetParameter->load(),
                 etetRootNoteParameter->load(),
                 etetNumeratorParameter->load(),
-                etetDenominatorParameter->load());
+                etetDenominatorParameter->load(),
+                killswitch);
 
         midiMessages.swapWith(outputBuffer);
     } else {
@@ -241,7 +243,18 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 isEtetParameter->load(),
                 etetRootNoteParameter->load(),
                 etetNumeratorParameter->load(),
-                etetDenominatorParameter->load());
+                etetDenominatorParameter->load(),
+                killswitch);
+    }
+    auto endTime = juce::Time::getHighResolutionTicks();
+
+    auto elapsedSeconds = juce::Time::highResolutionTicksToSeconds(endTime - startTime);
+    double budget = buffer.getNumSamples() / getSampleRate();
+
+    // Will disable audio output until the next note is hit just to prevent freezing the whole daw at extreme speeds.
+    if (elapsedSeconds > budget) {
+        killswitch = true;
+        std::cout << "Killswitch on" << std::endl;
     }
 }
 
