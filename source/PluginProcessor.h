@@ -78,6 +78,7 @@ private:
     std::atomic<float>* etetDenominatorParameter = nullptr; /**< Extratone Equal Temperament (ETET) denominator parameter: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) */
     std::atomic<float>* noteLengthParameter = nullptr; /**< Note length parameter: Controls how long a note is held before the next note is played */
     std::atomic<float>* samplePitchBendParameter = nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
+    std::atomic<float>* velocityParameter = nullptr; /**< Velocity parameter: Controls the velocity of the MIDI note being played */
     double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     double nextNoteSample = 0; /**< The sample position of the next note to be played. */
     bool killswitch = false;

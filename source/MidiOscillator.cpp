@@ -22,6 +22,7 @@ void MidiOscillator::processBlock(
         int etetRootNote,
         float etetNumerator,
         float etetDenominator,
+        float velocity,
         bool& killswitch) {
     if (!isTuned) {
         processUntuned(
@@ -37,6 +38,7 @@ void MidiOscillator::processBlock(
                 etetRootNote,
                 etetNumerator,
                 etetDenominator,
+                velocity,
                 killswitch);
     } else {
         processTuned(
@@ -48,6 +50,7 @@ void MidiOscillator::processBlock(
                 nextQuarterNotePpq,
                 nextNoteSample,
                 noteLength,
+                velocity,
                 killswitch);
     }
 }
@@ -65,6 +68,7 @@ void MidiOscillator::processUntuned(
         int etetRootNote,
         float etetNumerator,
         float etetDenominator,
+        float velocity,
         bool& killswitch) {
     float speedScale =
             isEtet ? inputSpeedScale
@@ -99,7 +103,7 @@ void MidiOscillator::processUntuned(
 
         if (firstMessage.isNoteOn()) {
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f), firstEventTime);
+                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, velocity), firstEventTime);
             noteBeingHeld = true;
             /*
                 First event time is relative to the start of the buffer so it must be added to current 
@@ -127,7 +131,7 @@ void MidiOscillator::processUntuned(
 
             if (success2 && secondMessage.isNoteOn()) {
                 outputBuffer.addEvent(
-                        juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f), secondEventTime);
+                        juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, velocity), secondEventTime);
                 noteBeingHeld = true;
                 nextQuarterNotePpq = ((currentSamples + secondEventTime) / samplePerPpq) + (1.0 / speedScale);
             }
@@ -138,7 +142,8 @@ void MidiOscillator::processUntuned(
     bool nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
                            && !compareFloat(nextQuarterNotePpq, 0.0);
     bool noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
-    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch
+           && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             outputBuffer.addEvent(
                     juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum),
@@ -153,7 +158,7 @@ void MidiOscillator::processUntuned(
             outputBuffer.addEvent(
                     juce::MidiMessage::noteOff(1, isEtet ? etetRootNote : lastNoteNum), floor(noteOffset));
             outputBuffer.addEvent(
-                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, 1.0f), floor(noteOffset));
+                    juce::MidiMessage::noteOn(1, isEtet ? etetRootNote : lastNoteNum, velocity), floor(noteOffset));
             noteBeingHeld = true;
 
             // A higher speed means shorter quarter notes, so 1 / speedScale represents the length of a quarter
@@ -189,6 +194,7 @@ void MidiOscillator::processTuned(
         double& nextQuarterNotePpq,
         double& nextNoteSample,
         float noteLength,
+        float velocity,
         bool& killswitch) {
     juce::MidiMessage firstMessage;
     int firstEventTime = 0; // The sample offset (relative to buffer start)
@@ -219,7 +225,7 @@ void MidiOscillator::processTuned(
         if (firstMessage.isNoteOn()) {
             // Right now they're all playing on note 30 but this is subject to change.  I'm thinking there could be an option
             // to have it match the input note, or there could be a dial in the plugin to dynamically control which note is played.
-            outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), firstEventTime);
+            outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, velocity), firstEventTime);
             noteBeingHeld = true;
 
             // curr + firstTime gets the absolute position of the first note, and the next note is determined
@@ -239,7 +245,7 @@ void MidiOscillator::processTuned(
                 lastNoteNum = secondMessage.getNoteNumber();
                 const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
                 const double samplePerHz = sampleRate / hertz;
-                outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), secondEventTime);
+                outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, velocity), secondEventTime);
                 noteBeingHeld = true;
                 nextNoteSample = currentSamples + secondEventTime + samplePerHz / speedScale;
             }
@@ -252,7 +258,8 @@ void MidiOscillator::processTuned(
     bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && !compareFloat(nextNoteSample, 0.0);
     bool noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
 
-    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch
+           && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             outputBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), floor(adjustedNoteEnd - currentSamples));
             noteBeingHeld = false;
@@ -263,7 +270,7 @@ void MidiOscillator::processTuned(
 
             // Add note off and note on at the same time to create a legato effect (continuous stream of notes).
             outputBuffer.addEvent(juce::MidiMessage::noteOff(1, 30), floor(noteOffset));
-            outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, 1.0f), floor(noteOffset));
+            outputBuffer.addEvent(juce::MidiMessage::noteOn(1, 30, velocity), floor(noteOffset));
             noteBeingHeld = true;
 
             nextNoteSample += samplePerHz / speedScale;

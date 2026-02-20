@@ -80,6 +80,13 @@ PluginProcessor::PluginProcessor() :
                       juce::NormalisableRange<float> { -120.0f, 120.0f, 0.01f },
                       0.0f,
                       juce::AudioParameterFloatAttributes {}.withCategory(
+                              juce::AudioParameterFloat::genericParameter)),
+              std::make_unique<juce::AudioParameterFloat>(
+                      "velocity",
+                      "Velocity",
+                      juce::NormalisableRange<float> { 1.0f, 127.0f, 1.0f },
+                      127.0f,
+                      juce::AudioParameterFloatAttributes {}.withCategory(
                               juce::AudioParameterFloat::genericParameter)) }),
 
     sampleOscillator(std::make_unique<SampleOscillator>(parameters)),
@@ -96,6 +103,7 @@ PluginProcessor::PluginProcessor() :
     etetDenominatorParameter = parameters.getRawParameterValue("etetDenominator");
     noteLengthParameter = parameters.getRawParameterValue("noteLength");
     samplePitchBendParameter = parameters.getRawParameterValue("samplePitchBendRatio");
+    velocityParameter = parameters.getRawParameterValue("velocity");
 }
 
 PluginProcessor::~PluginProcessor() {}
@@ -226,6 +234,7 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 etetRootNoteParameter->load(),
                 etetNumeratorParameter->load(),
                 etetDenominatorParameter->load(),
+                velocityParameter->load() / 127.0f,
                 killswitch);
 
         midiMessages.swapWith(outputBuffer);

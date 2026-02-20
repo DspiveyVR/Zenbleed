@@ -32,6 +32,7 @@ public:
             int etetRootNote,
             float etetNumerator,
             float etetDenominator,
+            float velocity,
             bool& killswitch);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
@@ -50,6 +51,7 @@ private:
             int etetRootNote,
             float etetNumerator,
             float etetDenominator,
+            float velocity,
             bool& killswitch);
 
     void processTuned(
@@ -61,6 +63,7 @@ private:
             double& nextQuarterNotePpq,
             double& nextNoteSample,
             float noteLength,
+            float velocity,
             bool& killswitch);
 
     double sampleRate = 0;
