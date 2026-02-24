@@ -79,13 +79,23 @@ PluginProcessor::PluginProcessor() :
                       "Sample Pitch Bend",
                       juce::NormalisableRange<float> { -120.0f, 120.0f, 0.01f },
                       0.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(
-                              juce::AudioParameterFloat::genericParameter)),
+                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
               std::make_unique<juce::AudioParameterFloat>(
                       "velocity",
                       "Velocity",
                       juce::NormalisableRange<float> { 1.0f, 127.0f, 1.0f },
                       127.0f,
+                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
+              std::make_unique<juce::AudioParameterBool>(
+                      "isKeytrack",
+                      "Keytrack",
+                      false,
+                      juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
+              std::make_unique<juce::AudioParameterFloat>(
+                      "fixedNoteNumber",
+                      "Note",
+                      juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
+                      25.0f,
                       juce::AudioParameterFloatAttributes {}.withCategory(
                               juce::AudioParameterFloat::genericParameter)) }),
 
@@ -104,6 +114,8 @@ PluginProcessor::PluginProcessor() :
     noteLengthParameter = parameters.getRawParameterValue("noteLength");
     samplePitchBendParameter = parameters.getRawParameterValue("samplePitchBendRatio");
     velocityParameter = parameters.getRawParameterValue("velocity");
+    isKeytrackParameter = parameters.getRawParameterValue("isKeytrack");
+    fixedNoteNumberParameter = parameters.getRawParameterValue("fixedNoteNumber");
 }
 
 PluginProcessor::~PluginProcessor() {}
@@ -170,7 +182,7 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
     return true;
 #else
     // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
+    // In this template code we only support mono or stereovelocity.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
@@ -234,8 +246,10 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
                 etetRootNoteParameter->load(),
                 etetNumeratorParameter->load(),
                 etetDenominatorParameter->load(),
-                velocityParameter->load() / 127.0f,
-                killswitch);
+                velocityParameter->load() / 127.0f, // Normalize velocity value to [0.0, 1.0]
+                killswitch,
+                isKeytrackParameter->load(),
+                fixedNoteNumberParameter->load());
 
         midiMessages.swapWith(outputBuffer);
     } else {

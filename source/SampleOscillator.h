@@ -96,7 +96,7 @@ private:
     double sampleRate = 0.0;
     bool wasPlaying = false;
     bool currentSampleEnded = false;
-    int lastNoteNum = 0; /**< The number of the last musical note that was played. */
+    int lastNoteInput = 0; /**< The number of the last musical note that was played. */
     double nextReadPosition = 0.0;
 
     juce::AudioFormatManager formatManager;

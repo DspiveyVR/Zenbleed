@@ -79,6 +79,8 @@ private:
     std::atomic<float>* noteLengthParameter = nullptr; /**< Note length parameter: Controls how long a note is held before the next note is played */
     std::atomic<float>* samplePitchBendParameter = nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
     std::atomic<float>* velocityParameter = nullptr; /**< Velocity parameter: Controls the velocity of the MIDI note being played */
+    std::atomic<float>* isKeytrackParameter = nullptr; /**< Is keytrack parameter: Dictates wheter the MIDI note triggered is equal to the input note or whether it is fixed. */
+    std::atomic<float>* fixedNoteNumberParameter = nullptr; /**< Fixed note number parameter: Dictates the MIDI note to be triggered when keytrack is false */
     double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     double nextNoteSample = 0; /**< The sample position of the next note to be played. */
     bool killswitch = false;

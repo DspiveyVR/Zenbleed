@@ -33,7 +33,9 @@ public:
             float etetNumerator,
             float etetDenominator,
             float velocity,
-            bool& killswitch);
+            bool& killswitch,
+            bool isKeytrack,
+            int fixedNoteNumber);
 
     void setSampleRate(const double sr) { sampleRate = sr; }
 
@@ -52,7 +54,9 @@ private:
             float etetNumerator,
             float etetDenominator,
             float velocity,
-            bool& killswitch);
+            bool& killswitch,
+            bool isKeytrack,
+            int fixedNoteNumber);
 
     void processTuned(
             const int bufferSize,
@@ -64,10 +68,13 @@ private:
             double& nextNoteSample,
             float noteLength,
             float velocity,
-            bool& killswitch);
+            bool& killswitch,
+            bool isKeytrack,
+            int fixedNoteNumber);
 
     double sampleRate = 0;
     bool wasPlaying = false;
-    int lastNoteNum = 0; /**< The number of the last musical note that was played. */
+    int lastNoteInput = 0; /**< The number of the last musical note that was recieved through the MIDI buffer. */
+    int lastNoteOutput = 0; /**< The number of the last musical note that was output by the MIDI oscillator. */
     bool noteBeingHeld = false; /**< indicates whether a note is currently being held. */
 };

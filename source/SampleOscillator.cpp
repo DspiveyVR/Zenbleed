@@ -2,7 +2,7 @@
 #include "Utilities.h"
 
 inline float
-getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote);
+getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteInput, int etetRootNote);
 
 void getNextSampleBlock(
         const int writeStart,
@@ -164,17 +164,17 @@ void SampleOscillator::processUntuned(
 
     float speedScale =
             isEtet ? inputSpeedScale
-                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote)
+                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
                    : inputSpeedScale;
 
     if (success) {
         killswitch = false;
         currentSampleEnded = false;
-        lastNoteNum = firstMessage.getNoteNumber();
+        lastNoteInput = firstMessage.getNoteNumber();
 
         if (isEtet) {
             speedScale = inputSpeedScale
-                         * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
+                         * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
         }
 
         if (firstMessage.isNoteOn()) {
@@ -212,11 +212,11 @@ void SampleOscillator::processUntuned(
             juce::MidiMessage secondMessage;
             int secondEventTime = 0; // The sample offset (relative to buffer start)
             bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
-            lastNoteNum = secondMessage.getNoteNumber();
+            lastNoteInput = secondMessage.getNoteNumber();
 
             if (isEtet) {
                 speedScale = inputSpeedScale
-                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteNum, etetRootNote);
+                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
@@ -328,8 +328,8 @@ void SampleOscillator::processUntuned(
 }
 
 inline float
-getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteNum, int etetRootNote) {
-    const int noteDiff = lastNoteNum - etetRootNote;
+getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteInput, int etetRootNote) {
+    const int noteDiff = lastNoteInput - etetRootNote;
     const float interval = etetNumerator / etetDenominator;
     if (noteDiff == 0) {
         return 1.0f;
@@ -371,10 +371,10 @@ void SampleOscillator::processTuned(
     if (success) {
         killswitch = false;
         currentSampleEnded = false;
-        lastNoteNum = firstMessage.getNoteNumber();
+        lastNoteInput = firstMessage.getNoteNumber();
 
         // Hertz represents the number of notes per second.
-        const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
+        const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteInput);
         const double samplePerHz = sampleRate / hertz;
 
         if (firstMessage.isNoteOn()) {
@@ -413,12 +413,12 @@ void SampleOscillator::processTuned(
             juce::MidiMessage secondMessage;
             int secondEventTime = 0; // The sample offset (relative to buffer start)
             bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
-            lastNoteNum = secondMessage.getNoteNumber();
+            lastNoteInput = secondMessage.getNoteNumber();
             if (success2 && secondMessage.isNoteOn()) {
                 noteBeingHeld = true;
                 writeStart = secondEventTime;
                 nextReadPosition = 0;
-                const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
+                const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteInput);
                 const double samplePerHz = sampleRate / hertz;
 
                 nextNoteSample = currentSamples + secondEventTime + samplePerHz / speedScale;
@@ -426,7 +426,7 @@ void SampleOscillator::processTuned(
         }
     }
 
-    const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteNum);
+    const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteInput);
     const double samplePerHz = sampleRate / hertz;
     double adjustedNoteEnd = nextNoteSample - (samplePerHz / speedScale) + ((noteLength * samplePerHz) / speedScale);
     bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0);
