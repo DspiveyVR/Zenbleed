@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sampleoscillator_20',['SampleOscillator',['../class_sample_oscillator.html',1,'']]]
+  ['sampleoscillator_35',['SampleOscillator',['../class_sample_oscillator.html',1,'']]]
 ];

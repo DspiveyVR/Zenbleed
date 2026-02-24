@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['openbutton_30',['openButton',['../class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68',1,'PluginEditor']]]
+  ['midioscillator_52',['midiOscillator',['../class_plugin_processor.html#ad442022d248dfc2a1d1e695c6d1f9d86',1,'PluginProcessor']]],
+  ['midspeedparameter_53',['midSpeedParameter',['../class_plugin_processor.html#a4ee60b40bacd94633a9f78de56a48c91',1,'PluginProcessor']]]
 ];

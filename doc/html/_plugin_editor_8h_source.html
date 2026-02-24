@@ -111,17 +111,21 @@ $(document).ready(function(){initNavTree('_plugin_editor_8h_source.html',''); in
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="comment">// access the processor object that created it.</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; processorRef;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::unique_ptr&lt;melatonin::Inspector&gt; inspector;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    juce::TextButton inspectButton { <span class="stringliteral">&quot;Inspect the UI&quot;</span> };</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">   24</a></span>&#160;    juce::TextButton <a class="code" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">openButton</a> { <span class="stringliteral">&quot;Open&quot;</span> }; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::unique_ptr&lt;juce::FileChooser&gt; chooser;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> openButtonClicked();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; getProcessor() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(<a class="code" href="class_plugin_editor.html">PluginEditor</a>)</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::unique_ptr&lt;juce::FileChooser&gt; chooser;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    juce::TextButton inspectButton { <span class="stringliteral">&quot;Inspect the UI&quot;</span> };</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">   26</a></span>&#160;    juce::TextButton <a class="code" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">openButton</a> { <span class="stringliteral">&quot;Open&quot;</span> }; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    juce::ComboBox speedRangeBox;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    std::unique_ptr&lt;juce::AudioProcessorValueTreeState::ComboBoxAttachment&gt; speedRangeAttachment;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> openButtonClicked();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; getProcessor() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(<a class="code" href="class_plugin_editor.html">PluginEditor</a>)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="ttc" id="aclass_plugin_editor_html"><div class="ttname"><a href="class_plugin_editor.html">PluginEditor</a></div><div class="ttdef"><b>Definition:</b> PluginEditor.h:7</div></div>
-<div class="ttc" id="aclass_plugin_editor_html_a83a6ef2f49a13e4451f2e6c30a339f68"><div class="ttname"><a href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">PluginEditor::openButton</a></div><div class="ttdeci">juce::TextButton openButton</div><div class="ttdef"><b>Definition:</b> PluginEditor.h:24</div></div>
+<div class="ttc" id="aclass_plugin_editor_html_a83a6ef2f49a13e4451f2e6c30a339f68"><div class="ttname"><a href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">PluginEditor::openButton</a></div><div class="ttdeci">juce::TextButton openButton</div><div class="ttdef"><b>Definition:</b> PluginEditor.h:26</div></div>
 <div class="ttc" id="aclass_plugin_processor_html"><div class="ttname"><a href="class_plugin_processor.html">PluginProcessor</a></div><div class="ttdef"><b>Definition:</b> PluginProcessor.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

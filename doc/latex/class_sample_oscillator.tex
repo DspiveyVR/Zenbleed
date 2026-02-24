@@ -6,13 +6,22 @@
 \mbox{\Hypertarget{class_sample_oscillator_ac0478bbc052e0c2516847c53cd5bacd0}\label{class_sample_oscillator_ac0478bbc052e0c2516847c53cd5bacd0}} 
 {\bfseries Sample\+Oscillator} (juce\+::\+Audio\+Processor\+Value\+Tree\+State \&params\+Ref)
 \item 
-void \mbox{\hyperlink{class_sample_oscillator_a22c0b578ef6486d41ee7ff2109aebea9}{process\+Block}} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info)
+void \mbox{\hyperlink{class_sample_oscillator_a5917439e695ef6e2a6ccdf800362ba7c}{process\+Block}} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, bool is\+Tuned, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, bool \&killswitch)
 \begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_sample_oscillator_af3cdaa3ffcb5ec0d52c1876c69789db5}\label{class_sample_oscillator_af3cdaa3ffcb5ec0d52c1876c69789db5}} 
 void {\bfseries set\+Sample\+Rate} (const double sr)
 \item 
 void \mbox{\hyperlink{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}{load\+Sample\+From\+File}} (const juce\+::\+File \&file)
 \begin{DoxyCompactList}\small\item\em Loads an audio sample based on a given file path. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_acc4a7c8e84138c4921593ba658112498}\label{class_sample_oscillator_acc4a7c8e84138c4921593ba658112498}} 
+void {\bfseries process\+Untuned} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool success, double first\+Event\+Time, juce\+::\+Midi\+Message first\+Message, double current\+Samples, double sample\+Per\+Ppq, const int buffer\+Size, juce\+::\+Midi\+Buffer\+::\+Iterator \&iterator, juce\+::\+Audio\+Buffer$<$ float $>$ $\ast$sample\+Buffer, const double bpm, double current\+Ppq, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, bool \&killswitch)
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_a0a3d6c5064b45a6ba7c68276427f823b}\label{class_sample_oscillator_a0a3d6c5064b45a6ba7c68276427f823b}} 
+void {\bfseries process\+Tuned} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool success, double first\+Event\+Time, juce\+::\+Midi\+Message first\+Message, double current\+Samples, double sample\+Per\+Ppq, const int buffer\+Size, juce\+::\+Midi\+Buffer\+::\+Iterator \&iterator, juce\+::\+Audio\+Buffer$<$ float $>$ $\ast$sample\+Buffer, const double bpm, double current\+Ppq, bool \&killswitch)
+\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -22,14 +31,18 @@ double {\bfseries sample\+Rate} = 0.\+0
 \mbox{\Hypertarget{class_sample_oscillator_ad2247cd7c37973071b157135d6fcb785}\label{class_sample_oscillator_ad2247cd7c37973071b157135d6fcb785}} 
 bool {\bfseries was\+Playing} = false
 \item 
-double \mbox{\hyperlink{class_sample_oscillator_a361d05fcc4b318679bb9705fdfb5d8b8}{next\+Quarter\+Note\+Ppq}} = 0
+\mbox{\Hypertarget{class_sample_oscillator_aee91e533a4deec13e28032b2fbcf693c}\label{class_sample_oscillator_aee91e533a4deec13e28032b2fbcf693c}} 
+bool {\bfseries current\+Sample\+Ended} = false
 \item 
-int \mbox{\hyperlink{class_sample_oscillator_a986ddaee77c5693f1ecd6d6594ef0a47}{last\+Note\+Num}} = 0
+int \mbox{\hyperlink{class_sample_oscillator_abac9081e24614fbc4971e766e03c2e5e}{last\+Note\+Input}} = 0
+\item 
+\mbox{\Hypertarget{class_sample_oscillator_ac5b53720bc40aabc976c62c09bee955a}\label{class_sample_oscillator_ac5b53720bc40aabc976c62c09bee955a}} 
+double {\bfseries next\+Read\+Position} = 0.\+0
 \item 
 \mbox{\Hypertarget{class_sample_oscillator_ac53eb1f651ff1689f1ce0062efe6b699}\label{class_sample_oscillator_ac53eb1f651ff1689f1ce0062efe6b699}} 
 juce\+::\+Audio\+Format\+Manager {\bfseries format\+Manager}
 \item 
-std\+::unique\+\_\+ptr$<$ juce\+::\+Memory\+Audio\+Source $>$ \mbox{\hyperlink{class_sample_oscillator_a8cfd008ba0086b0428517a538cf8ecd6}{audio\+Sample\+Source}}
+std\+::unique\+\_\+ptr$<$ juce\+::\+Audio\+Buffer$<$ float $>$ $>$ \mbox{\hyperlink{class_sample_oscillator_abf2486cb0a3050ca3f6d0756c2e81f70}{loaded\+Sample\+Buffer}}
 \item 
 bool \mbox{\hyperlink{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}{note\+Being\+Held}} = false
 \item 
@@ -59,11 +72,11 @@ This method should only be called from the message thread since File I/O is not 
 {\em file} & \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{class_sample_oscillator_a22c0b578ef6486d41ee7ff2109aebea9}\label{class_sample_oscillator_a22c0b578ef6486d41ee7ff2109aebea9}} 
+\mbox{\Hypertarget{class_sample_oscillator_a5917439e695ef6e2a6ccdf800362ba7c}\label{class_sample_oscillator_a5917439e695ef6e2a6ccdf800362ba7c}} 
 \index{SampleOscillator@{SampleOscillator}!processBlock@{processBlock}}
 \index{processBlock@{processBlock}!SampleOscillator@{SampleOscillator}}
 \doxysubsubsection{\texorpdfstring{processBlock()}{processBlock()}}
-{\footnotesize\ttfamily void Sample\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Audio\+Buffer$<$ float $>$ \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Sample\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Audio\+Buffer$<$ float $>$ \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info,  }\item[{bool}]{is\+Tuned,  }\item[{double \&}]{next\+Quarter\+Note\+Ppq,  }\item[{double \&}]{next\+Note\+Sample,  }\item[{float}]{note\+Length,  }\item[{float}]{sample\+Pitch\+Bend\+Ratio,  }\item[{bool}]{is\+Etet,  }\item[{int}]{etet\+Root\+Note,  }\item[{float}]{etet\+Numerator,  }\item[{float}]{etet\+Denominator,  }\item[{bool \&}]{killswitch }\end{DoxyParamCaption})}
 
 
 
@@ -83,25 +96,19 @@ Internally triggers samples at a speed dictated by bpm $\ast$ speed\+Scale.
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{class_sample_oscillator_a8cfd008ba0086b0428517a538cf8ecd6}\label{class_sample_oscillator_a8cfd008ba0086b0428517a538cf8ecd6}} 
-\index{SampleOscillator@{SampleOscillator}!audioSampleSource@{audioSampleSource}}
-\index{audioSampleSource@{audioSampleSource}!SampleOscillator@{SampleOscillator}}
-\doxysubsubsection{\texorpdfstring{audioSampleSource}{audioSampleSource}}
-{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$juce\+::\+Memory\+Audio\+Source$>$ Sample\+Oscillator\+::audio\+Sample\+Source\hspace{0.3cm}{\ttfamily [private]}}
+\mbox{\Hypertarget{class_sample_oscillator_abac9081e24614fbc4971e766e03c2e5e}\label{class_sample_oscillator_abac9081e24614fbc4971e766e03c2e5e}} 
+\index{SampleOscillator@{SampleOscillator}!lastNoteInput@{lastNoteInput}}
+\index{lastNoteInput@{lastNoteInput}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{lastNoteInput}{lastNoteInput}}
+{\footnotesize\ttfamily int Sample\+Oscillator\+::last\+Note\+Input = 0\hspace{0.3cm}{\ttfamily [private]}}
 
-The source that holds the loaded sample data. \mbox{\Hypertarget{class_sample_oscillator_a986ddaee77c5693f1ecd6d6594ef0a47}\label{class_sample_oscillator_a986ddaee77c5693f1ecd6d6594ef0a47}} 
-\index{SampleOscillator@{SampleOscillator}!lastNoteNum@{lastNoteNum}}
-\index{lastNoteNum@{lastNoteNum}!SampleOscillator@{SampleOscillator}}
-\doxysubsubsection{\texorpdfstring{lastNoteNum}{lastNoteNum}}
-{\footnotesize\ttfamily int Sample\+Oscillator\+::last\+Note\+Num = 0\hspace{0.3cm}{\ttfamily [private]}}
+The number of the last musical note that was played. \mbox{\Hypertarget{class_sample_oscillator_abf2486cb0a3050ca3f6d0756c2e81f70}\label{class_sample_oscillator_abf2486cb0a3050ca3f6d0756c2e81f70}} 
+\index{SampleOscillator@{SampleOscillator}!loadedSampleBuffer@{loadedSampleBuffer}}
+\index{loadedSampleBuffer@{loadedSampleBuffer}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{loadedSampleBuffer}{loadedSampleBuffer}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$juce\+::\+Audio\+Buffer$<$float$>$ $>$ Sample\+Oscillator\+::loaded\+Sample\+Buffer\hspace{0.3cm}{\ttfamily [private]}}
 
-The number of the last musical note that was played. \mbox{\Hypertarget{class_sample_oscillator_a361d05fcc4b318679bb9705fdfb5d8b8}\label{class_sample_oscillator_a361d05fcc4b318679bb9705fdfb5d8b8}} 
-\index{SampleOscillator@{SampleOscillator}!nextQuarterNotePpq@{nextQuarterNotePpq}}
-\index{nextQuarterNotePpq@{nextQuarterNotePpq}!SampleOscillator@{SampleOscillator}}
-\doxysubsubsection{\texorpdfstring{nextQuarterNotePpq}{nextQuarterNotePpq}}
-{\footnotesize\ttfamily double Sample\+Oscillator\+::next\+Quarter\+Note\+Ppq = 0\hspace{0.3cm}{\ttfamily [private]}}
-
-The ppq position of the next note to be played. \mbox{\Hypertarget{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}\label{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}} 
+The buffer that holds the loaded sample data. \mbox{\Hypertarget{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}\label{class_sample_oscillator_a7f89c7f387f9a0aec3ddebe5cab7823b}} 
 \index{SampleOscillator@{SampleOscillator}!noteBeingHeld@{noteBeingHeld}}
 \index{noteBeingHeld@{noteBeingHeld}!SampleOscillator@{SampleOscillator}}
 \doxysubsubsection{\texorpdfstring{noteBeingHeld}{noteBeingHeld}}

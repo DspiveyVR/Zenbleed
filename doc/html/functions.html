@@ -86,28 +86,67 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 
 <div class="contents">
 <div class="textblock">Here is a list of all documented class members with links to the class documentation for each member:</div><ul>
-<li>audioSampleSource
-: <a class="el" href="class_sample_oscillator.html#a8cfd008ba0086b0428517a538cf8ecd6">SampleOscillator</a>
+<li>etetDenominatorParameter
+: <a class="el" href="class_plugin_processor.html#afef3ee29cabc4649271e8f849e0518b4">PluginProcessor</a>
+</li>
+<li>etetNumeratorParameter
+: <a class="el" href="class_plugin_processor.html#aaa4e504535f8f854a4f7afcb1716bcac">PluginProcessor</a>
+</li>
+<li>etetRootNoteParameter
+: <a class="el" href="class_plugin_processor.html#a56c931b84b4f7137cadaf1490bf74160">PluginProcessor</a>
+</li>
+<li>fixedNoteNumberParameter
+: <a class="el" href="class_plugin_processor.html#a55e155c7506ad94a68871f627206d449">PluginProcessor</a>
+</li>
+<li>highSpeedParameter
+: <a class="el" href="class_plugin_processor.html#a2a1ce809a1a27e680830f29b3307fffa">PluginProcessor</a>
+</li>
+<li>isEtetParameter
+: <a class="el" href="class_plugin_processor.html#a45dc815d64962d068c04bd1467bc8d20">PluginProcessor</a>
+</li>
+<li>isKeytrackParameter
+: <a class="el" href="class_plugin_processor.html#aa8c9dcc03a0d3000bb9e559a0564d4e1">PluginProcessor</a>
 </li>
 <li>isMidiModeParameter
 : <a class="el" href="class_plugin_processor.html#a419e382fde6dc6c311aac4639be54a8c">PluginProcessor</a>
 </li>
-<li>lastNoteNum
-: <a class="el" href="class_midi_oscillator.html#a6762f523a973504fe0a50ef285e2587b">MidiOscillator</a>
-, <a class="el" href="class_sample_oscillator.html#a986ddaee77c5693f1ecd6d6594ef0a47">SampleOscillator</a>
+<li>isTunedParameter
+: <a class="el" href="class_plugin_processor.html#a693b3a323b32aac6fccae95365b143f3">PluginProcessor</a>
+</li>
+<li>lastNoteInput
+: <a class="el" href="class_midi_oscillator.html#a3b8aeff09e18e561f48b3ac2cd5d6136">MidiOscillator</a>
+, <a class="el" href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">SampleOscillator</a>
+</li>
+<li>lastNoteOutput
+: <a class="el" href="class_midi_oscillator.html#aa61bd89fb9506f0f02110f826dadf09f">MidiOscillator</a>
+</li>
+<li>loadedSampleBuffer
+: <a class="el" href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">SampleOscillator</a>
 </li>
 <li>loadSampleFromFile()
 : <a class="el" href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">SampleOscillator</a>
 </li>
+<li>lowSpeedParameter
+: <a class="el" href="class_plugin_processor.html#aa4d2fc33b73528264a524dd4e6b0c746">PluginProcessor</a>
+</li>
 <li>midiOscillator
 : <a class="el" href="class_plugin_processor.html#ad442022d248dfc2a1d1e695c6d1f9d86">PluginProcessor</a>
 </li>
+<li>midSpeedParameter
+: <a class="el" href="class_plugin_processor.html#a4ee60b40bacd94633a9f78de56a48c91">PluginProcessor</a>
+</li>
+<li>nextNoteSample
+: <a class="el" href="class_plugin_processor.html#a45a987d9a1234c71975b2a680397ec37">PluginProcessor</a>
+</li>
 <li>nextQuarterNotePpq
-: <a class="el" href="class_midi_oscillator.html#a870190c0fb34968188eb3f34afbcacc5">MidiOscillator</a>
-, <a class="el" href="class_sample_oscillator.html#a361d05fcc4b318679bb9705fdfb5d8b8">SampleOscillator</a>
+: <a class="el" href="class_plugin_processor.html#a21a7afed98d6086c817f7fdb4b825946">PluginProcessor</a>
 </li>
 <li>noteBeingHeld
-: <a class="el" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">SampleOscillator</a>
+: <a class="el" href="class_midi_oscillator.html#abbec7d5a1505d3f986105901ab9a0913">MidiOscillator</a>
+, <a class="el" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">SampleOscillator</a>
+</li>
+<li>noteLengthParameter
+: <a class="el" href="class_plugin_processor.html#a925bd1236d01caec25cc731fb60184a3">PluginProcessor</a>
 </li>
 <li>openButton
 : <a class="el" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">PluginEditor</a>
@@ -116,14 +155,20 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="class_plugin_processor.html#a6245933f65910a173d2e549cfb102996">PluginProcessor</a>
 </li>
 <li>processBlock()
-: <a class="el" href="class_midi_oscillator.html#ac674d169aec293d58508b885886c59f9">MidiOscillator</a>
-, <a class="el" href="class_sample_oscillator.html#a22c0b578ef6486d41ee7ff2109aebea9">SampleOscillator</a>
+: <a class="el" href="class_midi_oscillator.html#a38eded65f4c8f22c4067085665de7f99">MidiOscillator</a>
+, <a class="el" href="class_sample_oscillator.html#a5917439e695ef6e2a6ccdf800362ba7c">SampleOscillator</a>
 </li>
 <li>sampleOscillator
 : <a class="el" href="class_plugin_processor.html#ac805ccc956af221f472ed446a8b7c701">PluginProcessor</a>
 </li>
-<li>speedParameter
-: <a class="el" href="class_plugin_processor.html#aa75e34b64ae39540435361fec56bda2f">PluginProcessor</a>
+<li>samplePitchBendParameter
+: <a class="el" href="class_plugin_processor.html#a57f0a0e94244996c73be4c781e9a7eab">PluginProcessor</a>
+</li>
+<li>speedRangeParameter
+: <a class="el" href="class_plugin_processor.html#aac4d679638bc40a3e2786b0d20d25b91">PluginProcessor</a>
+</li>
+<li>velocityParameter
+: <a class="el" href="class_plugin_processor.html#ae03145f3acd5c7dde9eeb59245faeb2d">PluginProcessor</a>
 </li>
 </ul>
 </div><!-- contents -->
