@@ -20,7 +20,7 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    // NOTE: The size must be set, *before* we `addAndMakeVisible`.
+    // NOTE: The size must be set, *before* we addAndMakeVisible.
     setSize(640, 480);
 
     titleLabel.setText("Zenbleed", juce::dontSendNotification);
