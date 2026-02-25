@@ -18,39 +18,33 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
     };
 #endif
 
-    const juce::StringArray speedRanges = processorRef.getSpeedRangeChoices();
-    for (size_t i = 0; i < speedRanges.size(); i++) {
-        speedRangeBox.addItem(speedRanges[i], i + 1);
-    }
-
-    speedRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
-        processorRef.getParametersApvts(), "speedRange", speedRangeBox
-    );
-
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    // NOTE: The size must be set, *before* we addAndMakeVisible.
+    // NOTE: The size must be set, *before* we `addAndMakeVisible`.
     setSize(640, 480);
 
     titleLabel.setText("Zenbleed", juce::dontSendNotification);
-    titleFrame.addAndMakeVisible(titleLabel);
+    theLambel.setText("Computer running hot yet?", juce::dontSendNotification);
 
-    addAndMakeVisible(titleFrame);
+    // Gather a list of components to display.
+    std::vector<juce::Component*> components = { &titleLabel,      &theLambel,        &openButton,     &lowSpeedButton,
+                                                 &midSpeedButton,  &highSpeedButton,  &speedSlider,    &midiToggle,
+                                                 &tunedToggle,     &noteLengthSlider, &velocitySlider, &keytrackToggle,
+                                                 &fixedNoteSlider, &pitchBendSlider,  &eTETMode,       &rootNoteSlider,
+                                                 &numeratorSlider, &denominatorSlider };
+    // Display them
+    for (auto* comp: components) {
+        addAndMakeVisible(comp);
+    }
 
-    lowerFrame.addAndMakeVisible(openButton);
-    lowerFrame.addAndMakeVisible(speedRangeBox);
-
-    controlFrame.addAndMakeVisible(lowSpeedButton);
-    controlFrame.addAndMakeVisible(midSpeedButton);
-    controlFrame.addAndMakeVisible(highSpeedButton);
-    controlFrame.addAndMakeVisible(speedSlider);
-
-    featureFrame.addAndMakeVisible(midiToggle);
-    featureFrame.addAndMakeVisible(tunedToggle);
-
-    addAndMakeVisible(lowerFrame);
-    addAndMakeVisible(controlFrame);
-    addAndMakeVisible(featureFrame);
+    // Remove textboxes from sliders
+    noteLengthSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    velocitySlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    fixedNoteSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    pitchBendSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    rootNoteSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    numeratorSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    denominatorSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 
     // speedKnob.setSliderStyle(juce::Slider::Rotary);
     speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
@@ -117,76 +111,86 @@ void PluginEditor::paint(juce::Graphics& g) {
 }
 
 void PluginEditor::resized() {
-    auto area = getLocalBounds();
+    auto area = getLocalBounds(); // A
 
     // Split `area` into proper regions.
-    auto titleArea = area.removeFromTop(50);
-    titleFrame.setBounds(titleArea);
-    auto leftArea = area.removeFromLeft(area.getWidth() / 2);
-    auto rightArea = area;
-    auto featureArea = leftArea.removeFromTop(leftArea.getHeight() / 2);
-    auto lowerArea = leftArea;
+    auto titleArea = area.removeFromTop(50); // B
+    auto leftArea = area.removeFromLeft(area.getWidth() / 2); // C
+    auto rightArea = area; // G
 
-    featureFrame.setBounds(featureArea);
-    lowerFrame.setBounds(lowerArea);
-    controlFrame.setBounds(rightArea);
+    auto fileArea = leftArea.removeFromBottom(70); // F
+    auto featureArea = leftArea.removeFromTop(leftArea.getHeight() / 2); // D
+    auto lowerArea = leftArea; // E
 
-    // Title Frame
-    titleLabel.setBounds(titleFrame.getLocalBounds().reduced(10).removeFromRight(100));
+    auto lambelArea = rightArea.removeFromBottom(70); // N
+    auto radioArea = rightArea.removeFromTop(2 * rightArea.getHeight() / 3); // H
+    auto buttonRow = rightArea.removeFromTop(rightArea.getHeight() / 2); // I
+    auto sliderArea = rightArea; // M
 
-    // Lower Frame
+    // BUG: There is an issue that causes the sliders to be of varying sizes.
+    //      I will need to find a fix for this. ~ Ilia
+
+    // Title Area
+    titleLabel.setBounds(titleArea.reduced(10).removeFromRight(100));
+
+    // File Area
     {
-        auto lf = lowerFrame.getLocalBounds().reduced(10);
-        openButton.setBounds(lf.removeFromLeft(110));
+        fileArea = fileArea.reduced(10);
+        openButton.setBounds(fileArea.removeFromLeft(100));
         openButton.setSize(100, 50);
-        speedRangeBox.setBounds(lf.removeFromLeft(110));
-        speedRangeBox.setSize(100, 50);
-        // speedRangeBox.setCentrePosition(speedRangeBox.getBounds().getCentre());
+        // TODO: Add label with filename.
     }
 
-    // Control Frame
+    // Feature Area
     {
-        auto cf = controlFrame.getLocalBounds();
-
-        // Widget Sizing
-        const int buttonWidth = 80;
-        const int buttonHeight = 30;
-        const int buttonGap = 10;
-
-        const int sliderWidth = 300;
-        const int sliderHeight = 40;
-        const int verticalGap = 15;
-
-        const int totalWidth = buttonWidth * 3 + buttonGap * 2;
-
-        const int totalHeight = buttonHeight + verticalGap + sliderHeight;
-
-        // Selecting buttons and slider as a group.
-        auto group = cf.withSizeKeepingCentre(totalWidth, totalHeight);
-
-        // Defining the row of buttons.
-        auto buttonRow = group.removeFromTop(buttonHeight);
-
-        lowSpeedButton.setBounds(buttonRow.removeFromLeft(buttonWidth));
-        buttonRow.removeFromLeft(buttonGap);
-
-        midSpeedButton.setBounds(buttonRow.removeFromLeft(buttonWidth));
-        buttonRow.removeFromLeft(buttonGap);
-
-        highSpeedButton.setBounds(buttonRow.removeFromLeft(buttonWidth));
-
-        // Add space between the buttons and slider.
-        group.removeFromTop(verticalGap);
-
-        // Center the slider under the buttons.
-        speedSlider.setBounds(group.removeFromTop(sliderHeight).withSizeKeepingCentre(sliderWidth, sliderHeight));
+        featureArea = featureArea.reduced(10);
+        // TODO: Make midi / sampler toggle more intuitive.
+        midiToggle.setBounds(featureArea.removeFromTop(50));
+        noteLengthSlider.setBounds(featureArea.removeFromTop(50));
     }
 
-    // Feature Frame
+    // Lower Area
     {
-        auto ff = featureFrame.getLocalBounds().reduced(10);
-        midiToggle.setBounds(ff.removeFromTop(30));
-        tunedToggle.setBounds(ff.removeFromTop(30));
+        lowerArea = lowerArea.reduced(10);
+        velocitySlider.setBounds(lowerArea.removeFromTop(50));
+        keytrackToggle.setBounds(lowerArea.removeFromTop(50));
+        fixedNoteSlider.setBounds(lowerArea.removeFromTop(50));
+        pitchBendSlider.setBounds(lowerArea.removeFromTop(50));
+    }
+
+    // Lambel Area
+    {
+        lambelArea = lambelArea.reduced(10);
+        theLambel.setSize(lambelArea.getWidth() / 2, lambelArea.getHeight());
+        theLambel.setBoundsToFit(lambelArea, juce::Justification::centred, true);
+    }
+
+    // Radio Area
+    {
+        radioArea = radioArea.reduced(10);
+        // TODO: Convert to three way radio.
+        eTETMode.setBounds(radioArea.removeFromTop(50));
+        tunedToggle.setBounds(radioArea.removeFromTop(50));
+        rootNoteSlider.setBounds(radioArea.removeFromTop(50));
+        numeratorSlider.setBounds(radioArea.removeFromTop(50));
+        denominatorSlider.setBounds(radioArea.removeFromTop(50));
+    }
+
+    // Button Row
+    {
+        buttonRow = buttonRow.reduced(10);
+        auto lowButtonArea = buttonRow.removeFromLeft(buttonRow.getWidth() / 3); // J
+        auto midButtonArea = buttonRow.removeFromLeft(buttonRow.getWidth() / 2); // K
+        auto highButtonArea = buttonRow; // L
+        lowSpeedButton.setBounds(lowButtonArea);
+        midSpeedButton.setBounds(midButtonArea);
+        highSpeedButton.setBounds(highButtonArea);
+    }
+
+    // Slider Area
+    {
+        sliderArea = sliderArea.reduced(10);
+        speedSlider.setBounds(sliderArea);
     }
 
     // Inspect Button

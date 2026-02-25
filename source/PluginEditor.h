@@ -25,7 +25,6 @@ private:
 
     juce::TextButton inspectButton { "Inspect the UI" };
     juce::TextButton openButton { "Open" }; /**< Opens the file explorer to allow the user to select an audio sample. */
-    juce::ComboBox speedRangeBox;
 
     // Speed Control
     juce::TextButton lowSpeedButton { "Low" };
@@ -36,21 +35,26 @@ private:
 
     // Labels
     juce::Label titleLabel;
-    juce::Label midiToggleLabel;
-    juce::Label tunedToggleLabel;
-    // TODO: Add labels to other parts of the window.
-
-    // Frames
-    juce::Component titleFrame { "Title Frame" };
-    juce::Component featureFrame { "Feature Frame" };
-    juce::Component controlFrame { "Control Frame" };
-    juce::Component lowerFrame { "Lower Frame" };
+    // NOFIX ;)
+    juce::Label theLambel;
 
     // Toggles
     juce::ToggleButton midiToggle { "Midi Mode" };
     juce::ToggleButton tunedToggle { "Tuned Mode" };
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> speedRangeAttachment;
+    // Midi and Tuned mode sliders
+    juce::Slider noteLengthSlider { "Note Length" };
+    juce::Slider velocitySlider { "Velocity" };
+    juce::ToggleButton keytrackToggle { "Keytrack" };
+    juce::Slider fixedNoteSlider { "Fixed Note" };
+    juce::Slider pitchBendSlider { "Pitch Bend" };
+
+    // ETET Radio Controls
+    // TODO: Convert manual toggles to radio buttons.
+    juce::ToggleButton eTETMode { "Extratone Equal Temperament" };
+    juce::Slider rootNoteSlider { "Root Note" };
+    juce::Slider numeratorSlider { "Numerator" };
+    juce::Slider denominatorSlider { "Denominator" };
 
     void openButtonClicked();
     void speedSliderButtonClicked(const juce::String&);
