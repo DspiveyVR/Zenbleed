@@ -41,14 +41,14 @@ private:
     // TODO: Add labels to other parts of the window.
 
     // Frames
-    juce::Component titleBarFrame;
-    juce::Component leftFrame;
-    juce::Component rightFrame;
-    juce::Component fileManagementFrame;
+    juce::Component titleFrame { "Title Frame" };
+    juce::Component featureFrame { "Feature Frame" };
+    juce::Component controlFrame { "Control Frame" };
+    juce::Component lowerFrame { "Lower Frame" };
 
     // Toggles
-    juce::ToggleButton midiToggle;
-    juce::ToggleButton tunedToggle;
+    juce::ToggleButton midiToggle { "Midi Mode" };
+    juce::ToggleButton tunedToggle { "Tuned Mode" };
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> speedRangeAttachment;
 

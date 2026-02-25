@@ -31,33 +31,26 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
     // editor's size to whatever you need it to be.
     // NOTE: The size must be set, *before* we addAndMakeVisible.
     setSize(640, 480);
-        
-    // juce::Component* components[] = {
-    //     &openButton,
-    //     &speedRangeBox,
-    //     &lowSpeedButton,
-    //     &midSpeedButton,
-    //     &highSpeedButton,
-    //     &speedSlider,
-    //     &midiToggle,
-    //     &tunedToggle,
-    //     &titleLabel
-    // };
 
-    titleBarFrame.addAndMakeVisible(titleLabel);
+    titleLabel.setText("Zenbleed", juce::dontSendNotification);
+    titleFrame.addAndMakeVisible(titleLabel);
 
-    fileManagementFrame.addAndMakeVisible(openButton);
-    fileManagementFrame.addAndMakeVisible(speedRangeBox);
-    
-    rightFrame.addAndMakeVisible(lowSpeedButton);
-    rightFrame.addAndMakeVisible(midSpeedButton);
-    rightFrame.addAndMakeVisible(highSpeedButton);
-    rightFrame.addAndMakeVisible(speedSlider);
+    addAndMakeVisible(titleFrame);
 
-    leftFrame.addAndMakeVisible(midiToggle);
-    leftFrame.addAndMakeVisible(tunedToggle);
+    lowerFrame.addAndMakeVisible(openButton);
+    lowerFrame.addAndMakeVisible(speedRangeBox);
 
-    titleLabel.setText("Lambel", juce::dontSendNotification);
+    controlFrame.addAndMakeVisible(lowSpeedButton);
+    controlFrame.addAndMakeVisible(midSpeedButton);
+    controlFrame.addAndMakeVisible(highSpeedButton);
+    controlFrame.addAndMakeVisible(speedSlider);
+
+    featureFrame.addAndMakeVisible(midiToggle);
+    featureFrame.addAndMakeVisible(tunedToggle);
+
+    addAndMakeVisible(lowerFrame);
+    addAndMakeVisible(controlFrame);
+    addAndMakeVisible(featureFrame);
 
     // speedKnob.setSliderStyle(juce::Slider::Rotary);
     speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
@@ -124,20 +117,80 @@ void PluginEditor::paint(juce::Graphics& g) {
 }
 
 void PluginEditor::resized() {
-    // layout the positions of your child components here
-    juce::AudioProcessorEditor::resized();
-
     auto area = getLocalBounds();
 
-    titleBarFrame.setBounds(area.removeFromTop(150));
-    // TODO: Get the elements displayed in their parent rectangles.
-    // WHEN: Ilia gets new laptop :(
-    
+    // Split `area` into proper regions.
+    auto titleArea = area.removeFromTop(50);
+    titleFrame.setBounds(titleArea);
+    auto leftArea = area.removeFromLeft(area.getWidth() / 2);
+    auto rightArea = area;
+    auto featureArea = leftArea.removeFromTop(leftArea.getHeight() / 2);
+    auto lowerArea = leftArea;
 
-    // Labels
-    titleLabel.setBoundsToFit(getScreenBounds(), juce::Justification::topRight, true);
+    featureFrame.setBounds(featureArea);
+    lowerFrame.setBounds(lowerArea);
+    controlFrame.setBounds(rightArea);
 
-    // Let the generic controls layout first
+    // Title Frame
+    titleLabel.setBounds(titleFrame.getLocalBounds().reduced(10).removeFromRight(100));
+
+    // Lower Frame
+    {
+        auto lf = lowerFrame.getLocalBounds().reduced(10);
+        openButton.setBounds(lf.removeFromLeft(110));
+        openButton.setSize(100, 50);
+        speedRangeBox.setBounds(lf.removeFromLeft(110));
+        speedRangeBox.setSize(100, 50);
+        // speedRangeBox.setCentrePosition(speedRangeBox.getBounds().getCentre());
+    }
+
+    // Control Frame
+    {
+        auto cf = controlFrame.getLocalBounds();
+
+        // Widget Sizing
+        const int buttonWidth = 80;
+        const int buttonHeight = 30;
+        const int buttonGap = 10;
+
+        const int sliderWidth = 300;
+        const int sliderHeight = 40;
+        const int verticalGap = 15;
+
+        const int totalWidth = buttonWidth * 3 + buttonGap * 2;
+
+        const int totalHeight = buttonHeight + verticalGap + sliderHeight;
+
+        // Selecting buttons and slider as a group.
+        auto group = cf.withSizeKeepingCentre(totalWidth, totalHeight);
+
+        // Defining the row of buttons.
+        auto buttonRow = group.removeFromTop(buttonHeight);
+
+        lowSpeedButton.setBounds(buttonRow.removeFromLeft(buttonWidth));
+        buttonRow.removeFromLeft(buttonGap);
+
+        midSpeedButton.setBounds(buttonRow.removeFromLeft(buttonWidth));
+        buttonRow.removeFromLeft(buttonGap);
+
+        highSpeedButton.setBounds(buttonRow.removeFromLeft(buttonWidth));
+
+        // Add space between the buttons and slider.
+        group.removeFromTop(verticalGap);
+
+        // Center the slider under the buttons.
+        speedSlider.setBounds(group.removeFromTop(sliderHeight).withSizeKeepingCentre(sliderWidth, sliderHeight));
+    }
+
+    // Feature Frame
+    {
+        auto ff = featureFrame.getLocalBounds().reduced(10);
+        midiToggle.setBounds(ff.removeFromTop(30));
+        tunedToggle.setBounds(ff.removeFromTop(30));
+    }
+
+    // Inspect Button
     inspectButton.setSize(100, 50);
+    inspectButton.setAlwaysOnTop(true);
     inspectButton.setBoundsToFit(getScreenBounds(), juce::Justification::bottomRight, true);
 }
