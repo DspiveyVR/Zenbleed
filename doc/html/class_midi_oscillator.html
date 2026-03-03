@@ -87,6 +87,7 @@ $(document).ready(function(){initNavTree('class_midi_oscillator.html',''); initR
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_midi_oscillator-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -96,12 +97,21 @@ $(document).ready(function(){initNavTree('class_midi_oscillator.html',''); initR
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac674d169aec293d58508b885886c59f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#ac674d169aec293d58508b885886c59f9">processBlock</a> (const int bufferSize, juce::MidiBuffer &amp;inputBuffer, juce::MidiBuffer &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo)</td></tr>
-<tr class="memdesc:ac674d169aec293d58508b885886c59f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Secondary processBlock method called by the main processBlock in <a class="el" href="class_plugin_processor.html">PluginProcessor</a>.  <a href="class_midi_oscillator.html#ac674d169aec293d58508b885886c59f9">More...</a><br /></td></tr>
-<tr class="separator:ac674d169aec293d58508b885886c59f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38eded65f4c8f22c4067085665de7f99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#a38eded65f4c8f22c4067085665de7f99">processBlock</a> (const int bufferSize, juce::MidiBuffer &amp;inputBuffer, juce::MidiBuffer &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, bool isTuned, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, bool isEtet, int etetRootNote, float etetNumerator, float etetDenominator, float velocity, bool &amp;killswitch, bool isKeytrack, int fixedNoteNumber)</td></tr>
+<tr class="memdesc:a38eded65f4c8f22c4067085665de7f99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Secondary processBlock method called by the main processBlock in <a class="el" href="class_plugin_processor.html">PluginProcessor</a>.  <a href="class_midi_oscillator.html#a38eded65f4c8f22c4067085665de7f99">More...</a><br /></td></tr>
+<tr class="separator:a38eded65f4c8f22c4067085665de7f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69d2af103400ce6164f1ab81f32af47d"><td class="memItemLeft" align="right" valign="top"><a id="a69d2af103400ce6164f1ab81f32af47d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSampleRate</b> (const double sr)</td></tr>
 <tr class="separator:a69d2af103400ce6164f1ab81f32af47d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:aabc597b6067a21e15f9a4ac44d990509"><td class="memItemLeft" align="right" valign="top"><a id="aabc597b6067a21e15f9a4ac44d990509"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processUntuned</b> (const int bufferSize, juce::MidiBuffer &amp;inputBuffer, juce::MidiBuffer &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, bool isEtet, int etetRootNote, float etetNumerator, float etetDenominator, float velocity, bool &amp;killswitch, bool isKeytrack, int fixedNoteNumber)</td></tr>
+<tr class="separator:aabc597b6067a21e15f9a4ac44d990509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acacaf12943b8c33c6e3433a0d8a5bf71"><td class="memItemLeft" align="right" valign="top"><a id="acacaf12943b8c33c6e3433a0d8a5bf71"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processTuned</b> (const int bufferSize, juce::MidiBuffer &amp;inputBuffer, juce::MidiBuffer &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, float velocity, bool &amp;killswitch, bool isKeytrack, int fixedNoteNumber)</td></tr>
+<tr class="separator:acacaf12943b8c33c6e3433a0d8a5bf71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -111,14 +121,16 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b> = 0<
 <tr class="memitem:ab6f3b44d9ff42c28c6515d3c38ac8ed3"><td class="memItemLeft" align="right" valign="top"><a id="ab6f3b44d9ff42c28c6515d3c38ac8ed3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = false</td></tr>
 <tr class="separator:ab6f3b44d9ff42c28c6515d3c38ac8ed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a870190c0fb34968188eb3f34afbcacc5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#a870190c0fb34968188eb3f34afbcacc5">nextQuarterNotePpq</a> = 0</td></tr>
-<tr class="separator:a870190c0fb34968188eb3f34afbcacc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6762f523a973504fe0a50ef285e2587b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#a6762f523a973504fe0a50ef285e2587b">lastNoteNum</a> = 0</td></tr>
-<tr class="separator:a6762f523a973504fe0a50ef285e2587b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b8aeff09e18e561f48b3ac2cd5d6136"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#a3b8aeff09e18e561f48b3ac2cd5d6136">lastNoteInput</a> = 0</td></tr>
+<tr class="separator:a3b8aeff09e18e561f48b3ac2cd5d6136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa61bd89fb9506f0f02110f826dadf09f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#aa61bd89fb9506f0f02110f826dadf09f">lastNoteOutput</a> = 0</td></tr>
+<tr class="separator:aa61bd89fb9506f0f02110f826dadf09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbec7d5a1505d3f986105901ab9a0913"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_midi_oscillator.html#abbec7d5a1505d3f986105901ab9a0913">noteBeingHeld</a> = false</td></tr>
+<tr class="separator:abbec7d5a1505d3f986105901ab9a0913"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac674d169aec293d58508b885886c59f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac674d169aec293d58508b885886c59f9">&#9670;&nbsp;</a></span>processBlock()</h2>
+<a id="a38eded65f4c8f22c4067085665de7f99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38eded65f4c8f22c4067085665de7f99">&#9670;&nbsp;</a></span>processBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,7 +163,79 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = fals
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::AudioPlayHead::PositionInfo *&#160;</td>
-          <td class="paramname"><em>positionInfo</em>&#160;</td>
+          <td class="paramname"><em>positionInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isTuned</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>nextQuarterNotePpq</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>nextNoteSample</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>noteLength</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isEtet</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>etetRootNote</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>etetNumerator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>etetDenominator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>velocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>killswitch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isKeytrack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fixedNoteNumber</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -176,8 +260,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = fals
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a6762f523a973504fe0a50ef285e2587b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6762f523a973504fe0a50ef285e2587b">&#9670;&nbsp;</a></span>lastNoteNum</h2>
+<a id="a3b8aeff09e18e561f48b3ac2cd5d6136"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b8aeff09e18e561f48b3ac2cd5d6136">&#9670;&nbsp;</a></span>lastNoteInput</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,7 +270,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int MidiOscillator::lastNoteNum = 0</td>
+          <td class="memname">int MidiOscillator::lastNoteInput = 0</td>
         </tr>
       </table>
   </td>
@@ -195,12 +279,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The number of the last musical note that was played. </p>
+<p>The number of the last musical note that was recieved through the MIDI buffer. </p>
 
 </div>
 </div>
-<a id="a870190c0fb34968188eb3f34afbcacc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a870190c0fb34968188eb3f34afbcacc5">&#9670;&nbsp;</a></span>nextQuarterNotePpq</h2>
+<a id="aa61bd89fb9506f0f02110f826dadf09f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa61bd89fb9506f0f02110f826dadf09f">&#9670;&nbsp;</a></span>lastNoteOutput</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,7 +293,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double MidiOscillator::nextQuarterNotePpq = 0</td>
+          <td class="memname">int MidiOscillator::lastNoteOutput = 0</td>
         </tr>
       </table>
   </td>
@@ -218,7 +302,30 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The ppq position of the next note to be played. </p>
+<p>The number of the last musical note that was output by the MIDI oscillator. </p>
+
+</div>
+</div>
+<a id="abbec7d5a1505d3f986105901ab9a0913"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbec7d5a1505d3f986105901ab9a0913">&#9670;&nbsp;</a></span>noteBeingHeld</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MidiOscillator::noteBeingHeld = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>indicates whether a note is currently being held. </p>
 
 </div>
 </div>

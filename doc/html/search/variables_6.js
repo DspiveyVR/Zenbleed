@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['sampleoscillator_31',['sampleOscillator',['../class_plugin_processor.html#ac805ccc956af221f472ed446a8b7c701',1,'PluginProcessor']]],
-  ['speedparameter_32',['speedParameter',['../class_plugin_processor.html#aa75e34b64ae39540435361fec56bda2f',1,'PluginProcessor']]]
+  ['nextnotesample_54',['nextNoteSample',['../class_plugin_processor.html#a45a987d9a1234c71975b2a680397ec37',1,'PluginProcessor']]],
+  ['nextquarternoteppq_55',['nextQuarterNotePpq',['../class_plugin_processor.html#a21a7afed98d6086c817f7fdb4b825946',1,'PluginProcessor']]],
+  ['notebeingheld_56',['noteBeingHeld',['../class_midi_oscillator.html#abbec7d5a1505d3f986105901ab9a0913',1,'MidiOscillator::noteBeingHeld()'],['../class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b',1,'SampleOscillator::noteBeingHeld()']]],
+  ['notelengthparameter_57',['noteLengthParameter',['../class_plugin_processor.html#a925bd1236d01caec25cc731fb60184a3',1,'PluginProcessor']]]
 ];

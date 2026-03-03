@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['lastnotenum_4',['lastNoteNum',['../class_midi_oscillator.html#a6762f523a973504fe0a50ef285e2587b',1,'MidiOscillator::lastNoteNum()'],['../class_sample_oscillator.html#a986ddaee77c5693f1ecd6d6594ef0a47',1,'SampleOscillator::lastNoteNum()']]],
-  ['loadsamplefromfile_5',['loadSampleFromFile',['../class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d',1,'SampleOscillator']]]
+  ['introduction_6',['Introduction',['../md_doc_custom_pages__user_manual.html',1,'']]],
+  ['isetetparameter_7',['isEtetParameter',['../class_plugin_processor.html#a45dc815d64962d068c04bd1467bc8d20',1,'PluginProcessor']]],
+  ['iskeytrackparameter_8',['isKeytrackParameter',['../class_plugin_processor.html#aa8c9dcc03a0d3000bb9e559a0564d4e1',1,'PluginProcessor']]],
+  ['ismidimodeparameter_9',['isMidiModeParameter',['../class_plugin_processor.html#a419e382fde6dc6c311aac4639be54a8c',1,'PluginProcessor']]],
+  ['istunedparameter_10',['isTunedParameter',['../class_plugin_processor.html#a693b3a323b32aac6fccae95365b143f3',1,'PluginProcessor']]]
 ];

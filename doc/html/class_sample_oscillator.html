@@ -87,6 +87,7 @@ $(document).ready(function(){initNavTree('class_sample_oscillator.html',''); ini
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_sample_oscillator-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -99,15 +100,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac0478bbc052e0c2516847c53cd5bacd0"><td class="memItemLeft" align="right" valign="top"><a id="ac0478bbc052e0c2516847c53cd5bacd0"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SampleOscillator</b> (juce::AudioProcessorValueTreeState &amp;paramsRef)</td></tr>
 <tr class="separator:ac0478bbc052e0c2516847c53cd5bacd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22c0b578ef6486d41ee7ff2109aebea9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#a22c0b578ef6486d41ee7ff2109aebea9">processBlock</a> (juce::MidiBuffer &amp;inputBuffer, juce::AudioBuffer&lt; float &gt; &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo)</td></tr>
-<tr class="memdesc:a22c0b578ef6486d41ee7ff2109aebea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Secondary processBlock method called by the main processBlock in <a class="el" href="class_plugin_processor.html">PluginProcessor</a>.  <a href="class_sample_oscillator.html#a22c0b578ef6486d41ee7ff2109aebea9">More...</a><br /></td></tr>
-<tr class="separator:a22c0b578ef6486d41ee7ff2109aebea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5917439e695ef6e2a6ccdf800362ba7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#a5917439e695ef6e2a6ccdf800362ba7c">processBlock</a> (juce::MidiBuffer &amp;inputBuffer, juce::AudioBuffer&lt; float &gt; &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, bool isTuned, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, float samplePitchBendRatio, bool isEtet, int etetRootNote, float etetNumerator, float etetDenominator, bool &amp;killswitch)</td></tr>
+<tr class="memdesc:a5917439e695ef6e2a6ccdf800362ba7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Secondary processBlock method called by the main processBlock in <a class="el" href="class_plugin_processor.html">PluginProcessor</a>.  <a href="class_sample_oscillator.html#a5917439e695ef6e2a6ccdf800362ba7c">More...</a><br /></td></tr>
+<tr class="separator:a5917439e695ef6e2a6ccdf800362ba7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3cdaa3ffcb5ec0d52c1876c69789db5"><td class="memItemLeft" align="right" valign="top"><a id="af3cdaa3ffcb5ec0d52c1876c69789db5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSampleRate</b> (const double sr)</td></tr>
 <tr class="separator:af3cdaa3ffcb5ec0d52c1876c69789db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae36bb2a5d07f8f3c4191e2f01034a98d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">loadSampleFromFile</a> (const juce::File &amp;file)</td></tr>
 <tr class="memdesc:ae36bb2a5d07f8f3c4191e2f01034a98d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an audio sample based on a given file path.  <a href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">More...</a><br /></td></tr>
 <tr class="separator:ae36bb2a5d07f8f3c4191e2f01034a98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:acc4a7c8e84138c4921593ba658112498"><td class="memItemLeft" align="right" valign="top"><a id="acc4a7c8e84138c4921593ba658112498"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processUntuned</b> (juce::MidiBuffer &amp;inputBuffer, juce::AudioBuffer&lt; float &gt; &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, float samplePitchBendRatio, bool success, double firstEventTime, juce::MidiMessage firstMessage, double currentSamples, double samplePerPpq, const int bufferSize, juce::MidiBuffer::Iterator &amp;iterator, juce::AudioBuffer&lt; float &gt; *sampleBuffer, const double bpm, double currentPpq, bool isEtet, int etetRootNote, float etetNumerator, float etetDenominator, bool &amp;killswitch)</td></tr>
+<tr class="separator:acc4a7c8e84138c4921593ba658112498"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a3d6c5064b45a6ba7c68276427f823b"><td class="memItemLeft" align="right" valign="top"><a id="a0a3d6c5064b45a6ba7c68276427f823b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processTuned</b> (juce::MidiBuffer &amp;inputBuffer, juce::AudioBuffer&lt; float &gt; &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, float samplePitchBendRatio, bool success, double firstEventTime, juce::MidiMessage firstMessage, double currentSamples, double samplePerPpq, const int bufferSize, juce::MidiBuffer::Iterator &amp;iterator, juce::AudioBuffer&lt; float &gt; *sampleBuffer, const double bpm, double currentPpq, bool &amp;killswitch)</td></tr>
+<tr class="separator:a0a3d6c5064b45a6ba7c68276427f823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -117,15 +127,19 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b> = 0.
 <tr class="memitem:ad2247cd7c37973071b157135d6fcb785"><td class="memItemLeft" align="right" valign="top"><a id="ad2247cd7c37973071b157135d6fcb785"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasPlaying</b> = false</td></tr>
 <tr class="separator:ad2247cd7c37973071b157135d6fcb785"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a361d05fcc4b318679bb9705fdfb5d8b8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#a361d05fcc4b318679bb9705fdfb5d8b8">nextQuarterNotePpq</a> = 0</td></tr>
-<tr class="separator:a361d05fcc4b318679bb9705fdfb5d8b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a986ddaee77c5693f1ecd6d6594ef0a47"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#a986ddaee77c5693f1ecd6d6594ef0a47">lastNoteNum</a> = 0</td></tr>
-<tr class="separator:a986ddaee77c5693f1ecd6d6594ef0a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee91e533a4deec13e28032b2fbcf693c"><td class="memItemLeft" align="right" valign="top"><a id="aee91e533a4deec13e28032b2fbcf693c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>currentSampleEnded</b> = false</td></tr>
+<tr class="separator:aee91e533a4deec13e28032b2fbcf693c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abac9081e24614fbc4971e766e03c2e5e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">lastNoteInput</a> = 0</td></tr>
+<tr class="separator:abac9081e24614fbc4971e766e03c2e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5b53720bc40aabc976c62c09bee955a"><td class="memItemLeft" align="right" valign="top"><a id="ac5b53720bc40aabc976c62c09bee955a"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>nextReadPosition</b> = 0.0</td></tr>
+<tr class="separator:ac5b53720bc40aabc976c62c09bee955a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac53eb1f651ff1689f1ce0062efe6b699"><td class="memItemLeft" align="right" valign="top"><a id="ac53eb1f651ff1689f1ce0062efe6b699"></a>
 juce::AudioFormatManager&#160;</td><td class="memItemRight" valign="bottom"><b>formatManager</b></td></tr>
 <tr class="separator:ac53eb1f651ff1689f1ce0062efe6b699"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cfd008ba0086b0428517a538cf8ecd6"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::MemoryAudioSource &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#a8cfd008ba0086b0428517a538cf8ecd6">audioSampleSource</a></td></tr>
-<tr class="separator:a8cfd008ba0086b0428517a538cf8ecd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf2486cb0a3050ca3f6d0756c2e81f70"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::AudioBuffer&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">loadedSampleBuffer</a></td></tr>
+<tr class="separator:abf2486cb0a3050ca3f6d0756c2e81f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f89c7f387f9a0aec3ddebe5cab7823b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">noteBeingHeld</a> = false</td></tr>
 <tr class="separator:a7f89c7f387f9a0aec3ddebe5cab7823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bb2a8830bbd0a21a8658939eaa2cbf7"><td class="memItemLeft" align="right" valign="top"><a id="a1bb2a8830bbd0a21a8658939eaa2cbf7"></a>
@@ -161,8 +175,8 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
 
 </div>
 </div>
-<a id="a22c0b578ef6486d41ee7ff2109aebea9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22c0b578ef6486d41ee7ff2109aebea9">&#9670;&nbsp;</a></span>processBlock()</h2>
+<a id="a5917439e695ef6e2a6ccdf800362ba7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5917439e695ef6e2a6ccdf800362ba7c">&#9670;&nbsp;</a></span>processBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,7 +203,67 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::AudioPlayHead::PositionInfo *&#160;</td>
-          <td class="paramname"><em>positionInfo</em>&#160;</td>
+          <td class="paramname"><em>positionInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isTuned</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>nextQuarterNotePpq</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>nextNoteSample</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>noteLength</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>samplePitchBendRatio</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isEtet</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>etetRootNote</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>etetNumerator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>etetDenominator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>killswitch</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -213,8 +287,8 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8cfd008ba0086b0428517a538cf8ecd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8cfd008ba0086b0428517a538cf8ecd6">&#9670;&nbsp;</a></span>audioSampleSource</h2>
+<a id="abac9081e24614fbc4971e766e03c2e5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abac9081e24614fbc4971e766e03c2e5e">&#9670;&nbsp;</a></span>lastNoteInput</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,30 +297,7 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;juce::MemoryAudioSource&gt; SampleOscillator::audioSampleSource</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>The source that holds the loaded sample data. </p>
-
-</div>
-</div>
-<a id="a986ddaee77c5693f1ecd6d6594ef0a47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a986ddaee77c5693f1ecd6d6594ef0a47">&#9670;&nbsp;</a></span>lastNoteNum</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int SampleOscillator::lastNoteNum = 0</td>
+          <td class="memname">int SampleOscillator::lastNoteInput = 0</td>
         </tr>
       </table>
   </td>
@@ -259,8 +310,8 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
 
 </div>
 </div>
-<a id="a361d05fcc4b318679bb9705fdfb5d8b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a361d05fcc4b318679bb9705fdfb5d8b8">&#9670;&nbsp;</a></span>nextQuarterNotePpq</h2>
+<a id="abf2486cb0a3050ca3f6d0756c2e81f70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf2486cb0a3050ca3f6d0756c2e81f70">&#9670;&nbsp;</a></span>loadedSampleBuffer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -269,7 +320,7 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double SampleOscillator::nextQuarterNotePpq = 0</td>
+          <td class="memname">std::unique_ptr&lt;juce::AudioBuffer&lt;float&gt; &gt; SampleOscillator::loadedSampleBuffer</td>
         </tr>
       </table>
   </td>
@@ -278,7 +329,7 @@ juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" vali
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The ppq position of the next note to be played. </p>
+<p>The buffer that holds the loaded sample data. </p>
 
 </div>
 </div>

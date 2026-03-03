@@ -1,5 +1,10 @@
 var class_plugin_processor =
 [
+    [ "SpeedRange", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9", [
+      [ "Low", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9a28d0edd045e05cf5af64e35ae0c4c6ef", null ],
+      [ "Medium", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9a87f8a6ab85c9ced3702b4ea641ad4bb5", null ],
+      [ "High", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9a655d20c1ca69519ca647684edbb2db35", null ]
+    ] ],
     [ "PluginProcessor", "class_plugin_processor.html#a6245933f65910a173d2e549cfb102996", null ],
     [ "~PluginProcessor", "class_plugin_processor.html#a6bd77ed8717911be822095f7d646602a", null ],
     [ "acceptsMidi", "class_plugin_processor.html#abc89f595fff65cc7396a0b01543f8edd", null ],
@@ -9,7 +14,9 @@ var class_plugin_processor =
     [ "getCurrentProgram", "class_plugin_processor.html#ab6ad95d489945dc00ce82aeba305be14", null ],
     [ "getName", "class_plugin_processor.html#a08847913a957f111a4344528bb74529f", null ],
     [ "getNumPrograms", "class_plugin_processor.html#a12c1919430575ae4324ede0e664d336d", null ],
+    [ "getParametersApvts", "class_plugin_processor.html#a891479734329e359d3aba3aeda3bd5a1", null ],
     [ "getProgramName", "class_plugin_processor.html#a8decafe7728d5fe3b5b5226622500e33", null ],
+    [ "getSpeedRangeChoices", "class_plugin_processor.html#a5adf20672b0f343386d6b14ba4e435d3", null ],
     [ "getStateInformation", "class_plugin_processor.html#a5218056d16be61b3caa06ec35a4e621d", null ],
     [ "getTailLengthSeconds", "class_plugin_processor.html#a742de13773835a2f85ec0d090ace962a", null ],
     [ "hasEditor", "class_plugin_processor.html#a6576de24cd08675b528166834b4f932e", null ],
@@ -21,10 +28,27 @@ var class_plugin_processor =
     [ "releaseResources", "class_plugin_processor.html#aaa4eacf13476c61f7c2db14c7f4c206b", null ],
     [ "setCurrentProgram", "class_plugin_processor.html#a1e7817965ce7efbb680baad519462fb8", null ],
     [ "setStateInformation", "class_plugin_processor.html#a79debe20f480b7bb7bd6df531bd427be", null ],
+    [ "etetDenominatorParameter", "class_plugin_processor.html#afef3ee29cabc4649271e8f849e0518b4", null ],
+    [ "etetNumeratorParameter", "class_plugin_processor.html#aaa4e504535f8f854a4f7afcb1716bcac", null ],
+    [ "etetRootNoteParameter", "class_plugin_processor.html#a56c931b84b4f7137cadaf1490bf74160", null ],
+    [ "fixedNoteNumberParameter", "class_plugin_processor.html#a55e155c7506ad94a68871f627206d449", null ],
+    [ "highSpeedParameter", "class_plugin_processor.html#a2a1ce809a1a27e680830f29b3307fffa", null ],
+    [ "isEtetParameter", "class_plugin_processor.html#a45dc815d64962d068c04bd1467bc8d20", null ],
+    [ "isKeytrackParameter", "class_plugin_processor.html#aa8c9dcc03a0d3000bb9e559a0564d4e1", null ],
     [ "isMidiModeParameter", "class_plugin_processor.html#a419e382fde6dc6c311aac4639be54a8c", null ],
+    [ "isTunedParameter", "class_plugin_processor.html#a693b3a323b32aac6fccae95365b143f3", null ],
+    [ "killswitch", "class_plugin_processor.html#a9054b776fdb6e1593145f3193d43b67d", null ],
     [ "lastNoteSamplePos", "class_plugin_processor.html#a8c5ca10403cbee7f6735266684491a1f", null ],
+    [ "lowSpeedParameter", "class_plugin_processor.html#aa4d2fc33b73528264a524dd4e6b0c746", null ],
     [ "midiOscillator", "class_plugin_processor.html#ad442022d248dfc2a1d1e695c6d1f9d86", null ],
+    [ "midSpeedParameter", "class_plugin_processor.html#a4ee60b40bacd94633a9f78de56a48c91", null ],
+    [ "nextNoteSample", "class_plugin_processor.html#a45a987d9a1234c71975b2a680397ec37", null ],
+    [ "nextQuarterNotePpq", "class_plugin_processor.html#a21a7afed98d6086c817f7fdb4b825946", null ],
+    [ "noteLengthParameter", "class_plugin_processor.html#a925bd1236d01caec25cc731fb60184a3", null ],
     [ "parameters", "class_plugin_processor.html#aa7eb2e7d61250cdbdf58e4e66639a030", null ],
     [ "sampleOscillator", "class_plugin_processor.html#ac805ccc956af221f472ed446a8b7c701", null ],
-    [ "speedParameter", "class_plugin_processor.html#aa75e34b64ae39540435361fec56bda2f", null ]
+    [ "samplePitchBendParameter", "class_plugin_processor.html#a57f0a0e94244996c73be4c781e9a7eab", null ],
+    [ "speedRangeChoices", "class_plugin_processor.html#a962781278311a09749c4180b949b5dcb", null ],
+    [ "speedRangeParameter", "class_plugin_processor.html#aac4d679638bc40a3e2786b0d20d25b91", null ],
+    [ "velocityParameter", "class_plugin_processor.html#ae03145f3acd5c7dde9eeb59245faeb2d", null ]
 ];

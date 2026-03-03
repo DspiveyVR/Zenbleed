@@ -3,10 +3,19 @@
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{class_midi_oscillator_ac674d169aec293d58508b885886c59f9}{process\+Block}} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info)
+void \mbox{\hyperlink{class_midi_oscillator_a38eded65f4c8f22c4067085665de7f99}{process\+Block}} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, bool is\+Tuned, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number)
 \begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_midi_oscillator_a69d2af103400ce6164f1ab81f32af47d}\label{class_midi_oscillator_a69d2af103400ce6164f1ab81f32af47d}} 
 void {\bfseries set\+Sample\+Rate} (const double sr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_midi_oscillator_aabc597b6067a21e15f9a4ac44d990509}\label{class_midi_oscillator_aabc597b6067a21e15f9a4ac44d990509}} 
+void {\bfseries process\+Untuned} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number)
+\item 
+\mbox{\Hypertarget{class_midi_oscillator_acacaf12943b8c33c6e3433a0d8a5bf71}\label{class_midi_oscillator_acacaf12943b8c33c6e3433a0d8a5bf71}} 
+void {\bfseries process\+Tuned} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number)
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
@@ -17,18 +26,20 @@ double {\bfseries sample\+Rate} = 0
 \mbox{\Hypertarget{class_midi_oscillator_ab6f3b44d9ff42c28c6515d3c38ac8ed3}\label{class_midi_oscillator_ab6f3b44d9ff42c28c6515d3c38ac8ed3}} 
 bool {\bfseries was\+Playing} = false
 \item 
-double \mbox{\hyperlink{class_midi_oscillator_a870190c0fb34968188eb3f34afbcacc5}{next\+Quarter\+Note\+Ppq}} = 0
+int \mbox{\hyperlink{class_midi_oscillator_a3b8aeff09e18e561f48b3ac2cd5d6136}{last\+Note\+Input}} = 0
 \item 
-int \mbox{\hyperlink{class_midi_oscillator_a6762f523a973504fe0a50ef285e2587b}{last\+Note\+Num}} = 0
+int \mbox{\hyperlink{class_midi_oscillator_aa61bd89fb9506f0f02110f826dadf09f}{last\+Note\+Output}} = 0
+\item 
+bool \mbox{\hyperlink{class_midi_oscillator_abbec7d5a1505d3f986105901ab9a0913}{note\+Being\+Held}} = false
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{class_midi_oscillator_ac674d169aec293d58508b885886c59f9}\label{class_midi_oscillator_ac674d169aec293d58508b885886c59f9}} 
+\mbox{\Hypertarget{class_midi_oscillator_a38eded65f4c8f22c4067085665de7f99}\label{class_midi_oscillator_a38eded65f4c8f22c4067085665de7f99}} 
 \index{MidiOscillator@{MidiOscillator}!processBlock@{processBlock}}
 \index{processBlock@{processBlock}!MidiOscillator@{MidiOscillator}}
 \doxysubsubsection{\texorpdfstring{processBlock()}{processBlock()}}
-{\footnotesize\ttfamily void Midi\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{const int}]{buffer\+Size,  }\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Midi\+Buffer \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Midi\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{const int}]{buffer\+Size,  }\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Midi\+Buffer \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info,  }\item[{bool}]{is\+Tuned,  }\item[{double \&}]{next\+Quarter\+Note\+Ppq,  }\item[{double \&}]{next\+Note\+Sample,  }\item[{float}]{note\+Length,  }\item[{bool}]{is\+Etet,  }\item[{int}]{etet\+Root\+Note,  }\item[{float}]{etet\+Numerator,  }\item[{float}]{etet\+Denominator,  }\item[{float}]{velocity,  }\item[{bool \&}]{killswitch,  }\item[{bool}]{is\+Keytrack,  }\item[{int}]{fixed\+Note\+Number }\end{DoxyParamCaption})}
 
 
 
@@ -50,19 +61,25 @@ Creates a new MIDI buffer based on the input buffer with notes played at a speed
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{class_midi_oscillator_a6762f523a973504fe0a50ef285e2587b}\label{class_midi_oscillator_a6762f523a973504fe0a50ef285e2587b}} 
-\index{MidiOscillator@{MidiOscillator}!lastNoteNum@{lastNoteNum}}
-\index{lastNoteNum@{lastNoteNum}!MidiOscillator@{MidiOscillator}}
-\doxysubsubsection{\texorpdfstring{lastNoteNum}{lastNoteNum}}
-{\footnotesize\ttfamily int Midi\+Oscillator\+::last\+Note\+Num = 0\hspace{0.3cm}{\ttfamily [private]}}
+\mbox{\Hypertarget{class_midi_oscillator_a3b8aeff09e18e561f48b3ac2cd5d6136}\label{class_midi_oscillator_a3b8aeff09e18e561f48b3ac2cd5d6136}} 
+\index{MidiOscillator@{MidiOscillator}!lastNoteInput@{lastNoteInput}}
+\index{lastNoteInput@{lastNoteInput}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{lastNoteInput}{lastNoteInput}}
+{\footnotesize\ttfamily int Midi\+Oscillator\+::last\+Note\+Input = 0\hspace{0.3cm}{\ttfamily [private]}}
 
-The number of the last musical note that was played. \mbox{\Hypertarget{class_midi_oscillator_a870190c0fb34968188eb3f34afbcacc5}\label{class_midi_oscillator_a870190c0fb34968188eb3f34afbcacc5}} 
-\index{MidiOscillator@{MidiOscillator}!nextQuarterNotePpq@{nextQuarterNotePpq}}
-\index{nextQuarterNotePpq@{nextQuarterNotePpq}!MidiOscillator@{MidiOscillator}}
-\doxysubsubsection{\texorpdfstring{nextQuarterNotePpq}{nextQuarterNotePpq}}
-{\footnotesize\ttfamily double Midi\+Oscillator\+::next\+Quarter\+Note\+Ppq = 0\hspace{0.3cm}{\ttfamily [private]}}
+The number of the last musical note that was recieved through the MIDI buffer. \mbox{\Hypertarget{class_midi_oscillator_aa61bd89fb9506f0f02110f826dadf09f}\label{class_midi_oscillator_aa61bd89fb9506f0f02110f826dadf09f}} 
+\index{MidiOscillator@{MidiOscillator}!lastNoteOutput@{lastNoteOutput}}
+\index{lastNoteOutput@{lastNoteOutput}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{lastNoteOutput}{lastNoteOutput}}
+{\footnotesize\ttfamily int Midi\+Oscillator\+::last\+Note\+Output = 0\hspace{0.3cm}{\ttfamily [private]}}
 
-The ppq position of the next note to be played. 
+The number of the last musical note that was output by the MIDI oscillator. \mbox{\Hypertarget{class_midi_oscillator_abbec7d5a1505d3f986105901ab9a0913}\label{class_midi_oscillator_abbec7d5a1505d3f986105901ab9a0913}} 
+\index{MidiOscillator@{MidiOscillator}!noteBeingHeld@{noteBeingHeld}}
+\index{noteBeingHeld@{noteBeingHeld}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{noteBeingHeld}{noteBeingHeld}}
+{\footnotesize\ttfamily bool Midi\+Oscillator\+::note\+Being\+Held = false\hspace{0.3cm}{\ttfamily [private]}}
+
+indicates whether a note is currently being held. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

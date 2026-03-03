@@ -10,5 +10,7 @@ var class_plugin_editor =
     [ "inspectButton", "class_plugin_editor.html#a5a91c55387cef8910ed2abb8f994729b", null ],
     [ "inspector", "class_plugin_editor.html#a5734177cd6cc0710459f52c093455abe", null ],
     [ "openButton", "class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68", null ],
-    [ "processorRef", "class_plugin_editor.html#ae56a6e43d134ef927fdd90aea77cbb75", null ]
+    [ "processorRef", "class_plugin_editor.html#ae56a6e43d134ef927fdd90aea77cbb75", null ],
+    [ "speedRangeAttachment", "class_plugin_editor.html#a034290a4f26b98f110f2fe966981f5ce", null ],
+    [ "speedRangeBox", "class_plugin_editor.html#ae746ef2c43d20953df17a6393dc0d855", null ]
 ];

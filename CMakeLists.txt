@@ -128,7 +128,7 @@ target_link_libraries(SharedCode
     juce::juce_recommended_warning_flags)
 
 # Link the JUCE plugin targets our SharedCode target
-target_link_libraries("${PROJECT_NAME}" PRIVATE SharedCode)
+target_link_libraries("${PROJECT_NAME}" PRIVATE SharedCode Assets)
 
 if(WIN32)
     set(VST3_INSTALL_DIR "$ENV{LOCALAPPDATA}/Programs/Common Files/VST3")

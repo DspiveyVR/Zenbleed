@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['midioscillator_17',['MidiOscillator',['../class_midi_oscillator.html',1,'']]]
+  ['midioscillator_32',['MidiOscillator',['../class_midi_oscillator.html',1,'']]]
 ];
