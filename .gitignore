@@ -11,6 +11,8 @@ _deps
 **/.DS_Store
 
 build/
+node_modules/
+.docusaurus
 
 # IDE config
 .idea
