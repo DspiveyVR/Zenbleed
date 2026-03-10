@@ -55,38 +55,46 @@ public:
 
     std::atomic<float> lastNoteSamplePos = 0.0;
     std::unique_ptr<SampleOscillator>
-            sampleOscillator; /**< Child instance of SampleOscillator created in the constructor of PluginProcessor */
+        sampleOscillator; /**< Child instance of SampleOscillator created in the constructor of PluginProcessor */
 
 private:
     enum class SpeedRange { Low, Medium, High };
+    enum class OperationMode { Default, Etet, Tuned };
     const juce::StringArray speedRangeChoices = { "Low", "Medium", "High" };
+    const juce::StringArray operationModeChoices = { "Default", "Extratone Equal Temperament (ETET)", "Tuned" };
 
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* lowSpeedParameter = nullptr; /**< Speed parameter (low range): acts as a pitch bend */
     std::atomic<float>* midSpeedParameter = nullptr; /**< Speed parameter (mid range): acts as a pitch bend */
     std::atomic<float>* highSpeedParameter = nullptr; /**< Speed parameter (high range): acts as a pitch bend */
     std::atomic<float>* speedRangeParameter =
-            nullptr; /**< Speed range parameter: selects which speed range to choose */
+        nullptr; /**< Speed range parameter: selects which speed range to choose */
     std::atomic<float>* isMidiModeParameter =
-            nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
-    std::atomic<float>* isTunedParameter =
-            nullptr; /**< Tuned mode parameter: determines whether or not the extratone is tuned to the input note */
-    std::atomic<float>* isEtetParameter =
-            nullptr; /**< Extratone Equal Temperament (ETET) mode parameter: determines whether or not the "Extratone Equal Temperament (ETET) mode is enabled" */
-    std::atomic<float>* etetRootNoteParameter = nullptr; /**< ETET root note parameter: The root note for Extratone Equal Temperament (ETET) */
-    std::atomic<float>* etetNumeratorParameter = nullptr; /**< Extratone Equal Temperament (ETET) numerator parameter: Controls the numerator of the harmonic interval used in Extratone Equal Temperament (ETET) */
-    std::atomic<float>* etetDenominatorParameter = nullptr; /**< Extratone Equal Temperament (ETET) denominator parameter: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) */
-    std::atomic<float>* noteLengthParameter = nullptr; /**< Note length parameter: Controls how long a note is held before the next note is played */
-    std::atomic<float>* samplePitchBendParameter = nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
-    std::atomic<float>* velocityParameter = nullptr; /**< Velocity parameter: Controls the velocity of the MIDI note being played */
-    std::atomic<float>* isKeytrackParameter = nullptr; /**< Is keytrack parameter: Dictates wheter the MIDI note triggered is equal to the input note or whether it is fixed. */
-    std::atomic<float>* fixedNoteNumberParameter = nullptr; /**< Fixed note number parameter: Dictates the MIDI note to be triggered when keytrack is false */
+        nullptr; /**< Midi mode parameter: toggles between MIDI mode and sampler mode */
+    std::atomic<float>* operationModeParameter =
+        nullptr; /** Operation mode parameter: Selects between default, ETET, and tuned modes.   */
+    std::atomic<float>* etetRootNoteParameter =
+        nullptr; /**< ETET root note parameter: The root note for Extratone Equal Temperament (ETET) */
+    std::atomic<float>* etetNumeratorParameter =
+        nullptr; /**< Extratone Equal Temperament (ETET) numerator parameter: Controls the numerator of the harmonic interval used in Extratone Equal Temperament (ETET) */
+    std::atomic<float>* etetDenominatorParameter =
+        nullptr; /**< Extratone Equal Temperament (ETET) denominator parameter: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) */
+    std::atomic<float>* noteLengthParameter =
+        nullptr; /**< Note length parameter: Controls how long a note is held before the next note is played */
+    std::atomic<float>* samplePitchBendParameter =
+        nullptr; /**< Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) */
+    std::atomic<float>* velocityParameter =
+        nullptr; /**< Velocity parameter: Controls the velocity of the MIDI note being played */
+    std::atomic<float>* isKeytrackParameter =
+        nullptr; /**< Is keytrack parameter: Dictates wheter the MIDI note triggered is equal to the input note or whether it is fixed. */
+    std::atomic<float>* fixedNoteNumberParameter =
+        nullptr; /**< Fixed note number parameter: Dictates the MIDI note to be triggered when keytrack is false */
     double nextQuarterNotePpq = 0; /**< The ppq position of the next note to be played. */
     double nextNoteSample = 0; /**< The sample position of the next note to be played. */
     bool killswitch = false;
 
     std::unique_ptr<MidiOscillator>
-            midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
+        midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };

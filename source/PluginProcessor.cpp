@@ -7,97 +7,106 @@
 PluginProcessor::PluginProcessor() :
     AudioProcessor(BusesProperties().withOutput("Output", juce::AudioChannelSet::stereo(), true)),
     parameters(
-            *this,
-            nullptr,
-            juce::Identifier("ZenParameters"),
-            { std::make_unique<juce::AudioParameterFloat>(
-                      "lowSpeed",
-                      "Low Speed",
-                      juce::NormalisableRange<float> { 0.1f, 16.0f, 0.01, 0.7 },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "midSpeed",
-                      "Mid Speed",
-                      juce::NormalisableRange<float> { 0.1f, 64.0f, 0.01, 0.7 },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "highSpeed",
-                      "High Speed",
-                      juce::NormalisableRange<float> { 0.1f, 256.0f, 0.01, 0.7 },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterChoice>(
-                      "speedRange",
-                      "Speed Range",
-                      speedRangeChoices,
-                      static_cast<int>(SpeedRange::Medium),
-                      juce::AudioParameterChoiceAttributes {}.withCategory(
-                              juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterBool>(
-                      "isMidiMode",
-                      "Midi mode",
-                      false,
-                      juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
-              std::make_unique<juce::AudioParameterBool>(
-                      "isTuned",
-                      "Tuned",
-                      false,
-                      juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
-              std::make_unique<juce::AudioParameterBool>(
-                      "isEtet",
-                      "Extratone Equal Temperament (ETET)",
-                      false,
-                      juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "etetRootNote",
-                      "Root Note",
-                      juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "etetNumerator",
-                      "Numerator",
-                      juce::NormalisableRange<float> { 1.0f, 16.0f, 1.0f },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "etetDenominator",
-                      "Denominator",
-                      juce::NormalisableRange<float> { 1.0f, 16.0f, 1.0f },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "noteLength",
-                      "Note Length",
-                      juce::NormalisableRange<float> { 0.1f, 1.0f, 0.01f },
-                      1.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "samplePitchBendRatio",
-                      "Sample Pitch Bend",
-                      juce::NormalisableRange<float> { -120.0f, 120.0f, 0.01f },
-                      0.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "velocity",
-                      "Velocity",
-                      juce::NormalisableRange<float> { 1.0f, 127.0f, 1.0f },
-                      127.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)),
-              std::make_unique<juce::AudioParameterBool>(
-                      "isKeytrack",
-                      "Keytrack",
-                      false,
-                      juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)),
-              std::make_unique<juce::AudioParameterFloat>(
-                      "fixedNoteNumber",
-                      "Note",
-                      juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
-                      25.0f,
-                      juce::AudioParameterFloatAttributes {}.withCategory(
-                              juce::AudioParameterFloat::genericParameter)) }),
+        *this,
+        nullptr,
+        juce::Identifier("ZenParameters"),
+        { std::make_unique<juce::AudioParameterFloat>(
+              "lowSpeed",
+              "Low Speed",
+              juce::NormalisableRange<float> { 0.1f, 16.0f, 0.01, 0.7 },
+              1.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "midSpeed",
+              "Mid Speed",
+              juce::NormalisableRange<float> { 0.1f, 64.0f, 0.01, 0.7 },
+              1.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "highSpeed",
+              "High Speed",
+              juce::NormalisableRange<float> { 0.1f, 256.0f, 0.01, 0.7 },
+              1.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterChoice>(
+              "speedRange",
+              "Speed Range",
+              speedRangeChoices,
+              static_cast<int>(SpeedRange::Medium),
+              juce::AudioParameterChoiceAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterChoice>(
+              "operationMode",
+              "Operation Mode",
+              operationModeChoices,
+              static_cast<int>(OperationMode::Default),
+              juce::AudioParameterChoiceAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterBool>(
+              "isMidiMode",
+              "Midi mode",
+              false,
+              juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "etetRootNote",
+              "Root Note",
+              juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
+              1.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "etetNumerator",
+              "Numerator",
+              juce::NormalisableRange<float> { 1.0f, 16.0f, 1.0f },
+              2.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "etetDenominator",
+              "Denominator",
+              juce::NormalisableRange<float> { 1.0f, 16.0f, 1.0f },
+              1.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "noteLength",
+              "Note Length",
+              juce::NormalisableRange<float> { 0.1f, 1.0f, 0.01f },
+              1.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "samplePitchBendRatio",
+              "Sample Pitch Bend",
+              juce::NormalisableRange<float> { -120.0f, 120.0f, 0.01f },
+              0.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "velocity",
+              "Velocity",
+              juce::NormalisableRange<float> { 1.0f, 127.0f, 1.0f },
+              127.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterBool>(
+              "isKeytrack",
+              "Keytrack",
+              false,
+              juce::AudioParameterBoolAttributes {}.withCategory(juce::AudioParameterBool::genericParameter)
+          ),
+          std::make_unique<juce::AudioParameterFloat>(
+              "fixedNoteNumber",
+              "Note",
+              juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
+              25.0f,
+              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+          ) }
+    ),
 
     sampleOscillator(std::make_unique<SampleOscillator>(parameters)),
     midiOscillator(std::make_unique<MidiOscillator>()) {
@@ -106,8 +115,7 @@ PluginProcessor::PluginProcessor() :
     highSpeedParameter = parameters.getRawParameterValue("highSpeed");
     speedRangeParameter = parameters.getRawParameterValue("speedRange");
     isMidiModeParameter = parameters.getRawParameterValue("isMidiMode");
-    isTunedParameter = parameters.getRawParameterValue("isTuned");
-    isEtetParameter = parameters.getRawParameterValue("isEtet");
+    operationModeParameter = parameters.getRawParameterValue("operationMode");
     etetRootNoteParameter = parameters.getRawParameterValue("etetRootNote");
     etetNumeratorParameter = parameters.getRawParameterValue("etetNumerator");
     etetDenominatorParameter = parameters.getRawParameterValue("etetDenominator");
@@ -226,6 +234,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
             break;
     }
 
+    const OperationMode operationModeChoice =
+        static_cast<OperationMode>(static_cast<int>(operationModeParameter->load()));
     bool isMidiMode = isMidiModeParameter->load();
     float samplePitchBendRatio = std::pow(2, (samplePitchBendParameter->load() / 12));
     float noteLength = *noteLengthParameter;
@@ -233,41 +243,41 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
         juce::MidiBuffer outputBuffer;
 
         midiOscillator->processBlock(
-                buffer.getNumSamples(),
-                midiMessages,
-                outputBuffer,
-                speedScale,
-                positionInfo,
-                isTunedParameter->load(),
-                nextQuarterNotePpq,
-                nextNoteSample,
-                noteLength,
-                isEtetParameter->load(),
-                etetRootNoteParameter->load(),
-                etetNumeratorParameter->load(),
-                etetDenominatorParameter->load(),
-                velocityParameter->load() / 127.0f, // Normalize velocity value to [0.0, 1.0]
-                killswitch,
-                isKeytrackParameter->load(),
-                fixedNoteNumberParameter->load());
+            buffer.getNumSamples(),
+            midiMessages,
+            outputBuffer,
+            speedScale,
+            positionInfo,
+            static_cast<MidiOscillator::OperationMode>(operationModeChoice),
+            nextQuarterNotePpq,
+            nextNoteSample,
+            noteLength,
+            etetRootNoteParameter->load(),
+            etetNumeratorParameter->load(),
+            etetDenominatorParameter->load(),
+            velocityParameter->load() / 127.0f, // Normalize velocity value to [0.0, 1.0]
+            killswitch,
+            isKeytrackParameter->load(),
+            fixedNoteNumberParameter->load()
+        );
 
         midiMessages.swapWith(outputBuffer);
     } else {
         sampleOscillator.get()->processBlock(
-                midiMessages,
-                buffer,
-                speedScale,
-                positionInfo,
-                isTunedParameter->load(),
-                nextQuarterNotePpq,
-                nextNoteSample,
-                noteLength,
-                samplePitchBendRatio,
-                isEtetParameter->load(),
-                etetRootNoteParameter->load(),
-                etetNumeratorParameter->load(),
-                etetDenominatorParameter->load(),
-                killswitch);
+            midiMessages,
+            buffer,
+            speedScale,
+            positionInfo,
+            static_cast<SampleOscillator::OperationMode>(operationModeChoice),
+            nextQuarterNotePpq,
+            nextNoteSample,
+            noteLength,
+            samplePitchBendRatio,
+            etetRootNoteParameter->load(),
+            etetNumeratorParameter->load(),
+            etetDenominatorParameter->load(),
+            killswitch
+        );
     }
     auto endTime = juce::Time::getHighResolutionTicks();
 

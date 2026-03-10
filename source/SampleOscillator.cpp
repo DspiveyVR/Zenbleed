@@ -5,18 +5,19 @@ inline float
 getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, int lastNoteInput, int etetRootNote);
 
 void getNextSampleBlock(
-        const int writeStart,
-        const int writeLength,
-        double& nextReadPosition,
-        const float samplePitchBendRatio,
-        const int inSamplesLength,
-        const int outSamplesLength,
-        const float* inSamplesL,
-        const float* inSamplesR,
-        float* outSamplesL,
-        float* outSamplesR,
-        bool& currentSampleEnded,
-        const bool killswitch);
+    const int writeStart,
+    const int writeLength,
+    double& nextReadPosition,
+    const float samplePitchBendRatio,
+    const int inSamplesLength,
+    const int outSamplesLength,
+    const float* inSamplesL,
+    const float* inSamplesR,
+    float* outSamplesL,
+    float* outSamplesR,
+    bool& currentSampleEnded,
+    const bool killswitch
+);
 
 SampleOscillator::SampleOscillator(juce::AudioProcessorValueTreeState& paramsRef) :
     formatManager(), parametersRef(paramsRef) {
@@ -45,20 +46,20 @@ void SampleOscillator::loadSampleFromFile(const juce::File& file) {
 }
 
 void SampleOscillator::processBlock(
-        juce::MidiBuffer& inputBuffer,
-        juce::AudioBuffer<float>& outputBuffer,
-        const float speedScale,
-        const juce::AudioPlayHead::PositionInfo* positionInfo,
-        bool isTuned,
-        double& nextQuarterNotePpq,
-        double& nextNoteSample,
-        float noteLength,
-        float samplePitchBendRatio,
-        bool isEtet,
-        int etetRootNote,
-        float etetNumerator,
-        float etetDenominator,
-        bool& killswitch) {
+    juce::MidiBuffer& inputBuffer,
+    juce::AudioBuffer<float>& outputBuffer,
+    const float speedScale,
+    const juce::AudioPlayHead::PositionInfo* positionInfo,
+    const OperationMode operationMode,
+    double& nextQuarterNotePpq,
+    double& nextNoteSample,
+    float noteLength,
+    float samplePitchBendRatio,
+    int etetRootNote,
+    float etetNumerator,
+    float etetDenominator,
+    bool& killswitch
+) {
     juce::AudioBuffer<float>* sampleBuffer = loadedSampleBuffer.get();
     if (!sampleBuffer)
         return;
@@ -77,13 +78,16 @@ void SampleOscillator::processBlock(
     const double samplePerPpq = (60 * sampleRate) / bpm;
     const int bufferSize = outputBuffer.getNumSamples();
 
-    if (!isTuned) {
-        nextNoteSample = nextQuarterNotePpq * samplePerPpq;
-        processUntuned(
+    switch (operationMode) {
+        case OperationMode::Default:
+        case OperationMode::Etet:
+            nextNoteSample = nextQuarterNotePpq * samplePerPpq;
+            processUntuned(
                 inputBuffer,
                 outputBuffer,
                 speedScale,
                 positionInfo,
+                operationMode,
                 nextQuarterNotePpq,
                 nextNoteSample,
                 noteLength,
@@ -98,14 +102,15 @@ void SampleOscillator::processBlock(
                 sampleBuffer,
                 bpm,
                 currentPpq,
-                isEtet,
                 etetRootNote,
                 etetNumerator,
                 etetDenominator,
-                killswitch);
-    } else {
-        nextQuarterNotePpq = nextNoteSample / samplePerPpq;
-        processTuned(
+                killswitch
+            );
+            break;
+        default:
+            nextQuarterNotePpq = nextNoteSample / samplePerPpq;
+            processTuned(
                 inputBuffer,
                 outputBuffer,
                 speedScale,
@@ -124,34 +129,37 @@ void SampleOscillator::processBlock(
                 sampleBuffer,
                 bpm,
                 currentPpq,
-                killswitch);
+                killswitch
+            );
+            break;
     }
 }
 
 void SampleOscillator::processUntuned(
-        juce::MidiBuffer& inputBuffer,
-        juce::AudioBuffer<float>& outputBuffer,
-        const float inputSpeedScale,
-        const juce::AudioPlayHead::PositionInfo* positionInfo,
-        double& nextQuarterNotePpq,
-        double& nextNoteSample,
-        float noteLength,
-        float samplePitchBendRatio,
-        bool success,
-        double firstEventTime,
-        juce::MidiMessage firstMessage,
-        double currentSamples,
-        double samplePerPpq,
-        const int bufferSize,
-        juce::MidiBuffer::Iterator& iterator,
-        juce::AudioBuffer<float>* sampleBuffer,
-        const double bpm,
-        double currentPpq,
-        bool isEtet,
-        int etetRootNote,
-        float etetNumerator,
-        float etetDenominator,
-        bool& killswitch) {
+    juce::MidiBuffer& inputBuffer,
+    juce::AudioBuffer<float>& outputBuffer,
+    const float inputSpeedScale,
+    const juce::AudioPlayHead::PositionInfo* positionInfo,
+    const OperationMode operationMode,
+    double& nextQuarterNotePpq,
+    double& nextNoteSample,
+    float noteLength,
+    float samplePitchBendRatio,
+    bool success,
+    double firstEventTime,
+    juce::MidiMessage firstMessage,
+    double currentSamples,
+    double samplePerPpq,
+    const int bufferSize,
+    juce::MidiBuffer::Iterator& iterator,
+    juce::AudioBuffer<float>* sampleBuffer,
+    const double bpm,
+    double currentPpq,
+    int etetRootNote,
+    float etetNumerator,
+    float etetDenominator,
+    bool& killswitch
+) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
     const int inSamplesLength = sampleBuffer->getNumSamples();
@@ -163,16 +171,16 @@ void SampleOscillator::processUntuned(
     int writeLength = 0;
 
     float speedScale =
-            isEtet ? inputSpeedScale
-                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
-                   : inputSpeedScale;
+        operationMode == OperationMode::Etet ? inputSpeedScale
+                     * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
+               : inputSpeedScale;
 
     if (success) {
         killswitch = false;
         currentSampleEnded = false;
         lastNoteInput = firstMessage.getNoteNumber();
 
-        if (isEtet) {
+        if (operationMode == OperationMode::Etet) {
             speedScale = inputSpeedScale
                          * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
         }
@@ -195,18 +203,19 @@ void SampleOscillator::processUntuned(
             nextReadPosition = 0;
 
             getNextSampleBlock(
-                    writeStart,
-                    writeLength,
-                    nextReadPosition,
-                    samplePitchBendRatio,
-                    inSamplesLength,
-                    outSamplesLength,
-                    inSamplesL,
-                    inSamplesR,
-                    outSamplesL,
-                    outSamplesR,
-                    currentSampleEnded,
-                    killswitch);
+                writeStart,
+                writeLength,
+                nextReadPosition,
+                samplePitchBendRatio,
+                inSamplesLength,
+                outSamplesLength,
+                inSamplesL,
+                inSamplesR,
+                outSamplesL,
+                outSamplesR,
+                currentSampleEnded,
+                killswitch
+            );
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -214,9 +223,10 @@ void SampleOscillator::processUntuned(
             bool success2 = iterator.getNextEvent(secondMessage, secondEventTime);
             lastNoteInput = secondMessage.getNoteNumber();
 
-            if (isEtet) {
-                speedScale = inputSpeedScale
-                             * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
+            if (operationMode == OperationMode::Etet) {
+                speedScale =
+                    inputSpeedScale
+                    * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
@@ -231,29 +241,31 @@ void SampleOscillator::processUntuned(
     }
 
     double adjustedNoteEnd = nextQuarterNotePpq - (1.0 / speedScale) + (noteLength / speedScale);
-    bool nextNoteInBlock = (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize)
-                           && !compareFloat(nextQuarterNotePpq, 0.0);
+    bool nextNoteInBlock =
+        (nextQuarterNotePpq * samplePerPpq) <= (currentSamples + bufferSize) && !compareFloat(nextQuarterNotePpq, 0.0);
     bool noteEndInBlock = (adjustedNoteEnd * samplePerPpq) <= (currentSamples + bufferSize);
 
-    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch
+           && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
             double fragmentSamples = (adjustedNoteEnd * samplePerPpq) - currentSamples - writeStart;
 
             writeLength = fragmentSamples;
             getNextSampleBlock(
-                    writeStart,
-                    writeLength,
-                    nextReadPosition,
-                    samplePitchBendRatio,
-                    inSamplesLength,
-                    outSamplesLength,
-                    inSamplesL,
-                    inSamplesR,
-                    outSamplesL,
-                    outSamplesR,
-                    currentSampleEnded,
-                    killswitch);
+                writeStart,
+                writeLength,
+                nextReadPosition,
+                samplePitchBendRatio,
+                inSamplesLength,
+                outSamplesLength,
+                inSamplesL,
+                inSamplesR,
+                outSamplesL,
+                outSamplesR,
+                currentSampleEnded,
+                killswitch
+            );
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -279,18 +291,19 @@ void SampleOscillator::processUntuned(
 
             if (!noteEndInBlock) {
                 getNextSampleBlock(
-                        writeStart,
-                        writeLength,
-                        nextReadPosition,
-                        samplePitchBendRatio,
-                        inSamplesLength,
-                        outSamplesLength,
-                        inSamplesL,
-                        inSamplesR,
-                        outSamplesL,
-                        outSamplesR,
-                        currentSampleEnded,
-                        killswitch);
+                    writeStart,
+                    writeLength,
+                    nextReadPosition,
+                    samplePitchBendRatio,
+                    inSamplesLength,
+                    outSamplesLength,
+                    inSamplesL,
+                    inSamplesR,
+                    outSamplesL,
+                    outSamplesR,
+                    currentSampleEnded,
+                    killswitch
+                );
             }
             noteBeingHeld = true;
             currentSampleEnded = false;
@@ -312,18 +325,19 @@ void SampleOscillator::processUntuned(
     if (noteBeingHeld) {
         writeLength = outputBuffer.getNumSamples() - writeStart;
         getNextSampleBlock(
-                writeStart,
-                writeLength,
-                nextReadPosition,
-                samplePitchBendRatio,
-                inSamplesLength,
-                outSamplesLength,
-                inSamplesL,
-                inSamplesR,
-                outSamplesL,
-                outSamplesR,
-                currentSampleEnded,
-                killswitch);
+            writeStart,
+            writeLength,
+            nextReadPosition,
+            samplePitchBendRatio,
+            inSamplesLength,
+            outSamplesLength,
+            inSamplesL,
+            inSamplesR,
+            outSamplesL,
+            outSamplesR,
+            currentSampleEnded,
+            killswitch
+        );
     }
 }
 
@@ -339,25 +353,26 @@ getEtetScale(float inputSpeedScale, float etetNumerator, float etetDenominator, 
 }
 
 void SampleOscillator::processTuned(
-        juce::MidiBuffer& inputBuffer,
-        juce::AudioBuffer<float>& outputBuffer,
-        const float speedScale,
-        const juce::AudioPlayHead::PositionInfo* positionInfo,
-        double& nextQuarterNotePpq,
-        double& nextNoteSample,
-        float noteLength,
-        float samplePitchBendRatio,
-        bool success,
-        double firstEventTime,
-        juce::MidiMessage firstMessage,
-        double currentSamples,
-        double samplePerPpq,
-        const int bufferSize,
-        juce::MidiBuffer::Iterator& iterator,
-        juce::AudioBuffer<float>* sampleBuffer,
-        const double bpm,
-        double currentPpq,
-        bool& killswitch) {
+    juce::MidiBuffer& inputBuffer,
+    juce::AudioBuffer<float>& outputBuffer,
+    const float speedScale,
+    const juce::AudioPlayHead::PositionInfo* positionInfo,
+    double& nextQuarterNotePpq,
+    double& nextNoteSample,
+    float noteLength,
+    float samplePitchBendRatio,
+    bool success,
+    double firstEventTime,
+    juce::MidiMessage firstMessage,
+    double currentSamples,
+    double samplePerPpq,
+    const int bufferSize,
+    juce::MidiBuffer::Iterator& iterator,
+    juce::AudioBuffer<float>* sampleBuffer,
+    const double bpm,
+    double currentPpq,
+    bool& killswitch
+) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
     const int inSamplesLength = sampleBuffer->getNumSamples();
@@ -396,18 +411,19 @@ void SampleOscillator::processTuned(
 
             // Play the first note
             getNextSampleBlock(
-                    writeStart,
-                    writeLength,
-                    nextReadPosition,
-                    samplePitchBendRatio,
-                    inSamplesLength,
-                    outSamplesLength,
-                    inSamplesL,
-                    inSamplesR,
-                    outSamplesL,
-                    outSamplesR,
-                    currentSampleEnded,
-                    killswitch);
+                writeStart,
+                writeLength,
+                nextReadPosition,
+                samplePitchBendRatio,
+                inSamplesLength,
+                outSamplesLength,
+                inSamplesL,
+                inSamplesR,
+                outSamplesL,
+                outSamplesR,
+                currentSampleEnded,
+                killswitch
+            );
 
             // If there are two notes immediately next to each other.
             juce::MidiMessage secondMessage;
@@ -432,25 +448,27 @@ void SampleOscillator::processTuned(
     bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && (nextNoteSample != 0.0);
     bool noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
 
-    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
+    while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch
+           && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {
         if (noteBeingHeld && noteEndInBlock) {
             // Calculate the length of the note fragment.
             double fragmentSamples = (adjustedNoteEnd - currentSamples) - writeStart;
 
             writeLength = fragmentSamples;
             getNextSampleBlock(
-                    writeStart,
-                    writeLength,
-                    nextReadPosition,
-                    samplePitchBendRatio,
-                    inSamplesLength,
-                    outSamplesLength,
-                    inSamplesL,
-                    inSamplesR,
-                    outSamplesL,
-                    outSamplesR,
-                    currentSampleEnded,
-                    killswitch);
+                writeStart,
+                writeLength,
+                nextReadPosition,
+                samplePitchBendRatio,
+                inSamplesLength,
+                outSamplesLength,
+                inSamplesL,
+                inSamplesR,
+                outSamplesL,
+                outSamplesR,
+                currentSampleEnded,
+                killswitch
+            );
 
             // Apply a micro-fade (e.g., last 44 samples is ~1ms at 44.1kHz).
             // This prevents a click at the end of the note.
@@ -476,18 +494,19 @@ void SampleOscillator::processTuned(
             if (!noteEndInBlock) {
                 // play the remainder of the current note
                 getNextSampleBlock(
-                        writeStart,
-                        writeLength,
-                        nextReadPosition,
-                        samplePitchBendRatio,
-                        inSamplesLength,
-                        outSamplesLength,
-                        inSamplesL,
-                        inSamplesR,
-                        outSamplesL,
-                        outSamplesR,
-                        currentSampleEnded,
-                        killswitch);
+                    writeStart,
+                    writeLength,
+                    nextReadPosition,
+                    samplePitchBendRatio,
+                    inSamplesLength,
+                    outSamplesLength,
+                    inSamplesL,
+                    inSamplesR,
+                    outSamplesL,
+                    outSamplesR,
+                    currentSampleEnded,
+                    killswitch
+                );
             }
             noteBeingHeld = true;
             currentSampleEnded = false;
@@ -510,34 +529,36 @@ void SampleOscillator::processTuned(
         writeLength = outputBuffer.getNumSamples() - writeStart;
         // play the remainder of the current note
         getNextSampleBlock(
-                writeStart,
-                writeLength,
-                nextReadPosition,
-                samplePitchBendRatio,
-                inSamplesLength,
-                outSamplesLength,
-                inSamplesL,
-                inSamplesR,
-                outSamplesL,
-                outSamplesR,
-                currentSampleEnded,
-                killswitch);
+            writeStart,
+            writeLength,
+            nextReadPosition,
+            samplePitchBendRatio,
+            inSamplesLength,
+            outSamplesLength,
+            inSamplesL,
+            inSamplesR,
+            outSamplesL,
+            outSamplesR,
+            currentSampleEnded,
+            killswitch
+        );
     }
 }
 
 void getNextSampleBlock(
-        const int writeStart,
-        const int writeLength,
-        double& nextReadPosition,
-        const float samplePitchBendRatio,
-        const int inSamplesLength,
-        const int outSamplesLength,
-        const float* inSamplesL,
-        const float* inSamplesR,
-        float* outSamplesL,
-        float* outSamplesR,
-        bool& currentSampleEnded,
-        const bool killswitch) {
+    const int writeStart,
+    const int writeLength,
+    double& nextReadPosition,
+    const float samplePitchBendRatio,
+    const int inSamplesLength,
+    const int outSamplesLength,
+    const float* inSamplesL,
+    const float* inSamplesR,
+    float* outSamplesL,
+    float* outSamplesR,
+    bool& currentSampleEnded,
+    const bool killswitch
+) {
     if (currentSampleEnded || writeStart < 0 || writeLength <= 0) {
         return;
     }
