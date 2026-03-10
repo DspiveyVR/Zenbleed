@@ -24,7 +24,8 @@ void MidiOscillator::processBlock(
     float velocity,
     bool& killswitch,
     bool isKeytrack,
-    int fixedNoteNumber
+    int fixedNoteNumber,
+    std::atomic<float>& bpmSpeedometer
 ) {
     switch (operationMode) {
         case OperationMode::Default:
@@ -45,7 +46,8 @@ void MidiOscillator::processBlock(
                 velocity,
                 killswitch,
                 isKeytrack,
-                fixedNoteNumber
+                fixedNoteNumber,
+                bpmSpeedometer
             );
             break;
         default:
@@ -61,7 +63,8 @@ void MidiOscillator::processBlock(
                 velocity,
                 killswitch,
                 isKeytrack,
-                fixedNoteNumber
+                fixedNoteNumber,
+                bpmSpeedometer
             );
             break;
     }
@@ -83,12 +86,16 @@ void MidiOscillator::processUntuned(
     float velocity,
     bool& killswitch,
     bool isKeytrack,
-    int fixedNoteNumber
+    int fixedNoteNumber,
+    std::atomic<float>& bpmSpeedometer
 ) {
+    const double bpm = *positionInfo->getBpm();
     float speedScale =
-        operationMode == OperationMode::Etet ? inputSpeedScale
-                     * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
-               : inputSpeedScale;
+        operationMode == OperationMode::Etet
+            ? inputSpeedScale
+                  * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
+            : inputSpeedScale;
+    bpmSpeedometer.store(speedScale * bpm);
 
     const double currentPpq = *positionInfo->getPpqPosition();
     juce::MidiMessage firstMessage;
@@ -99,7 +106,6 @@ void MidiOscillator::processUntuned(
     const bool success = iterator.getNextEvent(firstMessage, firstEventTime);
 
     const auto currentSamples = static_cast<double>(*positionInfo->getTimeInSamples());
-    const double bpm = *positionInfo->getBpm();
     // 60 seconds cancels out the minutes unit in bpm.  What's left is samples over beats, where a "beat" is basically a quarter note.
     const double samplePerPpq = (60 * sampleRate) / bpm;
     if (!positionInfo->getIsPlaying()) {
@@ -114,6 +120,7 @@ void MidiOscillator::processUntuned(
         if (operationMode == OperationMode::Etet) {
             speedScale = inputSpeedScale
                          * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
+            bpmSpeedometer.store(speedScale * bpm);
         }
 
         if (firstMessage.isNoteOn()) {
@@ -143,6 +150,7 @@ void MidiOscillator::processUntuned(
                 speedScale =
                     inputSpeedScale
                     * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
+                bpmSpeedometer.store(speedScale * bpm);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
@@ -212,7 +220,8 @@ void MidiOscillator::processTuned(
     float velocity,
     bool& killswitch,
     bool isKeytrack,
-    int fixedNoteNumber
+    int fixedNoteNumber,
+    std::atomic<float>& bpmSpeedometer
 ) {
     juce::MidiMessage firstMessage;
     int firstEventTime = 0; // The sample offset (relative to buffer start)

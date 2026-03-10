@@ -58,7 +58,8 @@ void SampleOscillator::processBlock(
     int etetRootNote,
     float etetNumerator,
     float etetDenominator,
-    bool& killswitch
+    bool& killswitch,
+    std::atomic<float>& bpmSpeedometer
 ) {
     juce::AudioBuffer<float>* sampleBuffer = loadedSampleBuffer.get();
     if (!sampleBuffer)
@@ -105,7 +106,8 @@ void SampleOscillator::processBlock(
                 etetRootNote,
                 etetNumerator,
                 etetDenominator,
-                killswitch
+                killswitch,
+                bpmSpeedometer
             );
             break;
         default:
@@ -129,7 +131,8 @@ void SampleOscillator::processBlock(
                 sampleBuffer,
                 bpm,
                 currentPpq,
-                killswitch
+                killswitch,
+                bpmSpeedometer
             );
             break;
     }
@@ -158,7 +161,8 @@ void SampleOscillator::processUntuned(
     int etetRootNote,
     float etetNumerator,
     float etetDenominator,
-    bool& killswitch
+    bool& killswitch,
+    std::atomic<float>& bpmSpeedometer
 ) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);
@@ -171,9 +175,11 @@ void SampleOscillator::processUntuned(
     int writeLength = 0;
 
     float speedScale =
-        operationMode == OperationMode::Etet ? inputSpeedScale
-                     * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
-               : inputSpeedScale;
+        operationMode == OperationMode::Etet
+            ? inputSpeedScale
+                  * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote)
+            : inputSpeedScale;
+    bpmSpeedometer.store(speedScale * bpm);
 
     if (success) {
         killswitch = false;
@@ -183,6 +189,7 @@ void SampleOscillator::processUntuned(
         if (operationMode == OperationMode::Etet) {
             speedScale = inputSpeedScale
                          * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
+            bpmSpeedometer.store(speedScale * bpm);
         }
 
         if (firstMessage.isNoteOn()) {
@@ -227,6 +234,7 @@ void SampleOscillator::processUntuned(
                 speedScale =
                     inputSpeedScale
                     * getEtetScale(inputSpeedScale, etetNumerator, etetDenominator, lastNoteInput, etetRootNote);
+                bpmSpeedometer.store(speedScale * bpm);
             }
 
             if (success2 && secondMessage.isNoteOn()) {
@@ -371,7 +379,8 @@ void SampleOscillator::processTuned(
     juce::AudioBuffer<float>* sampleBuffer,
     const double bpm,
     double currentPpq,
-    bool& killswitch
+    bool& killswitch,
+    std::atomic<float>& bpmSpeedometer
 ) {
     const float* inSamplesL = sampleBuffer->getReadPointer(0);
     const float* inSamplesR = sampleBuffer->getReadPointer(1);

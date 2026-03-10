@@ -57,6 +57,8 @@ public:
     std::unique_ptr<SampleOscillator>
         sampleOscillator; /**< Child instance of SampleOscillator created in the constructor of PluginProcessor */
 
+    std::atomic<float> bpmSpeedometer { 0.0f }; /* This value is sent to the UI to display the effective speed. */
+
 private:
     enum class SpeedRange { Low, Medium, High };
     enum class OperationMode { Default, Etet, Tuned };
@@ -94,7 +96,7 @@ private:
     bool killswitch = false;
 
     std::unique_ptr<MidiOscillator>
-        midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor */
+        midiOscillator; /**< Child instance of MidiOscillator created in the constructor of PluginProcessor. */
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };

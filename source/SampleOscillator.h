@@ -32,7 +32,8 @@ public:
         int etetRootNote,
         float etetNumerator,
         float etetDenominator,
-        bool& killswitch
+        bool& killswitch,
+        std::atomic<float>& bpmSpeedometer
     );
 
     void setSampleRate(const double sr) { sampleRate = sr; }
@@ -72,7 +73,8 @@ private:
         int etetRootNote,
         float etetNumerator,
         float etetDenominator,
-        bool& killswitch
+        bool& killswitch,
+        std::atomic<float>& bpmSpeedometer
     );
 
     void processTuned(
@@ -94,7 +96,8 @@ private:
         juce::AudioBuffer<float>* sampleBuffer,
         const double bpm,
         double currentPpq,
-        bool& killswitch
+        bool& killswitch,
+        std::atomic<float>& bpmSpeedometer
     );
 
     double sampleRate = 0.0;

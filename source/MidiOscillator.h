@@ -35,7 +35,8 @@ public:
         float velocity,
         bool& killswitch,
         bool isKeytrack,
-        int fixedNoteNumber
+        int fixedNoteNumber,
+        std::atomic<float>& bpmSpeedometer
     );
 
     void setSampleRate(const double sr) { sampleRate = sr; }
@@ -57,7 +58,8 @@ private:
         float velocity,
         bool& killswitch,
         bool isKeytrack,
-        int fixedNoteNumber
+        int fixedNoteNumber,
+        std::atomic<float>& bpmSpeedometer
     );
 
     void processTuned(
@@ -72,7 +74,8 @@ private:
         float velocity,
         bool& killswitch,
         bool isKeytrack,
-        int fixedNoteNumber
+        int fixedNoteNumber,
+        std::atomic<float>& bpmSpeedometer
     );
 
     double sampleRate = 0;

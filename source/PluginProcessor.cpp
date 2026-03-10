@@ -3,6 +3,42 @@
 #include "MidiOscillator.h"
 #include "PluginEditor.h"
 
+auto midiToName = [](float value, int) { return juce::MidiMessage::getMidiNoteName((int)value, true, true, 4); };
+// DS: AI did this idk if it's correct
+auto nameToMidi = [](const juce::String& noteName) {
+    if (noteName.isEmpty())
+        return -1;
+
+    // Normalize input (e.g., c#4 -> C#4)
+    juce::String normalizedNoteName = noteName.trim().toUpperCase();
+
+    // Separate note from octave
+    int numPos = normalizedNoteName.indexOfAnyOf("0123456789");
+    if (numPos <= 0)
+        return -1; // Invalid format
+
+    juce::String notePart = normalizedNoteName.substring(0, numPos);
+    int octave = normalizedNoteName.substring(numPos).getIntValue();
+
+    // Map note names to 0-11
+    static const char* const notes[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+    static const char* const flats[] = { "C", "DB", "D", "EB", "E", "F", "GB", "G", "AB", "A", "BB", "B" };
+
+    int noteIndex = -1;
+    for (int i = 0; i < 12; ++i) {
+        if (notePart == notes[i] || notePart == flats[i]) {
+            noteIndex = i;
+            break;
+        }
+    }
+
+    if (noteIndex == -1)
+        return -1; // Invalid note name
+
+    // MIDI Note = NoteInOctave + (Octave + 1) * 12
+    return noteIndex + (octave + 1) * 12;
+};
+
 //==============================================================================
 PluginProcessor::PluginProcessor() :
     AudioProcessor(BusesProperties().withOutput("Output", juce::AudioChannelSet::stereo(), true)),
@@ -56,7 +92,10 @@ PluginProcessor::PluginProcessor() :
               "Root Note",
               juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
               1.0f,
-              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+              juce::AudioParameterFloatAttributes {}
+                  .withCategory(juce::AudioParameterFloat::genericParameter)
+                  .withStringFromValueFunction(midiToName)
+                  .withValueFromStringFunction(nameToMidi)
           ),
           std::make_unique<juce::AudioParameterFloat>(
               "etetNumerator",
@@ -104,7 +143,10 @@ PluginProcessor::PluginProcessor() :
               "Note",
               juce::NormalisableRange<float> { 0.0f, 127.0f, 1.0f },
               25.0f,
-              juce::AudioParameterFloatAttributes {}.withCategory(juce::AudioParameterFloat::genericParameter)
+              juce::AudioParameterFloatAttributes {}
+                  .withCategory(juce::AudioParameterFloat::genericParameter)
+                  .withStringFromValueFunction(midiToName)
+                  .withValueFromStringFunction(nameToMidi)
           ) }
     ),
 
@@ -258,7 +300,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
             velocityParameter->load() / 127.0f, // Normalize velocity value to [0.0, 1.0]
             killswitch,
             isKeytrackParameter->load(),
-            fixedNoteNumberParameter->load()
+            fixedNoteNumberParameter->load(),
+            bpmSpeedometer
         );
 
         midiMessages.swapWith(outputBuffer);
@@ -276,7 +319,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
             etetRootNoteParameter->load(),
             etetNumeratorParameter->load(),
             etetDenominatorParameter->load(),
-            killswitch
+            killswitch,
+            bpmSpeedometer
         );
     }
     auto endTime = juce::Time::getHighResolutionTicks();
