@@ -30,9 +30,9 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
     apvts.addParameterListener("speedRange", this);
 
     auto setupSpeedButton = [this](juce::TextButton& b) {
-        b.setClickingTogglesState(true);
+        b.setClickingTogglesState(false);
         b.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightgrey);
-        b.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+        b.setColour(juce::TextButton::textColourOnId, juce::Colours::red);
         addAndMakeVisible(b);
     };
 
@@ -55,15 +55,20 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), proce
     midSpeedButton.onClick = [this, &apvts] { apvts.getParameter("speedRange")->setValueNotifyingHost(0.5f); };
     highSpeedButton.onClick = [this, &apvts] { apvts.getParameter("speedRange")->setValueNotifyingHost(1.0f); };
 
-    // --- 2. Logo & File Setup ---
-    auto logoImage = juce::ImageCache::getFromMemory(BinaryData::logo_png, BinaryData::logo_pngSize);
-    logoComponent.setImage(logoImage, juce::RectanglePlacement::centred);
+    logo = juce::ImageCache::getFromMemory(BinaryData::logo_png, BinaryData::logo_pngSize);
+    background = juce::ImageCache::getFromMemory(BinaryData::background_jpg, BinaryData::background_jpgSize);
+    logoComponent.setImage(logo, juce::RectanglePlacement::centred);
     addAndMakeVisible(logoComponent);
 
     sampleNameLabel.setText("No sample loaded", juce::dontSendNotification);
     sampleNameLabel.setJustificationType(juce::Justification::centred);
     sampleNameLabel.setFont(juce::Font(13.0f, juce::Font::italic));
     sampleNameLabel.setColour(juce::Label::textColourId, juce::Colours::grey);
+    if (apvts.state.hasProperty("SamplePath")) {
+        juce::File sampleFile(apvts.state.getProperty("SamplePath").toString());
+        sampleNameLabel.setText(sampleFile.getFileName(), juce::dontSendNotification);
+        sampleNameLabel.setColour(juce::Label::textColourId, juce::Colours::white);
+    }
     addAndMakeVisible(sampleNameLabel);
 
     // --- 3. Attachments ---
@@ -177,9 +182,22 @@ void PluginEditor::speedSliderButtonClicked(const juce::String& parameterID) {
 PluginProcessor& PluginEditor::getProcessor() const { return static_cast<PluginProcessor&>(processor); }
 
 void PluginEditor::paint(juce::Graphics& g) {
-    juce::ColourGradient gradient(juce::Colours::darkgrey.darker(), 0, 0, juce::Colours::black, 0, getHeight(), false);
-    g.setGradientFill(gradient);
-    g.fillAll();
+    // 1. Fill with black first to prevent "ghosting" artifacts
+    g.fillAll(juce::Colours::black);
+
+    // 2. Draw the background image
+    if (background.isValid()) {
+        // We use originalWidth and originalHeight because your resized()
+        // scale transform handles the window stretching for us.
+        // stretchToFit ensures the image maps perfectly to your UI layout.
+        g.drawImageWithin(
+            background, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit, false
+        );
+    }
+
+    // 3. Optional: Darken the image by 20% to make the red sliders pop
+    g.setColour(juce::Colours::black.withAlpha(0.2f));
+    g.fillRect(getLocalBounds());
 }
 
 void PluginEditor::resized() {

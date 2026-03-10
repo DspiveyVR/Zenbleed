@@ -82,6 +82,9 @@ private:
 
     juce::ComponentBoundsConstrainer constrainer;
 
+    juce::Image logo;
+    juce::Image background;
+
     // Helper functions
     void openButtonClicked();
     void speedSliderButtonClicked(const juce::String& parameterID);
