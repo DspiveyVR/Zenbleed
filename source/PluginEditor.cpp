@@ -350,7 +350,7 @@ void PluginEditor::resized() {
     speedValueLabel.setBounds(rightCol.removeFromTop(20));
 
     const int constrainedWidthLambel = 350;
-    auto lambelRect = rightCol.removeFromTop(60).withSizeKeepingCentre(constrainedWidthLambel, rightCol.getHeight() * 3);
+    auto lambelRect = rightCol.removeFromTop(60).withSizeKeepingCentre(constrainedWidthLambel, 150);
     lambelRect.translate(0, 60);
     theLambel.setBounds(lambelRect);
 
