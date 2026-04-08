@@ -1,21 +1,30 @@
 \hypertarget{class_midi_oscillator}{}\doxysection{Midi\+Oscillator Class Reference}
 \label{class_midi_oscillator}\index{MidiOscillator@{MidiOscillator}}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{class_midi_oscillator_a30f470b97d10f6f606f874b42f4998f0}{Operation\+Mode}} \{ {\bfseries Default}
+, {\bfseries Etet}
+, {\bfseries Tuned}
+ \}
+\begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{class_midi_oscillator_a38eded65f4c8f22c4067085665de7f99}{process\+Block}} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, bool is\+Tuned, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number)
-\begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_midi_oscillator_ac048821853e68b5926c7bbf760f143ba}\label{class_midi_oscillator_ac048821853e68b5926c7bbf760f143ba}} 
+void {\bfseries process\+Block} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, const \mbox{\hyperlink{class_midi_oscillator_a30f470b97d10f6f606f874b42f4998f0}{Operation\+Mode}} operation\+Mode, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number, std\+::atomic$<$ float $>$ \&bpm\+Speedometer)
+\item 
 \mbox{\Hypertarget{class_midi_oscillator_a69d2af103400ce6164f1ab81f32af47d}\label{class_midi_oscillator_a69d2af103400ce6164f1ab81f32af47d}} 
 void {\bfseries set\+Sample\+Rate} (const double sr)
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_midi_oscillator_aabc597b6067a21e15f9a4ac44d990509}\label{class_midi_oscillator_aabc597b6067a21e15f9a4ac44d990509}} 
-void {\bfseries process\+Untuned} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number)
+\mbox{\Hypertarget{class_midi_oscillator_af922fcfab00b737f20e414cfb28c6913}\label{class_midi_oscillator_af922fcfab00b737f20e414cfb28c6913}} 
+void {\bfseries process\+Untuned} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, const \mbox{\hyperlink{class_midi_oscillator_a30f470b97d10f6f606f874b42f4998f0}{Operation\+Mode}} operation\+Mode, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number, std\+::atomic$<$ float $>$ \&bpm\+Speedometer)
 \item 
-\mbox{\Hypertarget{class_midi_oscillator_acacaf12943b8c33c6e3433a0d8a5bf71}\label{class_midi_oscillator_acacaf12943b8c33c6e3433a0d8a5bf71}} 
-void {\bfseries process\+Tuned} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number)
+\mbox{\Hypertarget{class_midi_oscillator_a3d06ce979081729f067f53a55a6b0a12}\label{class_midi_oscillator_a3d06ce979081729f067f53a55a6b0a12}} 
+void {\bfseries process\+Tuned} (const int buffer\+Size, juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Midi\+Buffer \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float velocity, bool \&killswitch, bool is\+Keytrack, int fixed\+Note\+Number, std\+::atomic$<$ float $>$ \&bpm\+Speedometer)
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
@@ -34,12 +43,12 @@ bool \mbox{\hyperlink{class_midi_oscillator_abbec7d5a1505d3f986105901ab9a0913}{n
 \end{DoxyCompactItemize}
 
 
-\doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{class_midi_oscillator_a38eded65f4c8f22c4067085665de7f99}\label{class_midi_oscillator_a38eded65f4c8f22c4067085665de7f99}} 
-\index{MidiOscillator@{MidiOscillator}!processBlock@{processBlock}}
-\index{processBlock@{processBlock}!MidiOscillator@{MidiOscillator}}
-\doxysubsubsection{\texorpdfstring{processBlock()}{processBlock()}}
-{\footnotesize\ttfamily void Midi\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{const int}]{buffer\+Size,  }\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Midi\+Buffer \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info,  }\item[{bool}]{is\+Tuned,  }\item[{double \&}]{next\+Quarter\+Note\+Ppq,  }\item[{double \&}]{next\+Note\+Sample,  }\item[{float}]{note\+Length,  }\item[{bool}]{is\+Etet,  }\item[{int}]{etet\+Root\+Note,  }\item[{float}]{etet\+Numerator,  }\item[{float}]{etet\+Denominator,  }\item[{float}]{velocity,  }\item[{bool \&}]{killswitch,  }\item[{bool}]{is\+Keytrack,  }\item[{int}]{fixed\+Note\+Number }\end{DoxyParamCaption})}
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_midi_oscillator_a30f470b97d10f6f606f874b42f4998f0}\label{class_midi_oscillator_a30f470b97d10f6f606f874b42f4998f0}} 
+\index{MidiOscillator@{MidiOscillator}!OperationMode@{OperationMode}}
+\index{OperationMode@{OperationMode}!MidiOscillator@{MidiOscillator}}
+\doxysubsubsection{\texorpdfstring{OperationMode}{OperationMode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_midi_oscillator_a30f470b97d10f6f606f874b42f4998f0}{Midi\+Oscillator\+::\+Operation\+Mode}}\hspace{0.3cm}{\ttfamily [strong]}}
 
 
 

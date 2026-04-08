@@ -1,10 +1,11 @@
 var indexSectionsWithContent =
 {
-  0: "efhilmnopsv",
-  1: "mps",
+  0: "efhilmnopsvz",
+  1: "mpsz",
   2: "lp",
-  3: "efhilmnosv",
-  4: "fi"
+  3: "efhilmnsv",
+  4: "o",
+  5: "fi"
 };
 
 var indexSectionNames =
@@ -13,7 +14,8 @@ var indexSectionNames =
   1: "classes",
   2: "functions",
   3: "variables",
-  4: "pages"
+  4: "enums",
+  5: "pages"
 };
 
 var indexSectionLabels =
@@ -22,6 +24,7 @@ var indexSectionLabels =
   1: "Classes",
   2: "Functions",
   3: "Variables",
-  4: "Pages"
+  4: "Enumerations",
+  5: "Pages"
 };
 

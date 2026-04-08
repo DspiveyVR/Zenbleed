@@ -174,6 +174,9 @@ std::atomic&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b
 <tr class="separator:a8c5ca10403cbee7f6735266684491a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac805ccc956af221f472ed446a8b7c701"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="class_sample_oscillator.html">SampleOscillator</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#ac805ccc956af221f472ed446a8b7c701">sampleOscillator</a></td></tr>
 <tr class="separator:ac805ccc956af221f472ed446a8b7c701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3a984c48671b8d3effd59b952d8717"><td class="memItemLeft" align="right" valign="top"><a id="abb3a984c48671b8d3effd59b952d8717"></a>
+std::atomic&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>bpmSpeedometer</b> { 0.0f }</td></tr>
+<tr class="separator:abb3a984c48671b8d3effd59b952d8717"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-types"></a>
 Private Types</h2></td></tr>
@@ -182,12 +185,20 @@ Private Types</h2></td></tr>
 , <b>High</b>
  }</td></tr>
 <tr class="separator:a643fcd4e283495fcbb4fa75efc2921a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a576898769671ba2d926203a686495834"><td class="memItemLeft" align="right" valign="top"><a id="a576898769671ba2d926203a686495834"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>OperationMode</b> { <b>Default</b>
+, <b>Etet</b>
+, <b>Tuned</b>
+ }</td></tr>
+<tr class="separator:a576898769671ba2d926203a686495834"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a962781278311a09749c4180b949b5dcb"><td class="memItemLeft" align="right" valign="top"><a id="a962781278311a09749c4180b949b5dcb"></a>
 const juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><b>speedRangeChoices</b> = { &quot;Low&quot;, &quot;Medium&quot;, &quot;High&quot; }</td></tr>
 <tr class="separator:a962781278311a09749c4180b949b5dcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05b403e1988ddc38afa32a431a690ef7"><td class="memItemLeft" align="right" valign="top"><a id="a05b403e1988ddc38afa32a431a690ef7"></a>
+const juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><b>operationModeChoices</b> = { &quot;Default&quot;, &quot;Extratone Equal Temperament (ETET)&quot;, &quot;Tuned&quot; }</td></tr>
+<tr class="separator:a05b403e1988ddc38afa32a431a690ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7eb2e7d61250cdbdf58e4e66639a030"><td class="memItemLeft" align="right" valign="top"><a id="aa7eb2e7d61250cdbdf58e4e66639a030"></a>
 juce::AudioProcessorValueTreeState&#160;</td><td class="memItemRight" valign="bottom"><b>parameters</b></td></tr>
 <tr class="separator:aa7eb2e7d61250cdbdf58e4e66639a030"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,25 +212,23 @@ juce::AudioProcessorValueTreeState&#160;</td><td class="memItemRight" valign="bo
 <tr class="separator:aac4d679638bc40a3e2786b0d20d25b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a419e382fde6dc6c311aac4639be54a8c"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a419e382fde6dc6c311aac4639be54a8c">isMidiModeParameter</a></td></tr>
 <tr class="separator:a419e382fde6dc6c311aac4639be54a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a693b3a323b32aac6fccae95365b143f3"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a693b3a323b32aac6fccae95365b143f3">isTunedParameter</a></td></tr>
-<tr class="separator:a693b3a323b32aac6fccae95365b143f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45dc815d64962d068c04bd1467bc8d20"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a45dc815d64962d068c04bd1467bc8d20">isEtetParameter</a></td></tr>
-<tr class="separator:a45dc815d64962d068c04bd1467bc8d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56c931b84b4f7137cadaf1490bf74160"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a56c931b84b4f7137cadaf1490bf74160">etetRootNoteParameter</a> = nullptr</td></tr>
+<tr class="memitem:a6d86f0dc9370c6bd8d50e7f7ba105010"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>operationModeParameter</b></td></tr>
+<tr class="separator:a6d86f0dc9370c6bd8d50e7f7ba105010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56c931b84b4f7137cadaf1490bf74160"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a56c931b84b4f7137cadaf1490bf74160">etetRootNoteParameter</a></td></tr>
 <tr class="separator:a56c931b84b4f7137cadaf1490bf74160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa4e504535f8f854a4f7afcb1716bcac"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#aaa4e504535f8f854a4f7afcb1716bcac">etetNumeratorParameter</a> = nullptr</td></tr>
+<tr class="memitem:aaa4e504535f8f854a4f7afcb1716bcac"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#aaa4e504535f8f854a4f7afcb1716bcac">etetNumeratorParameter</a></td></tr>
 <tr class="separator:aaa4e504535f8f854a4f7afcb1716bcac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afef3ee29cabc4649271e8f849e0518b4"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#afef3ee29cabc4649271e8f849e0518b4">etetDenominatorParameter</a> = nullptr</td></tr>
+<tr class="memitem:afef3ee29cabc4649271e8f849e0518b4"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#afef3ee29cabc4649271e8f849e0518b4">etetDenominatorParameter</a></td></tr>
 <tr class="separator:afef3ee29cabc4649271e8f849e0518b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a925bd1236d01caec25cc731fb60184a3"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a925bd1236d01caec25cc731fb60184a3">noteLengthParameter</a> = nullptr</td></tr>
+<tr class="memitem:a925bd1236d01caec25cc731fb60184a3"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a925bd1236d01caec25cc731fb60184a3">noteLengthParameter</a></td></tr>
 <tr class="separator:a925bd1236d01caec25cc731fb60184a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57f0a0e94244996c73be4c781e9a7eab"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a57f0a0e94244996c73be4c781e9a7eab">samplePitchBendParameter</a> = nullptr</td></tr>
+<tr class="memitem:a57f0a0e94244996c73be4c781e9a7eab"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a57f0a0e94244996c73be4c781e9a7eab">samplePitchBendParameter</a></td></tr>
 <tr class="separator:a57f0a0e94244996c73be4c781e9a7eab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae03145f3acd5c7dde9eeb59245faeb2d"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#ae03145f3acd5c7dde9eeb59245faeb2d">velocityParameter</a> = nullptr</td></tr>
+<tr class="memitem:ae03145f3acd5c7dde9eeb59245faeb2d"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#ae03145f3acd5c7dde9eeb59245faeb2d">velocityParameter</a></td></tr>
 <tr class="separator:ae03145f3acd5c7dde9eeb59245faeb2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8c9dcc03a0d3000bb9e559a0564d4e1"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#aa8c9dcc03a0d3000bb9e559a0564d4e1">isKeytrackParameter</a> = nullptr</td></tr>
+<tr class="memitem:aa8c9dcc03a0d3000bb9e559a0564d4e1"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#aa8c9dcc03a0d3000bb9e559a0564d4e1">isKeytrackParameter</a></td></tr>
 <tr class="separator:aa8c9dcc03a0d3000bb9e559a0564d4e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55e155c7506ad94a68871f627206d449"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a55e155c7506ad94a68871f627206d449">fixedNoteNumberParameter</a> = nullptr</td></tr>
+<tr class="memitem:a55e155c7506ad94a68871f627206d449"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a55e155c7506ad94a68871f627206d449">fixedNoteNumberParameter</a></td></tr>
 <tr class="separator:a55e155c7506ad94a68871f627206d449"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21a7afed98d6086c817f7fdb4b825946"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_plugin_processor.html#a21a7afed98d6086c817f7fdb4b825946">nextQuarterNotePpq</a> = 0</td></tr>
 <tr class="separator:a21a7afed98d6086c817f7fdb4b825946"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -263,7 +272,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::etetDenominatorParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::etetDenominatorParameter</td>
         </tr>
       </table>
   </td>
@@ -272,7 +281,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Extratone Equal Temperament (ETET) denominator parameter: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Extratone Equal Temperament (ETET) denominator parameter: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) </p>
 
 </div>
 </div>
@@ -286,7 +297,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::etetNumeratorParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::etetNumeratorParameter</td>
         </tr>
       </table>
   </td>
@@ -295,7 +306,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Extratone Equal Temperament (ETET) numerator parameter: Controls the numerator of the harmonic interval used in Extratone Equal Temperament (ETET) </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Extratone Equal Temperament (ETET) numerator parameter: Controls the numerator of the harmonic interval used in Extratone Equal Temperament (ETET) </p>
 
 </div>
 </div>
@@ -309,7 +322,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::etetRootNoteParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::etetRootNoteParameter</td>
         </tr>
       </table>
   </td>
@@ -318,7 +331,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>ETET root note parameter: The root note for Extratone Equal Temperament (ETET) </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Operation mode parameter: Selects between default, ETET, and tuned modes. <br  />
+ ETET root note parameter: The root note for Extratone Equal Temperament (ETET) </p>
 
 </div>
 </div>
@@ -332,7 +348,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::fixedNoteNumberParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::fixedNoteNumberParameter</td>
         </tr>
       </table>
   </td>
@@ -341,7 +357,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Fixed note number parameter: Dictates the MIDI note to be triggered when keytrack is false </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Fixed note number parameter: Dictates the MIDI note to be triggered when keytrack is false </p>
 
 </div>
 </div>
@@ -368,31 +386,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
 
 </div>
 </div>
-<a id="a45dc815d64962d068c04bd1467bc8d20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45dc815d64962d068c04bd1467bc8d20">&#9670;&nbsp;</a></span>isEtetParameter</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::isEtetParameter</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">            <span class="keyword">nullptr</span></div>
-</div><!-- fragment --><p>Extratone Equal Temperament (ETET) mode parameter: determines whether or not the "Extratone Equal Temperament (ETET) mode is enabled" </p>
-
-</div>
-</div>
 <a id="aa8c9dcc03a0d3000bb9e559a0564d4e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8c9dcc03a0d3000bb9e559a0564d4e1">&#9670;&nbsp;</a></span>isKeytrackParameter</h2>
 
@@ -403,7 +396,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::isKeytrackParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::isKeytrackParameter</td>
         </tr>
       </table>
   </td>
@@ -412,7 +405,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Is keytrack parameter: Dictates wheter the MIDI note triggered is equal to the input note or whether it is fixed. </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Is keytrack parameter: Dictates wheter the MIDI note triggered is equal to the input note or whether it is fixed. </p>
 
 </div>
 </div>
@@ -436,33 +431,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">            <span class="keyword">nullptr</span></div>
+<div class="line">        <span class="keyword">nullptr</span></div>
 </div><!-- fragment --><p>Midi mode parameter: toggles between MIDI mode and sampler mode </p>
-
-</div>
-</div>
-<a id="a693b3a323b32aac6fccae95365b143f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a693b3a323b32aac6fccae95365b143f3">&#9670;&nbsp;</a></span>isTunedParameter</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::isTunedParameter</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">            <span class="keyword">nullptr</span></div>
-</div><!-- fragment --><p>Tuned mode parameter: determines whether or not the extratone is tuned to the input note </p>
 
 </div>
 </div>
@@ -508,7 +478,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Child instance of <a class="el" href="class_midi_oscillator.html">MidiOscillator</a> created in the constructor of <a class="el" href="class_plugin_processor.html">PluginProcessor</a> </p>
+<p>Child instance of <a class="el" href="class_midi_oscillator.html">MidiOscillator</a> created in the constructor of <a class="el" href="class_plugin_processor.html">PluginProcessor</a>. </p>
 
 </div>
 </div>
@@ -591,7 +561,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::noteLengthParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::noteLengthParameter</td>
         </tr>
       </table>
   </td>
@@ -600,8 +570,34 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Note length parameter: Controls how long a note is held before the next note is played </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Note length parameter: Controls how long a note is held before the next note is played </p>
 
+</div>
+</div>
+<a id="a6d86f0dc9370c6bd8d50e7f7ba105010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d86f0dc9370c6bd8d50e7f7ba105010">&#9670;&nbsp;</a></span>operationModeParameter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::operationModeParameter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ac805ccc956af221f472ed446a8b7c701"></a>
@@ -629,7 +625,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::samplePitchBendParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::samplePitchBendParameter</td>
         </tr>
       </table>
   </td>
@@ -638,7 +634,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Sample pitch bend parameter: Changes the pitch of the loaded sample (in semitones) </p>
 
 </div>
 </div>
@@ -662,7 +660,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">            <span class="keyword">nullptr</span></div>
+<div class="line">        <span class="keyword">nullptr</span></div>
 </div><!-- fragment --><p>Speed range parameter: selects which speed range to choose </p>
 
 </div>
@@ -677,7 +675,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::velocityParameter = nullptr</td>
+          <td class="memname">std::atomic&lt;float&gt;* PluginProcessor::velocityParameter</td>
         </tr>
       </table>
   </td>
@@ -686,7 +684,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>killswitch</b> = fals
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Velocity parameter: Controls the velocity of the MIDI note being played </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        <span class="keyword">nullptr</span></div>
+</div><!-- fragment --><p>Velocity parameter: Controls the velocity of the MIDI note being played </p>
 
 </div>
 </div>

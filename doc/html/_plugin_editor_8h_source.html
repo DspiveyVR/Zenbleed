@@ -91,42 +91,131 @@ $(document).ready(function(){initNavTree('_plugin_editor_8h_source.html',''); in
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;juce_events/juce_events.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;PluginProcessor.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;melatonin_inspector/melatonin_inspector.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="class_plugin_editor.html">    7</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_plugin_editor.html">PluginEditor</a> final : <span class="keyword">public</span> juce::GenericAudioProcessorEditor {</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_plugin_editor.html">PluginEditor</a>(<a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp;);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    ~<a class="code" href="class_plugin_editor.html">PluginEditor</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="comment">//==============================================================================</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;juce_audio_processors/juce_audio_processors.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;juce_gui_basics/juce_gui_basics.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;PluginProcessor.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;ZenbleedLookAndFeel.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;melatonin_inspector/melatonin_inspector.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="class_plugin_editor.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_plugin_editor.html">PluginEditor</a> final : <span class="keyword">public</span> juce::AudioProcessorEditor, <span class="keyword">public</span> juce::AudioProcessorValueTreeState::Listener, <span class="keyword">public</span> juce::Timer {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_plugin_editor.html">PluginEditor</a>(<a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp;);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    ~<a class="code" href="class_plugin_editor.html">PluginEditor</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> paint(juce::Graphics&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> resized() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="comment">// This reference is provided as a quick way for your editor to</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="comment">// access the processor object that created it.</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; processorRef;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::unique_ptr&lt;melatonin::Inspector&gt; inspector;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::unique_ptr&lt;juce::FileChooser&gt; chooser;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    juce::TextButton inspectButton { <span class="stringliteral">&quot;Inspect the UI&quot;</span> };</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">   26</a></span>&#160;    juce::TextButton <a class="code" href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">openButton</a> { <span class="stringliteral">&quot;Open&quot;</span> }; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    juce::ComboBox speedRangeBox;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> resized() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> parameterChanged(<span class="keyword">const</span> juce::String&amp; parameterID, <span class="keywordtype">float</span> newValue) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> timerCallback() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">using</span> SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">using</span> ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">using</span> ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="class_zenbleed_look_and_feel.html">ZenbleedLookAndFeel</a> lookAndFeel;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; processorRef;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::unique_ptr&lt;melatonin::Inspector&gt; inspector;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::unique_ptr&lt;juce::FileChooser&gt; chooser;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    std::unique_ptr&lt;juce::AudioProcessorValueTreeState::ComboBoxAttachment&gt; speedRangeAttachment;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> openButtonClicked();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; getProcessor() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="comment">// UI Buttons</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    juce::TextButton inspectButton { <span class="stringliteral">&quot;Inspect the UI&quot;</span> };</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    juce::TextButton openButton { <span class="stringliteral">&quot;Open&quot;</span> };</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    juce::Label sampleNameLabel; <span class="comment">// Shows &quot;No sample loaded&quot; or filename</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(<a class="code" href="class_plugin_editor.html">PluginEditor</a>)</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
-<div class="ttc" id="aclass_plugin_editor_html"><div class="ttname"><a href="class_plugin_editor.html">PluginEditor</a></div><div class="ttdef"><b>Definition:</b> PluginEditor.h:7</div></div>
-<div class="ttc" id="aclass_plugin_editor_html_a83a6ef2f49a13e4451f2e6c30a339f68"><div class="ttname"><a href="class_plugin_editor.html#a83a6ef2f49a13e4451f2e6c30a339f68">PluginEditor::openButton</a></div><div class="ttdeci">juce::TextButton openButton</div><div class="ttdef"><b>Definition:</b> PluginEditor.h:26</div></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">// Speed Control (Manual Radio Group)</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    juce::TextButton lowSpeedButton { <span class="stringliteral">&quot;Low&quot;</span> };</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    juce::TextButton midSpeedButton { <span class="stringliteral">&quot;Mid&quot;</span> };</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    juce::TextButton highSpeedButton { <span class="stringliteral">&quot;High&quot;</span> };</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    juce::Slider speedSlider;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    juce::Label speedValueLabel;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    juce::Label speedName;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// Toggles</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    juce::ToggleButton midiToggle { <span class="stringliteral">&quot;Midi Mode&quot;</span> };</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    juce::ToggleButton keytrackToggle { <span class="stringliteral">&quot;Keytrack&quot;</span> };</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// Sliders</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    juce::Slider noteLengthSlider, velocitySlider, fixedNoteSlider, pitchBendSlider;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    juce::Slider rootNoteSlider, numeratorSlider, denominatorSlider;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// Value Labels (Dynamic readouts)</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    juce::Label noteLengthLabel, velocityLabel, fixedNoteLabel, pitchBendLabel;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    juce::Label rootNoteLabel, numeratorLabel, denominatorLabel;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Name Labels (Static text)</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    juce::Label noteLengthName, velocityName, fixedNoteName, pitchBendName;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    juce::Label rootNoteName, numeratorName, denominatorName;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// Static Header Labels</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    juce::Label titleLabel;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    juce::Label bpmSpeedometerLabel;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    juce::Label bpmTextLabel;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    juce::Label hzSpeedometerLabel;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    juce::Label hzTextLabel;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="struct_plugin_editor_1_1_speed_message.html">   66</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_plugin_editor_1_1_speed_message.html">SpeedMessage</a> {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        juce::String text;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        juce::Colour color;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        std::array&lt;long, 2&gt; speedRange;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    };</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> std::array&lt;SpeedMessage, 10&gt; lambels = {{</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        { <span class="stringliteral">&quot;Doomcore&quot;</span>, juce::Colours::black, {0, 112} },</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        { <span class="stringliteral">&quot;The rain formerly known as purple&quot;</span>, juce::Colours::purple, {113, 114} },</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        { <span class="stringliteral">&quot;Pop music&quot;</span>, juce::Colours::pink, {115, 199} },</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        { <span class="stringliteral">&quot;Still too slow&quot;</span>, juce::Colours::yellow, {200, 499} },</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        { <span class="stringliteral">&quot;REAL MUSIC&quot;</span>, juce::Colours::red, {500, 999} },</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        { <span class="stringliteral">&quot;The brown note&quot;</span>, juce::Colours::brown, {1000, 9999} },</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        { <span class="stringliteral">&quot;Hard drive death&quot;</span>, juce::Colours::white, {10000, 19999} },</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        { <span class="stringliteral">&quot;Girl, you&#39;re thicker than a bowl of oatmeal&quot;</span>, juce::Colours::pink, {20000, 99999} },</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        { <span class="stringliteral">&quot;Chillllllllllllll l l l ll l&quot;</span>, juce::Colours::cyan, {100000, 299999} },</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        { <span class="stringliteral">&quot;Segmentation fault (core dumped)&quot;</span>, juce::Colours::white, {300000, 300001} }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }};</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    juce::TextEditor theLambel;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    juce::ImageComponent logoComponent;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">// Attachments</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; speedAttachment;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    std::unique_ptr&lt;ButtonAttachment&gt; midiToggleAttachment;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::unique_ptr&lt;ButtonAttachment&gt; keytrackAttachment;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; noteLengthAttachment;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; velocityAttachment;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; fixedNoteAttachment;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; pitchBendAttachment;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; rootNoteAttachment;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; numeratorAttachment;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::unique_ptr&lt;SliderAttachment&gt; denominatorAttachment;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    std::unique_ptr&lt;ComboBoxAttachment&gt; modeAttachment;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    juce::ComboBox modeSelector;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    juce::Label modeLabel;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">float</span> originalWidth = 700.0f;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">float</span> originalHeight = 520.0f;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    juce::ComponentBoundsConstrainer constrainer;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    juce::Image logo;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    juce::Image background;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Helper functions</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">void</span> openButtonClicked();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">void</span> speedSliderButtonClicked(<span class="keyword">const</span> juce::String&amp; parameterID);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> updateLabelText(juce::Label&amp; label, juce::Slider&amp; slider, juce::String suffix = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> updateNoteLabelText(juce::Label&amp; label, juce::Slider&amp; slider);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">void</span> setLambel(<span class="keywordtype">long</span> bpm);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="class_plugin_processor.html">PluginProcessor</a>&amp; getProcessor() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(<a class="code" href="class_plugin_editor.html">PluginEditor</a>)</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;};</div>
+<div class="ttc" id="aclass_plugin_editor_html"><div class="ttname"><a href="class_plugin_editor.html">PluginEditor</a></div><div class="ttdef"><b>Definition:</b> PluginEditor.h:9</div></div>
 <div class="ttc" id="aclass_plugin_processor_html"><div class="ttname"><a href="class_plugin_processor.html">PluginProcessor</a></div><div class="ttdef"><b>Definition:</b> PluginProcessor.h:14</div></div>
+<div class="ttc" id="aclass_zenbleed_look_and_feel_html"><div class="ttname"><a href="class_zenbleed_look_and_feel.html">ZenbleedLookAndFeel</a></div><div class="ttdef"><b>Definition:</b> ZenbleedLookAndFeel.h:6</div></div>
+<div class="ttc" id="astruct_plugin_editor_1_1_speed_message_html"><div class="ttname"><a href="struct_plugin_editor_1_1_speed_message.html">PluginEditor::SpeedMessage</a></div><div class="ttdef"><b>Definition:</b> PluginEditor.h:66</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

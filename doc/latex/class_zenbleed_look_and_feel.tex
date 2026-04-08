@@ -1,0 +1,62 @@
+\hypertarget{class_zenbleed_look_and_feel}{}\doxysection{Zenbleed\+Look\+And\+Feel Class Reference}
+\label{class_zenbleed_look_and_feel}\index{ZenbleedLookAndFeel@{ZenbleedLookAndFeel}}
+
+
+Inherits juce\+::\+Look\+And\+Feel\+\_\+\+V4.
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_aa58b2d26af34d094930f3256833188d5}\label{class_zenbleed_look_and_feel_aa58b2d26af34d094930f3256833188d5}} 
+juce\+::\+Font {\bfseries get\+Label\+Font} (juce\+::\+Label \&label) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_ad423f825199c7268e63e7c23f3f07445}\label{class_zenbleed_look_and_feel_ad423f825199c7268e63e7c23f3f07445}} 
+juce\+::\+Font {\bfseries get\+Text\+Button\+Font} (juce\+::\+Text\+Button \&, int button\+Height) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_a300c99847af1ea226eae8d16fde6bf1b}\label{class_zenbleed_look_and_feel_a300c99847af1ea226eae8d16fde6bf1b}} 
+juce\+::\+Font {\bfseries get\+Combo\+Box\+Font} (juce\+::\+Combo\+Box \&) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_aea378834423415c91e1b59c0e2114900}\label{class_zenbleed_look_and_feel_aea378834423415c91e1b59c0e2114900}} 
+void {\bfseries draw\+Button\+Background} (juce\+::\+Graphics \&g, juce\+::\+Button \&, const juce\+::\+Colour \&background\+Colour, bool should\+Draw\+Button\+As\+Highlighted, bool should\+Draw\+Button\+As\+Down) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_a3c87209305094a19cb21af7788620709}\label{class_zenbleed_look_and_feel_a3c87209305094a19cb21af7788620709}} 
+void {\bfseries draw\+Toggle\+Button} (juce\+::\+Graphics \&g, juce\+::\+Toggle\+Button \&button, bool should\+Draw\+Button\+As\+Highlighted, bool should\+Draw\+Button\+As\+Down) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_a6c101bcc3950459857c748b28231e1b5}\label{class_zenbleed_look_and_feel_a6c101bcc3950459857c748b28231e1b5}} 
+void {\bfseries draw\+Linear\+Slider} (juce\+::\+Graphics \&, int x, int y, int width, int height, float slider\+Pos, float min\+Slider\+Pos, float max\+Slider\+Pos, const juce\+::\+Slider\+::\+Slider\+Style, juce\+::\+Slider \&) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_ac7b16fb86b52af59924e1cf05fedd55c}\label{class_zenbleed_look_and_feel_ac7b16fb86b52af59924e1cf05fedd55c}} 
+void {\bfseries draw\+Combo\+Box} (juce\+::\+Graphics \&, int width, int height, bool is\+Button\+Down, int buttonX, int buttonY, int buttonW, int buttonH, juce\+::\+Combo\+Box \&) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_a8fafcfc8e16ae315fc34099e96e2fdb7}\label{class_zenbleed_look_and_feel_a8fafcfc8e16ae315fc34099e96e2fdb7}} 
+void {\bfseries draw\+Tick\+Box} (juce\+::\+Graphics \&g, juce\+::\+Component \&component, float x, float y, float w, float h, const bool ticked, const bool is\+Enabled, const bool should\+Draw\+Button\+As\+Highlighted, const bool should\+Draw\+Button\+As\+Down) override
+\item 
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_aeeaf7fea11378393bfea3edc0d914995}\label{class_zenbleed_look_and_feel_aeeaf7fea11378393bfea3edc0d914995}} 
+juce\+::\+Typeface\+::\+Ptr {\bfseries get\+Typeface\+For\+Font} (const juce\+::\+Font \&) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+juce\+::\+Typeface\+::\+Ptr {\bfseries typeface}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_zenbleed_look_and_feel_a04353365fbb7813b0b5277680ae5bd43}\label{class_zenbleed_look_and_feel_a04353365fbb7813b0b5277680ae5bd43}} 
+\index{ZenbleedLookAndFeel@{ZenbleedLookAndFeel}!typeface@{typeface}}
+\index{typeface@{typeface}!ZenbleedLookAndFeel@{ZenbleedLookAndFeel}}
+\doxysubsubsection{\texorpdfstring{typeface}{typeface}}
+{\footnotesize\ttfamily juce\+::\+Typeface\+::\+Ptr Zenbleed\+Look\+And\+Feel\+::typeface\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        juce::Typeface::createSystemTypefaceFor(BinaryData::font\_ttf, BinaryData::font\_ttfSize)}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+source/Zenbleed\+Look\+And\+Feel.\+h\item 
+source/Zenbleed\+Look\+And\+Feel.\+cpp\end{DoxyCompactItemize}

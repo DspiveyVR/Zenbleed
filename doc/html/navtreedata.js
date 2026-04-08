@@ -30,19 +30,19 @@ var NAVTREE =
     ] ],
     [ "Introduction", "md_doc_custom_pages__user_manual.html", [
       [ "Building From Source", "md_doc_custom_pages__user_manual.html#autotoc_md14", [
-        [ "System Requirements", "md_doc_custom_pages__user_manual.html#autotoc_md3", [
-          [ "Windows", "md_doc_custom_pages__user_manual.html#autotoc_md4", [
-            [ "Minimum:", "md_doc_custom_pages__user_manual.html#autotoc_md5", null ],
-            [ "Recommended:", "md_doc_custom_pages__user_manual.html#autotoc_md6", null ]
+        [ "History", "md_doc_custom_pages__user_manual.html#autotoc_md3", null ],
+        [ "Developer Information", "md_doc_custom_pages__user_manual.html#autotoc_md4", null ],
+        [ "System Requirements", "md_doc_custom_pages__user_manual.html#autotoc_md5", [
+          [ "Windows", "md_doc_custom_pages__user_manual.html#autotoc_md6", [
+            [ "Minimum:", "md_doc_custom_pages__user_manual.html#autotoc_md7", null ],
+            [ "Recommended:", "md_doc_custom_pages__user_manual.html#autotoc_md8", null ]
           ] ],
-          [ "Linux", "md_doc_custom_pages__user_manual.html#autotoc_md7", [
-            [ "Minimum:", "md_doc_custom_pages__user_manual.html#autotoc_md8", null ],
-            [ "Recommended:", "md_doc_custom_pages__user_manual.html#autotoc_md9", null ]
+          [ "Linux", "md_doc_custom_pages__user_manual.html#autotoc_md9", [
+            [ "Minimum:", "md_doc_custom_pages__user_manual.html#autotoc_md10", null ],
+            [ "Recommended:", "md_doc_custom_pages__user_manual.html#autotoc_md11", null ]
           ] ],
-          [ "MacOs", "md_doc_custom_pages__user_manual.html#autotoc_md10", null ]
+          [ "MacOs", "md_doc_custom_pages__user_manual.html#autotoc_md12", null ]
         ] ],
-        [ "History", "md_doc_custom_pages__user_manual.html#autotoc_md11", null ],
-        [ "Developer Information", "md_doc_custom_pages__user_manual.html#autotoc_md12", null ],
         [ "Quick Start", "md_doc_custom_pages__user_manual.html#autotoc_md13", null ],
         [ "General Prerequisites", "md_doc_custom_pages__user_manual.html#autotoc_md15", null ],
         [ "Linux (Debian/Ubuntu)", "md_doc_custom_pages__user_manual.html#autotoc_md16", [
@@ -64,7 +64,8 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
-        [ "Variables", "functions_vars.html", null ]
+        [ "Variables", "functions_vars.html", null ],
+        [ "Enumerations", "functions_enum.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [

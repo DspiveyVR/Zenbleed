@@ -1,13 +1,22 @@
 \hypertarget{class_sample_oscillator}{}\doxysection{Sample\+Oscillator Class Reference}
 \label{class_sample_oscillator}\index{SampleOscillator@{SampleOscillator}}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{class_sample_oscillator_ac523c5b1411a79c9c6f410c9c6595cba}{Operation\+Mode}} \{ {\bfseries Default}
+, {\bfseries Etet}
+, {\bfseries Tuned}
+ \}
+\begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_sample_oscillator_ac0478bbc052e0c2516847c53cd5bacd0}\label{class_sample_oscillator_ac0478bbc052e0c2516847c53cd5bacd0}} 
 {\bfseries Sample\+Oscillator} (juce\+::\+Audio\+Processor\+Value\+Tree\+State \&params\+Ref)
 \item 
-void \mbox{\hyperlink{class_sample_oscillator_a5917439e695ef6e2a6ccdf800362ba7c}{process\+Block}} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, bool is\+Tuned, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, bool \&killswitch)
-\begin{DoxyCompactList}\small\item\em Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sample_oscillator_a49c3be62a7c007ab5f2dce7986ffb2c7}\label{class_sample_oscillator_a49c3be62a7c007ab5f2dce7986ffb2c7}} 
+void {\bfseries process\+Block} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, const \mbox{\hyperlink{class_sample_oscillator_ac523c5b1411a79c9c6f410c9c6595cba}{Operation\+Mode}} operation\+Mode, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, bool \&killswitch, std\+::atomic$<$ float $>$ \&bpm\+Speedometer)
+\item 
 \mbox{\Hypertarget{class_sample_oscillator_af3cdaa3ffcb5ec0d52c1876c69789db5}\label{class_sample_oscillator_af3cdaa3ffcb5ec0d52c1876c69789db5}} 
 void {\bfseries set\+Sample\+Rate} (const double sr)
 \item 
@@ -16,11 +25,11 @@ void \mbox{\hyperlink{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_sample_oscillator_acc4a7c8e84138c4921593ba658112498}\label{class_sample_oscillator_acc4a7c8e84138c4921593ba658112498}} 
-void {\bfseries process\+Untuned} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool success, double first\+Event\+Time, juce\+::\+Midi\+Message first\+Message, double current\+Samples, double sample\+Per\+Ppq, const int buffer\+Size, juce\+::\+Midi\+Buffer\+::\+Iterator \&iterator, juce\+::\+Audio\+Buffer$<$ float $>$ $\ast$sample\+Buffer, const double bpm, double current\+Ppq, bool is\+Etet, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, bool \&killswitch)
+\mbox{\Hypertarget{class_sample_oscillator_a9288b6a944e6d77831df7b96d18b0ad2}\label{class_sample_oscillator_a9288b6a944e6d77831df7b96d18b0ad2}} 
+void {\bfseries process\+Untuned} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, const \mbox{\hyperlink{class_sample_oscillator_ac523c5b1411a79c9c6f410c9c6595cba}{Operation\+Mode}} operation\+Mode, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool success, double first\+Event\+Time, juce\+::\+Midi\+Message first\+Message, double current\+Samples, double sample\+Per\+Ppq, const int buffer\+Size, juce\+::\+Midi\+Buffer\+::\+Iterator \&iterator, juce\+::\+Audio\+Buffer$<$ float $>$ $\ast$sample\+Buffer, const double bpm, double current\+Ppq, int etet\+Root\+Note, float etet\+Numerator, float etet\+Denominator, bool \&killswitch, std\+::atomic$<$ float $>$ \&bpm\+Speedometer)
 \item 
-\mbox{\Hypertarget{class_sample_oscillator_a0a3d6c5064b45a6ba7c68276427f823b}\label{class_sample_oscillator_a0a3d6c5064b45a6ba7c68276427f823b}} 
-void {\bfseries process\+Tuned} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool success, double first\+Event\+Time, juce\+::\+Midi\+Message first\+Message, double current\+Samples, double sample\+Per\+Ppq, const int buffer\+Size, juce\+::\+Midi\+Buffer\+::\+Iterator \&iterator, juce\+::\+Audio\+Buffer$<$ float $>$ $\ast$sample\+Buffer, const double bpm, double current\+Ppq, bool \&killswitch)
+\mbox{\Hypertarget{class_sample_oscillator_a71f7a14c601ac3c2748f9f0fcf0ec513}\label{class_sample_oscillator_a71f7a14c601ac3c2748f9f0fcf0ec513}} 
+void {\bfseries process\+Tuned} (juce\+::\+Midi\+Buffer \&input\+Buffer, juce\+::\+Audio\+Buffer$<$ float $>$ \&output\+Buffer, const float speed\+Scale, const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$position\+Info, double \&next\+Quarter\+Note\+Ppq, double \&next\+Note\+Sample, float note\+Length, float sample\+Pitch\+Bend\+Ratio, bool success, double first\+Event\+Time, juce\+::\+Midi\+Message first\+Message, double current\+Samples, double sample\+Per\+Ppq, const int buffer\+Size, juce\+::\+Midi\+Buffer\+::\+Iterator \&iterator, juce\+::\+Audio\+Buffer$<$ float $>$ $\ast$sample\+Buffer, const double bpm, double current\+Ppq, bool \&killswitch, std\+::atomic$<$ float $>$ \&bpm\+Speedometer)
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
@@ -51,6 +60,30 @@ juce\+::\+Audio\+Processor\+Value\+Tree\+State \& {\bfseries parameters\+Ref}
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_sample_oscillator_ac523c5b1411a79c9c6f410c9c6595cba}\label{class_sample_oscillator_ac523c5b1411a79c9c6f410c9c6595cba}} 
+\index{SampleOscillator@{SampleOscillator}!OperationMode@{OperationMode}}
+\index{OperationMode@{OperationMode}!SampleOscillator@{SampleOscillator}}
+\doxysubsubsection{\texorpdfstring{OperationMode}{OperationMode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_sample_oscillator_ac523c5b1411a79c9c6f410c9c6595cba}{Sample\+Oscillator\+::\+Operation\+Mode}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. 
+
+Internally triggers samples at a speed dictated by bpm $\ast$ speed\+Scale. 
+\begin{DoxyParams}{Parameters}
+{\em input\+Buffer} & MIDI notes to be processed by the \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}}. \\
+\hline
+{\em output\+Buffer} & Audio output. \\
+\hline
+{\em speed\+Scale} & Current value of the speed parameter. \\
+\hline
+{\em position\+Info} & Position info given by the host DAW. \\
+\hline
+\end{DoxyParams}
+
+
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}\label{class_sample_oscillator_ae36bb2a5d07f8f3c4191e2f01034a98d}} 
 \index{SampleOscillator@{SampleOscillator}!loadSampleFromFile@{loadSampleFromFile}}
@@ -70,27 +103,6 @@ This method should only be called from the message thread since File I/O is not 
 
 \begin{DoxyParams}{Parameters}
 {\em file} & \\
-\hline
-\end{DoxyParams}
-\mbox{\Hypertarget{class_sample_oscillator_a5917439e695ef6e2a6ccdf800362ba7c}\label{class_sample_oscillator_a5917439e695ef6e2a6ccdf800362ba7c}} 
-\index{SampleOscillator@{SampleOscillator}!processBlock@{processBlock}}
-\index{processBlock@{processBlock}!SampleOscillator@{SampleOscillator}}
-\doxysubsubsection{\texorpdfstring{processBlock()}{processBlock()}}
-{\footnotesize\ttfamily void Sample\+Oscillator\+::process\+Block (\begin{DoxyParamCaption}\item[{juce\+::\+Midi\+Buffer \&}]{input\+Buffer,  }\item[{juce\+::\+Audio\+Buffer$<$ float $>$ \&}]{output\+Buffer,  }\item[{const float}]{speed\+Scale,  }\item[{const juce\+::\+Audio\+Play\+Head\+::\+Position\+Info $\ast$}]{position\+Info,  }\item[{bool}]{is\+Tuned,  }\item[{double \&}]{next\+Quarter\+Note\+Ppq,  }\item[{double \&}]{next\+Note\+Sample,  }\item[{float}]{note\+Length,  }\item[{float}]{sample\+Pitch\+Bend\+Ratio,  }\item[{bool}]{is\+Etet,  }\item[{int}]{etet\+Root\+Note,  }\item[{float}]{etet\+Numerator,  }\item[{float}]{etet\+Denominator,  }\item[{bool \&}]{killswitch }\end{DoxyParamCaption})}
-
-
-
-Secondary process\+Block method called by the main process\+Block in \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. 
-
-Internally triggers samples at a speed dictated by bpm $\ast$ speed\+Scale. 
-\begin{DoxyParams}{Parameters}
-{\em input\+Buffer} & MIDI notes to be processed by the \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}}. \\
-\hline
-{\em output\+Buffer} & Audio output. \\
-\hline
-{\em speed\+Scale} & Current value of the speed parameter. \\
-\hline
-{\em position\+Info} & Position info given by the host DAW. \\
 \hline
 \end{DoxyParams}
 

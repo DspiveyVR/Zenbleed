@@ -1,5 +1,15 @@
 ## Introduction
 
+### History 
+    (Denton) I've had the idea this plugin for a while, since I've been a bit dissatisfied with what standard DAWs are able to do with regard to extratone production.  In particular I find that MIDI is limiting when I want to create smooth speed changes.  Of course, this sort of thing can be done with a standard sampler but then you lose the flexibility of a fully controllable MIDI instrument.  This plugin represents a philosophy that extratone can be its own form of synthesis.  At the speed of extratone, the actual kick patterns you are creating become their own type of oscillator.  I wanted to create a plugin that explores this concept further by allowing more flexible ways of modulating tones than what is offered by standard tools.
+
+### Developer Information
+    Zenbleed is developed by a team of three college students for their Capstone project:
+
+    Denton Spivey, Nick Owens, and Jacob Evans
+
+    You can submit feedback by messaging me on discord @Dspivey or by opening an [issue on github](https://github.com/CSCI591USCA/Zenbleed/issues)
+
 ### System Requirements
 
 #### Windows
@@ -25,15 +35,6 @@
 
 #### MacOs
     Untested
-
-### History 
-    (Denton) I've had the idea this plugin for a while, since I've been a bit dissatisfied with what standard DAWs are able to do with regard to extratone production.  In particular I find that MIDI is limiting when I want to create smooth speed changes.  Of course, this sort of thing can be done with a standard sampler but then you lose the flexibility of a fully controllable MIDI instrument.  This plugin represents a philosophy that extratone can be its own form of synthesis.  At the speed of extratone, the actual kick patterns you are creating become their own type of oscillator.  I wanted to create a plugin that explores this concept further by allowing more flexible ways of modulating tones than what is offered by standard tools.
-
-### Developer Information
-    Zenbleed is developed by a team of three college students for their Capstone project:
-
-    Denton Spivey, Nick Owens, and Jacob Evans
-
 
 ### Quick Start
 

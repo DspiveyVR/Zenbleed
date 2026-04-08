@@ -79,6 +79,9 @@ void {\bfseries set\+State\+Information} (const void $\ast$data, int size\+In\+B
 std\+::atomic$<$ float $>$ {\bfseries last\+Note\+Sample\+Pos} = 0.\+0
 \item 
 std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}} $>$ \mbox{\hyperlink{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}{sample\+Oscillator}}
+\item 
+\mbox{\Hypertarget{class_plugin_processor_abb3a984c48671b8d3effd59b952d8717}\label{class_plugin_processor_abb3a984c48671b8d3effd59b952d8717}} 
+std\+::atomic$<$ float $>$ {\bfseries bpm\+Speedometer} \{ 0.\+0f \}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Types}
 \begin{DoxyCompactItemize}
@@ -88,12 +91,21 @@ enum class {\bfseries Speed\+Range} \{ {\bfseries Low}
 , {\bfseries Medium}
 , {\bfseries High}
  \}
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a576898769671ba2d926203a686495834}\label{class_plugin_processor_a576898769671ba2d926203a686495834}} 
+enum class {\bfseries Operation\+Mode} \{ {\bfseries Default}
+, {\bfseries Etet}
+, {\bfseries Tuned}
+ \}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_plugin_processor_a962781278311a09749c4180b949b5dcb}\label{class_plugin_processor_a962781278311a09749c4180b949b5dcb}} 
 const juce\+::\+String\+Array {\bfseries speed\+Range\+Choices} = \{ \char`\"{}Low\char`\"{}, \char`\"{}Medium\char`\"{}, \char`\"{}High\char`\"{} \}
+\item 
+\mbox{\Hypertarget{class_plugin_processor_a05b403e1988ddc38afa32a431a690ef7}\label{class_plugin_processor_a05b403e1988ddc38afa32a431a690ef7}} 
+const juce\+::\+String\+Array {\bfseries operation\+Mode\+Choices} = \{ \char`\"{}Default\char`\"{}, \char`\"{}Extratone Equal Temperament (ETET)\char`\"{}, \char`\"{}Tuned\char`\"{} \}
 \item 
 \mbox{\Hypertarget{class_plugin_processor_aa7eb2e7d61250cdbdf58e4e66639a030}\label{class_plugin_processor_aa7eb2e7d61250cdbdf58e4e66639a030}} 
 juce\+::\+Audio\+Processor\+Value\+Tree\+State {\bfseries parameters}
@@ -108,25 +120,23 @@ std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_aac4d6
 \item 
 std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a419e382fde6dc6c311aac4639be54a8c}{is\+Midi\+Mode\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a693b3a323b32aac6fccae95365b143f3}{is\+Tuned\+Parameter}}
+std\+::atomic$<$ float $>$ $\ast$ {\bfseries operation\+Mode\+Parameter}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a45dc815d64962d068c04bd1467bc8d20}{is\+Etet\+Parameter}}
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a56c931b84b4f7137cadaf1490bf74160}{etet\+Root\+Note\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a56c931b84b4f7137cadaf1490bf74160}{etet\+Root\+Note\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_aaa4e504535f8f854a4f7afcb1716bcac}{etet\+Numerator\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_aaa4e504535f8f854a4f7afcb1716bcac}{etet\+Numerator\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_afef3ee29cabc4649271e8f849e0518b4}{etet\+Denominator\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_afef3ee29cabc4649271e8f849e0518b4}{etet\+Denominator\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a925bd1236d01caec25cc731fb60184a3}{note\+Length\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a925bd1236d01caec25cc731fb60184a3}{note\+Length\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a57f0a0e94244996c73be4c781e9a7eab}{sample\+Pitch\+Bend\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a57f0a0e94244996c73be4c781e9a7eab}{sample\+Pitch\+Bend\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_ae03145f3acd5c7dde9eeb59245faeb2d}{velocity\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_ae03145f3acd5c7dde9eeb59245faeb2d}{velocity\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_aa8c9dcc03a0d3000bb9e559a0564d4e1}{is\+Keytrack\+Parameter}}
 \item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_aa8c9dcc03a0d3000bb9e559a0564d4e1}{is\+Keytrack\+Parameter}} = nullptr
-\item 
-std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a55e155c7506ad94a68871f627206d449}{fixed\+Note\+Number\+Parameter}} = nullptr
+std\+::atomic$<$ float $>$ $\ast$ \mbox{\hyperlink{class_plugin_processor_a55e155c7506ad94a68871f627206d449}{fixed\+Note\+Number\+Parameter}}
 \item 
 double \mbox{\hyperlink{class_plugin_processor_a21a7afed98d6086c817f7fdb4b825946}{next\+Quarter\+Note\+Ppq}} = 0
 \item 
@@ -157,50 +167,69 @@ Uses RAII to create \mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}} a
 \index{PluginProcessor@{PluginProcessor}!etetDenominatorParameter@{etetDenominatorParameter}}
 \index{etetDenominatorParameter@{etetDenominatorParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{etetDenominatorParameter}{etetDenominatorParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::etet\+Denominator\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::etet\+Denominator\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
 Extratone Equal Temperament (ETET) denominator parameter\+: Controls the denominator of the harmonic interval used in Extratone Equal Temperament (ETET) \mbox{\Hypertarget{class_plugin_processor_aaa4e504535f8f854a4f7afcb1716bcac}\label{class_plugin_processor_aaa4e504535f8f854a4f7afcb1716bcac}} 
 \index{PluginProcessor@{PluginProcessor}!etetNumeratorParameter@{etetNumeratorParameter}}
 \index{etetNumeratorParameter@{etetNumeratorParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{etetNumeratorParameter}{etetNumeratorParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::etet\+Numerator\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::etet\+Numerator\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
 Extratone Equal Temperament (ETET) numerator parameter\+: Controls the numerator of the harmonic interval used in Extratone Equal Temperament (ETET) \mbox{\Hypertarget{class_plugin_processor_a56c931b84b4f7137cadaf1490bf74160}\label{class_plugin_processor_a56c931b84b4f7137cadaf1490bf74160}} 
 \index{PluginProcessor@{PluginProcessor}!etetRootNoteParameter@{etetRootNoteParameter}}
 \index{etetRootNoteParameter@{etetRootNoteParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{etetRootNoteParameter}{etetRootNoteParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::etet\+Root\+Note\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::etet\+Root\+Note\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
-ETET root note parameter\+: The root note for Extratone Equal Temperament (ETET) \mbox{\Hypertarget{class_plugin_processor_a55e155c7506ad94a68871f627206d449}\label{class_plugin_processor_a55e155c7506ad94a68871f627206d449}} 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
+Operation mode parameter\+: Selects between default, ETET, and tuned modes. ~\newline
+ ETET root note parameter\+: The root note for Extratone Equal Temperament (ETET) \mbox{\Hypertarget{class_plugin_processor_a55e155c7506ad94a68871f627206d449}\label{class_plugin_processor_a55e155c7506ad94a68871f627206d449}} 
 \index{PluginProcessor@{PluginProcessor}!fixedNoteNumberParameter@{fixedNoteNumberParameter}}
 \index{fixedNoteNumberParameter@{fixedNoteNumberParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{fixedNoteNumberParameter}{fixedNoteNumberParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::fixed\+Note\+Number\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::fixed\+Note\+Number\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
 Fixed note number parameter\+: Dictates the MIDI note to be triggered when keytrack is false \mbox{\Hypertarget{class_plugin_processor_a2a1ce809a1a27e680830f29b3307fffa}\label{class_plugin_processor_a2a1ce809a1a27e680830f29b3307fffa}} 
 \index{PluginProcessor@{PluginProcessor}!highSpeedParameter@{highSpeedParameter}}
 \index{highSpeedParameter@{highSpeedParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{highSpeedParameter}{highSpeedParameter}}
 {\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::high\+Speed\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
 
-Speed parameter (high range)\+: acts as a pitch bend \mbox{\Hypertarget{class_plugin_processor_a45dc815d64962d068c04bd1467bc8d20}\label{class_plugin_processor_a45dc815d64962d068c04bd1467bc8d20}} 
-\index{PluginProcessor@{PluginProcessor}!isEtetParameter@{isEtetParameter}}
-\index{isEtetParameter@{isEtetParameter}!PluginProcessor@{PluginProcessor}}
-\doxysubsubsection{\texorpdfstring{isEtetParameter}{isEtetParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::is\+Etet\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
+Speed parameter (high range)\+: acts as a pitch bend \mbox{\Hypertarget{class_plugin_processor_aa8c9dcc03a0d3000bb9e559a0564d4e1}\label{class_plugin_processor_aa8c9dcc03a0d3000bb9e559a0564d4e1}} 
+\index{PluginProcessor@{PluginProcessor}!isKeytrackParameter@{isKeytrackParameter}}
+\index{isKeytrackParameter@{isKeytrackParameter}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{isKeytrackParameter}{isKeytrackParameter}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::is\+Keytrack\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
 {\bfseries Initial value\+:}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{=}
-\DoxyCodeLine{            \textcolor{keyword}{nullptr}}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
 
 \end{DoxyCode}
-Extratone Equal Temperament (ETET) mode parameter\+: determines whether or not the \char`\"{}\+Extratone Equal Temperament (\+ETET) mode is enabled\char`\"{} \mbox{\Hypertarget{class_plugin_processor_aa8c9dcc03a0d3000bb9e559a0564d4e1}\label{class_plugin_processor_aa8c9dcc03a0d3000bb9e559a0564d4e1}} 
-\index{PluginProcessor@{PluginProcessor}!isKeytrackParameter@{isKeytrackParameter}}
-\index{isKeytrackParameter@{isKeytrackParameter}!PluginProcessor@{PluginProcessor}}
-\doxysubsubsection{\texorpdfstring{isKeytrackParameter}{isKeytrackParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::is\+Keytrack\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
-
 Is keytrack parameter\+: Dictates wheter the MIDI note triggered is equal to the input note or whether it is fixed. \mbox{\Hypertarget{class_plugin_processor_a419e382fde6dc6c311aac4639be54a8c}\label{class_plugin_processor_a419e382fde6dc6c311aac4639be54a8c}} 
 \index{PluginProcessor@{PluginProcessor}!isMidiModeParameter@{isMidiModeParameter}}
 \index{isMidiModeParameter@{isMidiModeParameter}!PluginProcessor@{PluginProcessor}}
@@ -210,22 +239,10 @@ Is keytrack parameter\+: Dictates wheter the MIDI note triggered is equal to the
 {\bfseries Initial value\+:}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{=}
-\DoxyCodeLine{            \textcolor{keyword}{nullptr}}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
 
 \end{DoxyCode}
-Midi mode parameter\+: toggles between MIDI mode and sampler mode \mbox{\Hypertarget{class_plugin_processor_a693b3a323b32aac6fccae95365b143f3}\label{class_plugin_processor_a693b3a323b32aac6fccae95365b143f3}} 
-\index{PluginProcessor@{PluginProcessor}!isTunedParameter@{isTunedParameter}}
-\index{isTunedParameter@{isTunedParameter}!PluginProcessor@{PluginProcessor}}
-\doxysubsubsection{\texorpdfstring{isTunedParameter}{isTunedParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::is\+Tuned\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
-
-{\bfseries Initial value\+:}
-\begin{DoxyCode}{0}
-\DoxyCodeLine{=}
-\DoxyCodeLine{            \textcolor{keyword}{nullptr}}
-
-\end{DoxyCode}
-Tuned mode parameter\+: determines whether or not the extratone is tuned to the input note \mbox{\Hypertarget{class_plugin_processor_aa4d2fc33b73528264a524dd4e6b0c746}\label{class_plugin_processor_aa4d2fc33b73528264a524dd4e6b0c746}} 
+Midi mode parameter\+: toggles between MIDI mode and sampler mode \mbox{\Hypertarget{class_plugin_processor_aa4d2fc33b73528264a524dd4e6b0c746}\label{class_plugin_processor_aa4d2fc33b73528264a524dd4e6b0c746}} 
 \index{PluginProcessor@{PluginProcessor}!lowSpeedParameter@{lowSpeedParameter}}
 \index{lowSpeedParameter@{lowSpeedParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{lowSpeedParameter}{lowSpeedParameter}}
@@ -237,7 +254,7 @@ Speed parameter (low range)\+: acts as a pitch bend \mbox{\Hypertarget{class_plu
 \doxysubsubsection{\texorpdfstring{midiOscillator}{midiOscillator}}
 {\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}}$>$ Plugin\+Processor\+::midi\+Oscillator\hspace{0.3cm}{\ttfamily [private]}}
 
-Child instance of \mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}} created in the constructor of \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}} \mbox{\Hypertarget{class_plugin_processor_a4ee60b40bacd94633a9f78de56a48c91}\label{class_plugin_processor_a4ee60b40bacd94633a9f78de56a48c91}} 
+Child instance of \mbox{\hyperlink{class_midi_oscillator}{Midi\+Oscillator}} created in the constructor of \mbox{\hyperlink{class_plugin_processor}{Plugin\+Processor}}. \mbox{\Hypertarget{class_plugin_processor_a4ee60b40bacd94633a9f78de56a48c91}\label{class_plugin_processor_a4ee60b40bacd94633a9f78de56a48c91}} 
 \index{PluginProcessor@{PluginProcessor}!midSpeedParameter@{midSpeedParameter}}
 \index{midSpeedParameter@{midSpeedParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{midSpeedParameter}{midSpeedParameter}}
@@ -259,9 +276,27 @@ The ppq position of the next note to be played. \mbox{\Hypertarget{class_plugin_
 \index{PluginProcessor@{PluginProcessor}!noteLengthParameter@{noteLengthParameter}}
 \index{noteLengthParameter@{noteLengthParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{noteLengthParameter}{noteLengthParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::note\+Length\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::note\+Length\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
-Note length parameter\+: Controls how long a note is held before the next note is played \mbox{\Hypertarget{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}\label{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}} 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
+Note length parameter\+: Controls how long a note is held before the next note is played \mbox{\Hypertarget{class_plugin_processor_a6d86f0dc9370c6bd8d50e7f7ba105010}\label{class_plugin_processor_a6d86f0dc9370c6bd8d50e7f7ba105010}} 
+\index{PluginProcessor@{PluginProcessor}!operationModeParameter@{operationModeParameter}}
+\index{operationModeParameter@{operationModeParameter}!PluginProcessor@{PluginProcessor}}
+\doxysubsubsection{\texorpdfstring{operationModeParameter}{operationModeParameter}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::operation\+Mode\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}\label{class_plugin_processor_ac805ccc956af221f472ed446a8b7c701}} 
 \index{PluginProcessor@{PluginProcessor}!sampleOscillator@{sampleOscillator}}
 \index{sampleOscillator@{sampleOscillator}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{sampleOscillator}{sampleOscillator}}
@@ -271,8 +306,14 @@ Child instance of \mbox{\hyperlink{class_sample_oscillator}{Sample\+Oscillator}}
 \index{PluginProcessor@{PluginProcessor}!samplePitchBendParameter@{samplePitchBendParameter}}
 \index{samplePitchBendParameter@{samplePitchBendParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{samplePitchBendParameter}{samplePitchBendParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::sample\+Pitch\+Bend\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::sample\+Pitch\+Bend\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
 Sample pitch bend parameter\+: Changes the pitch of the loaded sample (in semitones) \mbox{\Hypertarget{class_plugin_processor_aac4d679638bc40a3e2786b0d20d25b91}\label{class_plugin_processor_aac4d679638bc40a3e2786b0d20d25b91}} 
 \index{PluginProcessor@{PluginProcessor}!speedRangeParameter@{speedRangeParameter}}
 \index{speedRangeParameter@{speedRangeParameter}!PluginProcessor@{PluginProcessor}}
@@ -282,15 +323,21 @@ Sample pitch bend parameter\+: Changes the pitch of the loaded sample (in semito
 {\bfseries Initial value\+:}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{=}
-\DoxyCodeLine{            \textcolor{keyword}{nullptr}}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
 
 \end{DoxyCode}
 Speed range parameter\+: selects which speed range to choose \mbox{\Hypertarget{class_plugin_processor_ae03145f3acd5c7dde9eeb59245faeb2d}\label{class_plugin_processor_ae03145f3acd5c7dde9eeb59245faeb2d}} 
 \index{PluginProcessor@{PluginProcessor}!velocityParameter@{velocityParameter}}
 \index{velocityParameter@{velocityParameter}!PluginProcessor@{PluginProcessor}}
 \doxysubsubsection{\texorpdfstring{velocityParameter}{velocityParameter}}
-{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::velocity\+Parameter = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::atomic$<$float$>$$\ast$ Plugin\+Processor\+::velocity\+Parameter\hspace{0.3cm}{\ttfamily [private]}}
 
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{        \textcolor{keyword}{nullptr}}
+
+\end{DoxyCode}
 Velocity parameter\+: Controls the velocity of the MIDI note being played 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

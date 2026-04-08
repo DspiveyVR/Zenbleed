@@ -1,0 +1,246 @@
+/* Fira Code: https://github.com/tonsky/FiraCode */
+@import url('https://cdn.staticdelivr.com/gfonts/css2?family=Fira+Code:wght@300..700&display=swap');
+
+:root {
+  --background: #000000;
+  --foreground: #eceae5;
+  --accent: #f80104;
+  --radius: 0;
+  --font-size: 1rem;
+  --line-height: 1.54em;
+  --container-width: 90vw;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-size: var(--font-size);
+  font-weight: 400;
+  line-height: var(--line-height);
+  background-color: var(--background);
+  color: var(--foreground);
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: contextual;
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#title::after {
+  content: '';
+  background: repeating-linear-gradient(90deg, var(--accent), var(--accent) 2px, transparent 0, transparent 8px);
+  display: block;
+  width: 100%;
+  margin-left: 20px;
+  right: 10px;
+}
+
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 60px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 40px;
+}
+
+.logo-placeholder {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  border: 4px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+h1 {
+  font-size: calc(var(--font-size) * 2.5);
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  color: var(--accent);
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.intro-text {
+  max-width: 700px;
+  margin: 25px auto;
+  font-size: 1.1rem;
+}
+
+/* Button Stack */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin: 40px 0;
+}
+
+.btn-group button {
+  width: 300px;
+  max-width: 100%;
+}
+
+/* Layout Sections */
+section {
+  margin: 80px 0;
+}
+
+.flex-row {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.flex-row.reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-content {
+  flex: 1;
+}
+
+.flex-image {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Media / Embeds */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border: 4px solid var(--accent);
+  margin: 30px 0;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.audio-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.form-container {
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+  border: 1px solid var(--accent);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* Provided CSS elements */
+h2 {
+  font-size: calc(var(--font-size) * 1.35);
+  color: var(--accent);
+  border-left: 4px solid var(--accent);
+  padding-left: 15px;
+}
+
+h3 {
+  font-size: calc(var(--font-size) * 1.15);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover {
+  border-bottom: 1px solid var(--accent);
+}
+
+button {
+  position: relative;
+  font: inherit;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  background: transparent;
+  color: var(--accent);
+  padding: 10px 18px;
+  border: 4px solid var(--accent);
+  border-radius: var(--radius);
+  transition: background 0.15s linear;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.logo {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
+.logo img {
+  width: 100%;
+  height: 20em;
+  padding-left: 2em;
+  object-fit: cover;
+  display: block;
+}
+
+hr {
+  border: none;
+  background: var(--accent);
+  height: 1px;
+  margin: 40px 0;
+  opacity: 0.3;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+
+  .flex-row,
+  .flex-row.reverse {
+    flex-direction: column;
+  }
+
+  .flex-image {
+    width: 100%;
+  }
+}

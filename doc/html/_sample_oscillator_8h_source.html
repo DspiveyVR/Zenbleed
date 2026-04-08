@@ -99,90 +99,96 @@ $(document).ready(function(){initNavTree('_sample_oscillator_8h_source.html','')
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <a class="code" href="class_sample_oscillator.html">SampleOscillator</a>(juce::AudioProcessorValueTreeState&amp; paramsRef);</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    ~<a class="code" href="class_sample_oscillator.html">SampleOscillator</a>();</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_sample_oscillator.html#a5917439e695ef6e2a6ccdf800362ba7c">processBlock</a>(</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            juce::MidiBuffer&amp; inputBuffer,</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            juce::AudioBuffer&lt;float&gt;&amp; outputBuffer,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">float</span> speedScale,</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            <span class="keyword">const</span> juce::AudioPlayHead::PositionInfo* positionInfo,</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <span class="keywordtype">bool</span> isTuned,</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <span class="keywordtype">double</span>&amp; nextQuarterNotePpq,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            <span class="keywordtype">double</span>&amp; nextNoteSample,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            <span class="keywordtype">float</span> noteLength,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <span class="keywordtype">float</span> samplePitchBendRatio,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <span class="keywordtype">bool</span> isEtet,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keywordtype">int</span> etetRootNote,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <span class="keywordtype">float</span> etetNumerator,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keywordtype">float</span> etetDenominator,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <span class="keywordtype">bool</span>&amp; killswitch);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> setSampleRate(<span class="keyword">const</span> <span class="keywordtype">double</span> sr) { sampleRate = sr; }</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">loadSampleFromFile</a>(<span class="keyword">const</span> juce::File&amp; file);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> processUntuned(</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            juce::MidiBuffer&amp; inputBuffer,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            juce::AudioBuffer&lt;float&gt;&amp; outputBuffer,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">float</span> speedScale,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="keyword">const</span> juce::AudioPlayHead::PositionInfo* positionInfo,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keywordtype">double</span>&amp; nextQuarterNotePpq,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordtype">double</span>&amp; nextNoteSample,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordtype">float</span> noteLength,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordtype">float</span> samplePitchBendRatio,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <span class="keywordtype">bool</span> success,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="keywordtype">double</span> firstEventTime,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            juce::MidiMessage firstMessage,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordtype">double</span> currentSamples,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordtype">double</span> samplePerPpq,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">int</span> bufferSize,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            juce::MidiBuffer::Iterator&amp; iterator,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            juce::AudioBuffer&lt;float&gt;* sampleBuffer,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">double</span> bpm,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keywordtype">double</span> currentPpq,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordtype">bool</span> isEtet,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keywordtype">int</span> etetRootNote,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordtype">float</span> etetNumerator,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keywordtype">float</span> etetDenominator,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keywordtype">bool</span>&amp; killswitch);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> processTuned(</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            juce::MidiBuffer&amp; inputBuffer,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            juce::AudioBuffer&lt;float&gt;&amp; outputBuffer,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">float</span> speedScale,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">const</span> juce::AudioPlayHead::PositionInfo* positionInfo,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keywordtype">double</span>&amp; nextQuarterNotePpq,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keywordtype">double</span>&amp; nextNoteSample,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keywordtype">float</span> noteLength,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keywordtype">float</span> samplePitchBendRatio,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keywordtype">bool</span> success,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keywordtype">double</span> firstEventTime,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            juce::MidiMessage firstMessage,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordtype">double</span> currentSamples,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordtype">double</span> samplePerPpq,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">int</span> bufferSize,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            juce::MidiBuffer::Iterator&amp; iterator,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            juce::AudioBuffer&lt;float&gt;* sampleBuffer,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">double</span> bpm,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keywordtype">double</span> currentPpq,</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keywordtype">bool</span>&amp; killswitch);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">double</span> sampleRate = 0.0;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span> wasPlaying = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">bool</span> currentSampleEnded = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">   99</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">lastNoteInput</a> = 0; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">double</span> nextReadPosition = 0.0;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    juce::AudioFormatManager formatManager;</div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">  103</a></span>&#160;    std::unique_ptr&lt;juce::AudioBuffer&lt;float&gt;&gt; <a class="code" href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">loadedSampleBuffer</a>; </div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">  104</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">noteBeingHeld</a> = <span class="keyword">false</span>; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    juce::AudioProcessorValueTreeState&amp; parametersRef;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#ac523c5b1411a79c9c6f410c9c6595cba">   21</a></span>&#160;    <span class="keyword">enum class</span> <a class="code" href="class_sample_oscillator.html#ac523c5b1411a79c9c6f410c9c6595cba">OperationMode</a> { Default, Etet, Tuned };</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> processBlock(</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        juce::MidiBuffer&amp; inputBuffer,</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        juce::AudioBuffer&lt;float&gt;&amp; outputBuffer,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">float</span> speedScale,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">const</span> juce::AudioPlayHead::PositionInfo* positionInfo,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_sample_oscillator.html#ac523c5b1411a79c9c6f410c9c6595cba">OperationMode</a> operationMode,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">double</span>&amp; nextQuarterNotePpq,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">double</span>&amp; nextNoteSample,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">float</span> noteLength,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">float</span> samplePitchBendRatio,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">int</span> etetRootNote,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">float</span> etetNumerator,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">float</span> etetDenominator,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordtype">bool</span>&amp; killswitch,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        std::atomic&lt;float&gt;&amp; bpmSpeedometer</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    );</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> setSampleRate(<span class="keyword">const</span> <span class="keywordtype">double</span> sr) { sampleRate = sr; }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">loadSampleFromFile</a>(<span class="keyword">const</span> juce::File&amp; file);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> processUntuned(</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        juce::MidiBuffer&amp; inputBuffer,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        juce::AudioBuffer&lt;float&gt;&amp; outputBuffer,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">float</span> speedScale,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">const</span> juce::AudioPlayHead::PositionInfo* positionInfo,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_sample_oscillator.html#ac523c5b1411a79c9c6f410c9c6595cba">OperationMode</a> operationMode,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">double</span>&amp; nextQuarterNotePpq,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">double</span>&amp; nextNoteSample,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">float</span> noteLength,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">float</span> samplePitchBendRatio,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">bool</span> success,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">double</span> firstEventTime,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        juce::MidiMessage firstMessage,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordtype">double</span> currentSamples,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">double</span> samplePerPpq,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span> bufferSize,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        juce::MidiBuffer::Iterator&amp; iterator,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        juce::AudioBuffer&lt;float&gt;* sampleBuffer,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> bpm,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordtype">double</span> currentPpq,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordtype">int</span> etetRootNote,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">float</span> etetNumerator,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordtype">float</span> etetDenominator,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordtype">bool</span>&amp; killswitch,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        std::atomic&lt;float&gt;&amp; bpmSpeedometer</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    );</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> processTuned(</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        juce::MidiBuffer&amp; inputBuffer,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        juce::AudioBuffer&lt;float&gt;&amp; outputBuffer,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">float</span> speedScale,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">const</span> juce::AudioPlayHead::PositionInfo* positionInfo,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordtype">double</span>&amp; nextQuarterNotePpq,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordtype">double</span>&amp; nextNoteSample,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordtype">float</span> noteLength,</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">float</span> samplePitchBendRatio,</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordtype">bool</span> success,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordtype">double</span> firstEventTime,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        juce::MidiMessage firstMessage,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordtype">double</span> currentSamples,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordtype">double</span> samplePerPpq,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span> bufferSize,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        juce::MidiBuffer::Iterator&amp; iterator,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        juce::AudioBuffer&lt;float&gt;* sampleBuffer,</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> bpm,</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">double</span> currentPpq,</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">bool</span>&amp; killswitch,</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        std::atomic&lt;float&gt;&amp; bpmSpeedometer</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    );</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">double</span> sampleRate = 0.0;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">bool</span> wasPlaying = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">bool</span> currentSampleEnded = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">  106</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">lastNoteInput</a> = 0; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">double</span> nextReadPosition = 0.0;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    juce::AudioFormatManager formatManager;</div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">  110</a></span>&#160;    std::unique_ptr&lt;juce::AudioBuffer&lt;float&gt;&gt; <a class="code" href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">loadedSampleBuffer</a>; </div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">  111</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">noteBeingHeld</a> = <span class="keyword">false</span>; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    juce::AudioProcessorValueTreeState&amp; parametersRef;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
 <div class="ttc" id="aclass_sample_oscillator_html"><div class="ttname"><a href="class_sample_oscillator.html">SampleOscillator</a></div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:6</div></div>
-<div class="ttc" id="aclass_sample_oscillator_html_a5917439e695ef6e2a6ccdf800362ba7c"><div class="ttname"><a href="class_sample_oscillator.html#a5917439e695ef6e2a6ccdf800362ba7c">SampleOscillator::processBlock</a></div><div class="ttdeci">void processBlock(juce::MidiBuffer &amp;inputBuffer, juce::AudioBuffer&lt; float &gt; &amp;outputBuffer, const float speedScale, const juce::AudioPlayHead::PositionInfo *positionInfo, bool isTuned, double &amp;nextQuarterNotePpq, double &amp;nextNoteSample, float noteLength, float samplePitchBendRatio, bool isEtet, int etetRootNote, float etetNumerator, float etetDenominator, bool &amp;killswitch)</div><div class="ttdoc">Secondary processBlock method called by the main processBlock in PluginProcessor.</div><div class="ttdef"><b>Definition:</b> SampleOscillator.cpp:47</div></div>
-<div class="ttc" id="aclass_sample_oscillator_html_a7f89c7f387f9a0aec3ddebe5cab7823b"><div class="ttname"><a href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">SampleOscillator::noteBeingHeld</a></div><div class="ttdeci">bool noteBeingHeld</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:104</div></div>
-<div class="ttc" id="aclass_sample_oscillator_html_abac9081e24614fbc4971e766e03c2e5e"><div class="ttname"><a href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">SampleOscillator::lastNoteInput</a></div><div class="ttdeci">int lastNoteInput</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:99</div></div>
-<div class="ttc" id="aclass_sample_oscillator_html_abf2486cb0a3050ca3f6d0756c2e81f70"><div class="ttname"><a href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">SampleOscillator::loadedSampleBuffer</a></div><div class="ttdeci">std::unique_ptr&lt; juce::AudioBuffer&lt; float &gt; &gt; loadedSampleBuffer</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:103</div></div>
-<div class="ttc" id="aclass_sample_oscillator_html_ae36bb2a5d07f8f3c4191e2f01034a98d"><div class="ttname"><a href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">SampleOscillator::loadSampleFromFile</a></div><div class="ttdeci">void loadSampleFromFile(const juce::File &amp;file)</div><div class="ttdoc">Loads an audio sample based on a given file path.</div><div class="ttdef"><b>Definition:</b> SampleOscillator.cpp:27</div></div>
+<div class="ttc" id="aclass_sample_oscillator_html_a7f89c7f387f9a0aec3ddebe5cab7823b"><div class="ttname"><a href="class_sample_oscillator.html#a7f89c7f387f9a0aec3ddebe5cab7823b">SampleOscillator::noteBeingHeld</a></div><div class="ttdeci">bool noteBeingHeld</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:111</div></div>
+<div class="ttc" id="aclass_sample_oscillator_html_abac9081e24614fbc4971e766e03c2e5e"><div class="ttname"><a href="class_sample_oscillator.html#abac9081e24614fbc4971e766e03c2e5e">SampleOscillator::lastNoteInput</a></div><div class="ttdeci">int lastNoteInput</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:106</div></div>
+<div class="ttc" id="aclass_sample_oscillator_html_abf2486cb0a3050ca3f6d0756c2e81f70"><div class="ttname"><a href="class_sample_oscillator.html#abf2486cb0a3050ca3f6d0756c2e81f70">SampleOscillator::loadedSampleBuffer</a></div><div class="ttdeci">std::unique_ptr&lt; juce::AudioBuffer&lt; float &gt; &gt; loadedSampleBuffer</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:110</div></div>
+<div class="ttc" id="aclass_sample_oscillator_html_ac523c5b1411a79c9c6f410c9c6595cba"><div class="ttname"><a href="class_sample_oscillator.html#ac523c5b1411a79c9c6f410c9c6595cba">SampleOscillator::OperationMode</a></div><div class="ttdeci">OperationMode</div><div class="ttdoc">Secondary processBlock method called by the main processBlock in PluginProcessor.</div><div class="ttdef"><b>Definition:</b> SampleOscillator.h:21</div></div>
+<div class="ttc" id="aclass_sample_oscillator_html_ae36bb2a5d07f8f3c4191e2f01034a98d"><div class="ttname"><a href="class_sample_oscillator.html#ae36bb2a5d07f8f3c4191e2f01034a98d">SampleOscillator::loadSampleFromFile</a></div><div class="ttdeci">void loadSampleFromFile(const juce::File &amp;file)</div><div class="ttdoc">Loads an audio sample based on a given file path.</div><div class="ttdef"><b>Definition:</b> SampleOscillator.cpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,5 +1,10 @@
 var class_plugin_processor =
 [
+    [ "OperationMode", "class_plugin_processor.html#a576898769671ba2d926203a686495834", [
+      [ "Default", "class_plugin_processor.html#a576898769671ba2d926203a686495834a7a1920d61156abc05a60135aefe8bc67", null ],
+      [ "Etet", "class_plugin_processor.html#a576898769671ba2d926203a686495834ac7826d58a77c66b49db5cec796336a8a", null ],
+      [ "Tuned", "class_plugin_processor.html#a576898769671ba2d926203a686495834a4b68d3259e7c53f15808dccbcd25e09d", null ]
+    ] ],
     [ "SpeedRange", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9", [
       [ "Low", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9a28d0edd045e05cf5af64e35ae0c4c6ef", null ],
       [ "Medium", "class_plugin_processor.html#a643fcd4e283495fcbb4fa75efc2921a9a87f8a6ab85c9ced3702b4ea641ad4bb5", null ],
@@ -28,15 +33,14 @@ var class_plugin_processor =
     [ "releaseResources", "class_plugin_processor.html#aaa4eacf13476c61f7c2db14c7f4c206b", null ],
     [ "setCurrentProgram", "class_plugin_processor.html#a1e7817965ce7efbb680baad519462fb8", null ],
     [ "setStateInformation", "class_plugin_processor.html#a79debe20f480b7bb7bd6df531bd427be", null ],
+    [ "bpmSpeedometer", "class_plugin_processor.html#abb3a984c48671b8d3effd59b952d8717", null ],
     [ "etetDenominatorParameter", "class_plugin_processor.html#afef3ee29cabc4649271e8f849e0518b4", null ],
     [ "etetNumeratorParameter", "class_plugin_processor.html#aaa4e504535f8f854a4f7afcb1716bcac", null ],
     [ "etetRootNoteParameter", "class_plugin_processor.html#a56c931b84b4f7137cadaf1490bf74160", null ],
     [ "fixedNoteNumberParameter", "class_plugin_processor.html#a55e155c7506ad94a68871f627206d449", null ],
     [ "highSpeedParameter", "class_plugin_processor.html#a2a1ce809a1a27e680830f29b3307fffa", null ],
-    [ "isEtetParameter", "class_plugin_processor.html#a45dc815d64962d068c04bd1467bc8d20", null ],
     [ "isKeytrackParameter", "class_plugin_processor.html#aa8c9dcc03a0d3000bb9e559a0564d4e1", null ],
     [ "isMidiModeParameter", "class_plugin_processor.html#a419e382fde6dc6c311aac4639be54a8c", null ],
-    [ "isTunedParameter", "class_plugin_processor.html#a693b3a323b32aac6fccae95365b143f3", null ],
     [ "killswitch", "class_plugin_processor.html#a9054b776fdb6e1593145f3193d43b67d", null ],
     [ "lastNoteSamplePos", "class_plugin_processor.html#a8c5ca10403cbee7f6735266684491a1f", null ],
     [ "lowSpeedParameter", "class_plugin_processor.html#aa4d2fc33b73528264a524dd4e6b0c746", null ],
@@ -45,6 +49,8 @@ var class_plugin_processor =
     [ "nextNoteSample", "class_plugin_processor.html#a45a987d9a1234c71975b2a680397ec37", null ],
     [ "nextQuarterNotePpq", "class_plugin_processor.html#a21a7afed98d6086c817f7fdb4b825946", null ],
     [ "noteLengthParameter", "class_plugin_processor.html#a925bd1236d01caec25cc731fb60184a3", null ],
+    [ "operationModeChoices", "class_plugin_processor.html#a05b403e1988ddc38afa32a431a690ef7", null ],
+    [ "operationModeParameter", "class_plugin_processor.html#a6d86f0dc9370c6bd8d50e7f7ba105010", null ],
     [ "parameters", "class_plugin_processor.html#aa7eb2e7d61250cdbdf58e4e66639a030", null ],
     [ "sampleOscillator", "class_plugin_processor.html#ac805ccc956af221f472ed446a8b7c701", null ],
     [ "samplePitchBendParameter", "class_plugin_processor.html#a57f0a0e94244996c73be4c781e9a7eab", null ],
