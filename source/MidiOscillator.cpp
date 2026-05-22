@@ -245,6 +245,7 @@ void MidiOscillator::processTuned(
 
         // Hertz represents the number of notes per second.
         const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteInput);
+        bpmSpeedometer.store(speedScale * (hertz * 60));
         const double samplePerHz = sampleRate / hertz;
 
         // The note on and off of the input note needs to be effectively "copied" to the new buffer
@@ -270,6 +271,7 @@ void MidiOscillator::processTuned(
             if (success2 && secondMessage.isNoteOn()) {
                 lastNoteInput = secondMessage.getNoteNumber();
                 const double hertz = juce::MidiMessage::getMidiNoteInHertz(lastNoteInput);
+                bpmSpeedometer.store(speedScale * (hertz * 60));
                 const double samplePerHz = sampleRate / hertz;
                 lastNoteOutput = isKeytrack ? lastNoteInput : fixedNoteNumber;
                 outputBuffer.addEvent(juce::MidiMessage::noteOn(1, lastNoteOutput, velocity), secondEventTime);
@@ -284,6 +286,7 @@ void MidiOscillator::processTuned(
     double adjustedNoteEnd = nextNoteSample - (samplePerHz / speedScale) + ((noteLength * samplePerHz) / speedScale);
     bool nextNoteInBlock = nextNoteSample <= (currentSamples + bufferSize) && !compareFloat(nextNoteSample, 0.0);
     bool noteEndInBlock = adjustedNoteEnd <= (currentSamples + bufferSize);
+    bpmSpeedometer.store(speedScale * (hertz * 60));
 
     while (((noteBeingHeld && noteEndInBlock) || nextNoteInBlock) && !killswitch
            && speedScale < 10000.0f /* there's some speeds even the killswitch can't save you from */) {

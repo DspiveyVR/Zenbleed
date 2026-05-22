@@ -4,17 +4,6 @@
 PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p), processorRef(p) {
     setLookAndFeel(&lookAndFeel);
 
-#if DEBUG
-    addAndMakeVisible(inspectButton);
-    inspectButton.onClick = [&] {
-        if (!inspector) {
-            inspector = std::make_unique<melatonin::Inspector>(*this);
-            inspector->onClose = [this]() { inspector.reset(); };
-        }
-        inspector->setVisible(true);
-    };
-#endif
-
     startTimerHz(30);
 
     // --- Window Setup ---
