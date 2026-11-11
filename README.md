@@ -70,9 +70,6 @@ make -j $(nproc)  # Parallel build using all available cores
 make install  # Install the compiled .vst in the .vst3 directory
 ```
 
-### Windows
-
-Windows build instructions coming soon.
 
 ## Troubleshooting
 
